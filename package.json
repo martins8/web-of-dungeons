@@ -1,0 +1,37 @@
+{
+  "name": "web-of-dungeons",
+  "version": "1.0.0",
+  "description": "this is a dungeon crawler text based rpg in construction",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martins8/web-of-dungeons.git"
+  },
+  "keywords": [
+    "text",
+    "rpg",
+    "web"
+  ],
+  "author": "icehowl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/martins8/web-of-dungeons/issues"
+  },
+  "homepage": "https://github.com/martins8/web-of-dungeons#readme",
+  "dependencies": {
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "next": "^15.5.9",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
