@@ -4,7 +4,7 @@
   "description": "this is a dungeon crawler text based rpg in construction",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "next dev",
     "commit": "cz"
   },
@@ -35,5 +35,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "devDependencies": {
+    "jest": "^30.2.0"
   }
 }
