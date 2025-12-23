@@ -6,6 +6,9 @@
   "scripts": {
     "test": "jest",
     "dev": "next dev",
+    "up:db": "docker compose -f src/infra/compose.yaml up -d",
+    "down:db": "docker compose -f src/infra/compose.yaml down",
+    "stop:db": "docker compose -f src/infra/compose.yaml stop",
     "commit": "cz"
   },
   "repository": {
@@ -24,19 +27,21 @@
   },
   "homepage": "https://github.com/martins8/web-of-dungeons#readme",
   "dependencies": {
-    "commitizen": "^4.3.1",
-    "cz-conventional-changelog": "^3.3.0",
+    "dotenv": "^17.2.3",
     "next": "^16.1.0",
-    "prettier": "^3.7.4",
+    "pg": "^8.16.3",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
+  },
+  "devDependencies": {
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "jest": "^30.2.0",
+    "prettier": "^3.7.4"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "devDependencies": {
-    "jest": "^30.2.0"
   }
 }
