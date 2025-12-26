@@ -13,11 +13,21 @@ export async function GET(request) {
     const maxConnectionsValue = parseInt(
       maxConnectionsResult.rows[0].max_connections,
     );
+    //opened connections
+    const databaseName = process.env.POSTGRES_DB;
+    const openedConnectionsResult = await database.query({
+      text: "SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1;",
+      values: [databaseName],
+    });
+    const openedConnectionsValue = openedConnectionsResult.rows[0].count;
+    console.log("🛜 opened connections:", openedConnectionsValue);
+    //response
     return Response.json({
+      updated_at: updated_at,
       database: {
-        updated_at: updated_at,
         version: versionValue,
         max_connections: maxConnectionsValue,
+        opened_connections: openedConnectionsValue,
       },
       status: "200",
     });

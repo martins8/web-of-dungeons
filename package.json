@@ -4,9 +4,10 @@
   "description": "this is a dungeon crawler text based rpg in construction",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "dev": "next dev",
-    "up:db": "docker compose -f src/infra/compose.yaml up -d",
+    "dev": "docker compose -f src/infra/compose.yaml up -d && next dev",
+    "test": "jest --verbose --runInBand",
+    "test:watch": "jest --watch",
+    "up:db": "docker compose -f src/infra/compose.yaml up -d && next dev",
     "down:db": "docker compose -f src/infra/compose.yaml down",
     "stop:db": "docker compose -f src/infra/compose.yaml stop",
     "commit": "cz"

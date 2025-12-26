@@ -12,7 +12,7 @@ async function query(queryObject) {
     throw error;
   } finally {
     await client.end();
-    console.log("🔴 client has disconnected");
+    console.log("🔴 db client has disconnected");
   }
 }
 
@@ -26,7 +26,7 @@ async function getNewClient() {
     password: process.env.POSTGRES_PASSWORD,
   });
   await client.connect();
-  console.log("🟢 client has connected");
+  console.log("🟢 db client has connected");
   return client;
 }
 
