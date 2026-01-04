@@ -1,4 +1,4 @@
-export default class Player {
+export default class Enemy {
   constructor(name) {
     this.validateName(name);
     this.name = name;
