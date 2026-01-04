@@ -15,7 +15,7 @@ describe("HEALTH TESTS", () => {
 
   test("increase hp need to change max hp", () => {
     const health = new Health(50);
-    health.increaseMaxHealth(5);
+    health.increaseMaxHp(5);
     expect(health.maxHp).toBe(55);
   });
 

@@ -19,7 +19,7 @@ export default class Health {
     this._currentHp = Math.min(this._maxHp, this._currentHp + amount);
   }
 
-  increaseMaxHealth(amount) {
+  increaseMaxHp(amount) {
     this._maxHp += amount;
   }
 
