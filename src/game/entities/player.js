@@ -1,7 +1,14 @@
+import StatsCalculator from "../services/statsCalculator";
+import Attributes from "../value-objects/attributes";
+import Health from "../gcomponents/health";
+
 export default class Player {
-  constructor(name) {
+  constructor(name, attrValues) {
     this.validateName(name);
     this.name = name;
+    this.attrs = new Attributes(attrValues);
+    this.stats = new StatsCalculator(attrValues);
+    this.health = new Health(this.stats.maxHp);
   }
 
   validateName(name) {
