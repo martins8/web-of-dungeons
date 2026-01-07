@@ -7,7 +7,7 @@ export default class Player {
     this.validateName(name);
     this.name = name;
     this.attributes = new Attributes(attrValues);
-    this.stats = new StatsCalculator(this.attributes);
+    this.stats = StatsCalculator.calculate(this.attributes);
     this.health = new Health(this.stats.maxHp);
   }
 
