@@ -1,4 +1,4 @@
-import Stats from "../value-objects/stats";
+import Stats from "src/game/value-objects/stats";
 
 /*futuramente essa classe será responsável por calcular a depender dos equipamentos, buffs e 
 classe(warrior, mage, rogue etc.), tendo em vista que cada classe terá modificadores diferentes para ampliar os stats

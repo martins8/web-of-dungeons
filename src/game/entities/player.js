@@ -1,6 +1,6 @@
-import StatsCalculator from "../services/statsCalculator";
-import Attributes from "../value-objects/attributes";
-import Health from "../gcomponents/health";
+import StatsCalculator from "src/game/services/statsCalculator";
+import Attributes from "src/game/value-objects/attributes";
+import Health from "src/game/gcomponents/health";
 
 export default class Player {
   constructor(name, attrValues) {

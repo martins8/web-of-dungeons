@@ -1,9 +1,13 @@
+import StatsCalculator from "src/game/services/statsCalculator";
+import Attributes from "src/game/value-objects/attributes";
+import Health from "src/game/gcomponents/health";
+
 export default class Enemy {
   constructor(name, attrValues) {
     this.validateName(name);
     this.name = name;
     this.attributes = new Attributes(attrValues);
-    this.stats = new StatsCalculator(this.attributes);
+    this.stats = StatsCalculator.calculate(this.attributes);
     this.health = new Health(this.stats.maxHp);
   }
 
