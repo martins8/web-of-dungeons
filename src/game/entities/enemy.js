@@ -1,7 +1,10 @@
 export default class Enemy {
-  constructor(name) {
+  constructor(name, attrValues) {
     this.validateName(name);
     this.name = name;
+    this.attributes = new Attributes(attrValues);
+    this.stats = new StatsCalculator(this.attributes);
+    this.health = new Health(this.stats.maxHp);
   }
 
   validateName(name) {

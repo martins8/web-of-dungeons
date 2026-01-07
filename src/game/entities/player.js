@@ -6,8 +6,8 @@ export default class Player {
   constructor(name, attrValues) {
     this.validateName(name);
     this.name = name;
-    this.attrs = new Attributes(attrValues);
-    this.stats = new StatsCalculator(attrValues);
+    this.attributes = new Attributes(attrValues);
+    this.stats = new StatsCalculator(this.attributes);
     this.health = new Health(this.stats.maxHp);
   }
 
