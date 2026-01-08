@@ -31,8 +31,16 @@ export default class Character {
     return damage;
   }
 
+  reducePhysicalAtk() {
+    const reduceValue = Math.floor(this.stats.pDef * 0.3);
+    return reduceValue;
+  }
+
   takePhysicalAtk(damageTaken) {
-    this.health.takeDamage(damageTaken - this.stats.pDef * 0.3);
+    const reduceValue = this.reducePhysicalAtk();
+    const damageComing =
+      damageTaken > reduceValue ? Math.floor(damageTaken - reduceValue) : 0;
+    this.health.takeDamage(damageComing);
   }
 
   isDead() {
@@ -42,5 +50,13 @@ export default class Character {
 
   getName() {
     return this.name;
+  }
+
+  getCurrentHp() {
+    return this.health.currentHp;
+  }
+
+  getMaxHp() {
+    return this.health.maxHp;
   }
 }

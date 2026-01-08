@@ -15,7 +15,8 @@ export default class Combat {
 
     this.playerInit = player.stats.init;
     this.enemyInit = enemy.stats.init;
-    this.combatLog = "";
+    this.combatLog = `${this.player.getName()}: ${this.player.getMaxHp()}❤️
+      ${this.enemy.getName()}: ${this.enemy.getMaxHp()}❤️\n`;
   }
 
   startCombat() {
@@ -27,10 +28,18 @@ export default class Combat {
       damage = this.combatResolve.physical(first, second);
       this.combatLog += this.combatTexts.physical(damage, first, second);
 
-      if (second.isDead()) break;
+      if (second.isDead()) {
+        this.combatLog += this.combatTexts.die(second);
+        break;
+      }
 
       damage = this.combatResolve.physical(second, first);
       this.combatLog += this.combatTexts.physical(damage, second, first);
+
+      if (first.isDead()) {
+        this.combatLog += this.combatTexts.die(first);
+        break;
+      }
     }
   }
 }
