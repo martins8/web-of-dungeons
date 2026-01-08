@@ -1,7 +1,7 @@
 export default class Health {
   constructor(amount) {
-    this._currentHp = amount;
-    this._maxHp = amount;
+    this._currentHp = Math.floor(amount);
+    this._maxHp = Math.floor(amount);
   }
 
   get currentHp() {
