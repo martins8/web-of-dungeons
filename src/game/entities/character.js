@@ -47,16 +47,4 @@ export default class Character {
     const die = !this.health.isAlive() ? true : false;
     return die;
   }
-
-  getName() {
-    return this.name;
-  }
-
-  getCurrentHp() {
-    return this.health.currentHp;
-  }
-
-  getMaxHp() {
-    return this.health.maxHp;
-  }
 }

@@ -13,10 +13,10 @@ export default class Combat {
     this.combatResolve = combatResolve;
     this.combatTexts = combatTexts;
 
-    this.playerInit = player.stats.init;
-    this.enemyInit = enemy.stats.init;
-    this.combatLog = `${this.player.getName()}: ${this.player.getMaxHp()}❤️
-      ${this.enemy.getName()}: ${this.enemy.getMaxHp()}❤️\n`;
+    this.playerInit = this.player.stats.init;
+    this.enemyInit = this.enemy.stats.init;
+    this.combatLog = `${this.player.name}: ${this.player.health.maxHp}❤️
+      ${this.enemy.name}: ${this.enemy.health.maxHp}❤️\n`;
   }
 
   startCombat() {

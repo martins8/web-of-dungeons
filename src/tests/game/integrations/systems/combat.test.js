@@ -2,8 +2,8 @@ import Character from "src/game/entities/character";
 import Combat from "src/game/systems/combat";
 
 const attributes = [
-  { sta: 4, str: 4, con: 20, dex: 4, int: 4, wis: 4, agi: 15, cha: 4 },
-  { sta: 4, str: 4, con: 4, dex: 4, int: 4, wis: 4, agi: 4, cha: 4 },
+  { sta: 10, str: 5, con: 10, dex: 5, int: 5, wis: 5, agi: 5, cha: 5 },
+  { sta: 5, str: 10, con: 7, dex: 5, int: 5, wis: 5, agi: 10, cha: 5 },
 ];
 
 describe("Combat - Integration Test", () => {
