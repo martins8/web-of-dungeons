@@ -2,7 +2,7 @@ import StatsCalculator from "src/game/services/statsCalculator";
 import Attributes from "src/game/value-objects/attributes";
 import Health from "src/game/gcomponents/health";
 
-export default class Enemy {
+export default class Character {
   constructor(name, attrValues) {
     this.validateName(name);
     this.name = name;
@@ -24,5 +24,23 @@ export default class Enemy {
     if (/\s/.test(name)) {
       throw new Error("Name cannot contain spaces");
     }
+  }
+
+  doPhysicalAtk() {
+    const damage = this.stats.pDmg;
+    return damage;
+  }
+
+  takePhysicalAtk(damageTaken) {
+    this.health.takeDamage(damageTaken - this.stats.pDef * 0.3);
+  }
+
+  isDead() {
+    const die = !this.health.isAlive() ? true : false;
+    return die;
+  }
+
+  getName() {
+    return this.name;
   }
 }
