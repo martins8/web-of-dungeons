@@ -38,7 +38,7 @@ export default class CombatResolve {
   }
 
   rollCrit(chance) {
-    return Math.random() * 100 <= chance;
+    return Math.random() * 100 < chance;
   }
 
   rollEvade(chance) {

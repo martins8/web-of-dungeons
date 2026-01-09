@@ -13,26 +13,34 @@ export default class Combat {
     this.combatResolve = combatResolve;
     this.combatTexts = combatTexts;
 
-    this.combatLog = `${player.name}: ${player.health.maxHp}❤️
-${enemy.name}: ${enemy.health.maxHp}❤️\n`;
+    this.combatLog = this.initialLog();
+  }
+
+  initialLog() {
+    return `${this.player.name}: ${this.player.health.maxHp} ❤️ ${this.enemy.name}: ${this.enemy.health.maxHp} ❤️\n`;
+  }
+
+  decideTurnOrder() {
+    if (this.player.stats.init >= this.enemy.stats.init) {
+      return [this.player, this.enemy];
+    }
+    return [this.enemy, this.player];
+  }
+
+  executeTurn(attacker, defender) {
+    const result = this.combatResolve.physical(attacker, defender);
+    this.combatLog += this.combatTexts.fromResult(result);
+    return result.isDead;
   }
 
   startCombat() {
-    const first =
-      this.player.stats.init > this.enemy.stats.init ? this.player : this.enemy;
-
-    const second = first === this.player ? this.enemy : this.player;
+    const [first, second] = this.decideTurnOrder();
 
     while (true) {
-      const result1 = this.combatResolve.physical(first, second);
-      this.combatLog += this.combatTexts.fromResult(result1);
-
-      if (result1.isDead) break;
-
-      const result2 = this.combatResolve.physical(second, first);
-      this.combatLog += this.combatTexts.fromResult(result2);
-
-      if (result2.isDead) break;
+      if (this.executeTurn(first, second)) break;
+      if (this.executeTurn(second, first)) break;
     }
+
+    return this.combatLog;
   }
 }
