@@ -1,9 +1,10 @@
 import CombatActionResult from "./combatActionResult";
 
 export default class CombatResolve {
+  //actions methods
   physical(attacker, defender) {
+    //evasion test
     const isEvaded = this.rollEvade(defender.stats.eva);
-
     if (isEvaded) {
       return new CombatActionResult({
         attacker,
@@ -15,15 +16,15 @@ export default class CombatResolve {
       });
     }
 
+    //critical test
     const isCritical = this.rollCrit(attacker.stats.critC);
     let damage = attacker.stats.pDmg;
-
     if (isCritical) {
       damage = this.applyCrit(damage, attacker.stats.critD);
     }
 
+    //defender apply your defense stats
     damage = this.applyDefense(damage, defender.stats.pDef);
-
     defender.takeDamage(damage);
 
     return new CombatActionResult({
@@ -37,6 +38,7 @@ export default class CombatResolve {
     });
   }
 
+  //suport methods
   rollCrit(chance) {
     return Math.random() * 100 < chance;
   }
@@ -50,7 +52,11 @@ export default class CombatResolve {
   }
 
   applyDefense(damage, defense) {
-    const reduction = Math.floor(defense * 0.3);
-    return Math.max(0, damage - reduction);
+    if (defense >= 0) {
+      return Math.floor(damage * (100 / (100 + defense)));
+    }
+
+    // opcional: suporte a defesa negativa
+    return Math.floor(damage * (2 - 100 / (100 - defense)));
   }
 }
