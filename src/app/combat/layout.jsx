@@ -13,7 +13,6 @@ export default function RootLayout({ children }) {
           style={{
             display: "flex",
             justifyContent: "center",
-            alignItems: "center",
             height: "100vh",
             whiteSpace: "nowrap",
           }}
