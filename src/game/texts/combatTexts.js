@@ -13,7 +13,7 @@ export default class CombatTexts {
     let text = `${result.attacker.name} atacou fisicamente ${result.defender.name} causando ${result.damage}⚔️`;
 
     if (result.isCritical) {
-      text += " (CRÍTICO)";
+      text += "💥";
     }
 
     text += ` — HP restante: ${result.defender.health.currentHp}🩸\n`;
