@@ -51,8 +51,49 @@ describe("Character TESTS", () => {
 
     test("health maxHp should match stats.maxHp", () => {
       const character = new Character("Arthur", validAttributes);
-
       expect(character.health.maxHp).toBe(character.stats.maxHp);
+    });
+  });
+
+  describe("Character METHODS", () => {
+    test("doPhysicalAtk should return physical damage based on stats.pDmg", () => {
+      const character = new Character("Hero", validAttributes);
+      const damage = character.doPhysicalAtk();
+      expect(damage).toBe(character.stats.pDmg);
+    });
+
+    test("reducePhysicalAtk should return 30% of stats.pDef rounded down", () => {
+      const character = new Character("Hero", validAttributes);
+      const reduceValue = character.reducePhysicalAtk();
+      expect(reduceValue).toBe(Math.floor(character.stats.pDef * 0.3));
+    });
+
+    test("takePhysicalAtk should reduce health considering physical defense", () => {
+      const attacker = new Character("Hero", validAttributes);
+      const defender = new Character("Enemy", validAttributes);
+      const initialHp = defender.health.currentHp;
+      const incomingDamage = attacker.doPhysicalAtk();
+      defender.takePhysicalAtk(incomingDamage);
+      expect(defender.health.currentHp).toBeLessThan(initialHp);
+    });
+
+    test("takePhysicalAtk should not deal negative damage", () => {
+      const defender = new Character("Tank", validAttributes);
+      const initialHp = defender.health.currentHp;
+      // dano menor que a redução
+      defender.takePhysicalAtk(1);
+      expect(defender.health.currentHp).toBe(initialHp);
+    });
+
+    test("isDead should return false when character is alive", () => {
+      const character = new Character("Hero", validAttributes);
+      expect(character.isDead()).toBe(false);
+    });
+
+    test("isDead should return true when character health reaches zero", () => {
+      const character = new Character("Hero", validAttributes);
+      character.takePhysicalAtk(9999);
+      expect(character.isDead()).toBe(true);
     });
   });
 });
