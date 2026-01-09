@@ -1,12 +1,27 @@
 export default class CombatTexts {
-  die(defender) {
-    const string = `${defender.name} foi morto em combate ⚰️`;
-    return string;
+  fromResult(result) {
+    if (result.type === "physical") {
+      return this.physical(result);
+    }
   }
-  physical(amount, offender, defender) {
-    const string = `${offender.name} efetuou um ataque físico de ${amount}⚔️ em
-      ${defender.name} que mitigou ${defender.reducePhysicalAtk()} 🛡️, 
-      HP DEFENDER ${defender.health.currentHp}🩸\n`;
-    return string;
+
+  physical(result) {
+    if (result.isEvaded) {
+      return `${result.defender.name} esquivou do ataque de ${result.attacker.name} 🏃‍♂️\n`;
+    }
+
+    let text = `${result.attacker.name} atacou fisicamente ${result.defender.name} causando ${result.damage}⚔️`;
+
+    if (result.isCritical) {
+      text += " (CRÍTICO)";
+    }
+
+    text += ` — HP restante: ${result.defender.health.currentHp}🩸\n`;
+
+    if (result.isDead) {
+      text += `${result.defender.name} foi morto em combate ⚰️\n`;
+    }
+
+    return text;
   }
 }

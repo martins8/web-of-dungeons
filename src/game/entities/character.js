@@ -12,25 +12,11 @@ export default class Character {
     this.health = new Health(this.stats.maxHp);
   }
 
-  doPhysicalAtk() {
-    const damage = this.stats.pDmg;
-    return damage;
-  }
-
-  reducePhysicalAtk() {
-    const reduceValue = Math.floor(this.stats.pDef * 0.3);
-    return reduceValue;
-  }
-
-  takePhysicalAtk(damageTaken) {
-    const reduceValue = this.reducePhysicalAtk();
-    const damageComing =
-      damageTaken > reduceValue ? Math.floor(damageTaken - reduceValue) : 0;
-    this.health.takeDamage(damageComing);
+  takeDamage(amount) {
+    this.health.takeDamage(amount);
   }
 
   isDead() {
-    const die = !this.health.isAlive() ? true : false;
-    return die;
+    return !this.health.isAlive();
   }
 }
