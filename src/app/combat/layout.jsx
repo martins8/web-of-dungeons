@@ -15,6 +15,7 @@ export default function RootLayout({ children }) {
             justifyContent: "center",
             alignItems: "center",
             height: "100vh",
+            whiteSpace: "nowrap",
           }}
         >
           {children}

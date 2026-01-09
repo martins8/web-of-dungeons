@@ -2,20 +2,20 @@ import { Character, Combat } from "src/game/api";
 
 function CombatLog() {
   const player = new Character("Hero", {
-    sta: 10,
+    sta: 100,
     str: 5,
     con: 10,
     dex: 5,
     int: 5,
     wis: 5,
-    agi: 5,
+    agi: 50,
     cha: 5,
   });
   const enemy = new Character("Goblin", {
     sta: 5,
     str: 10,
     con: 5,
-    dex: 5,
+    dex: 50,
     int: 5,
     wis: 5,
     agi: 10,
