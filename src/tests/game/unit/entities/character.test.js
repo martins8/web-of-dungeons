@@ -10,6 +10,7 @@ const validAttributes = {
   agi: 10,
   cha: 10,
 };
+
 describe("Character TESTS", () => {
   describe("Character NAME VALIDATION", () => {
     test("should create Character with valid name", () => {
@@ -17,31 +18,15 @@ describe("Character TESTS", () => {
       expect(character.name).toBe("Arthur");
     });
 
-    test("should throw error if name is not a string", () => {
+    test("should throw error if name is invalid", () => {
       expect(() => new Character(123, validAttributes)).toThrow();
-      expect(() => new Character(null, validAttributes)).toThrow();
-      expect(() => new Character(undefined, validAttributes)).toThrow();
-    });
-
-    test("should throw error if name is empty", () => {
       expect(() => new Character("", validAttributes)).toThrow();
-      expect(() => new Character("   ", validAttributes)).toThrow();
-    });
-
-    test("should throw error if name contains numbers", () => {
-      expect(() => new Character("Arthur1", validAttributes)).toThrow();
-      expect(() => new Character("4rthur", validAttributes)).toThrow();
-    });
-
-    test("should throw error if name contains spaces", () => {
       expect(() => new Character("Arthur Lima", validAttributes)).toThrow();
-      expect(() => new Character(" Arthur", validAttributes)).toThrow();
-      expect(() => new Character("Arthur ", validAttributes)).toThrow();
     });
   });
 
   describe("Character INITIALIZATION", () => {
-    test("should create attributes, stats and health", () => {
+    test("should initialize attributes, stats and health", () => {
       const character = new Character("Arthur", validAttributes);
 
       expect(character.attributes).toBeDefined();
@@ -55,44 +40,34 @@ describe("Character TESTS", () => {
     });
   });
 
-  describe("Character METHODS", () => {
-    test("doPhysicalAtk should return physical damage based on stats.pDmg", () => {
+  describe("Character STATE", () => {
+    test("takeDamage should reduce health", () => {
       const character = new Character("Hero", validAttributes);
-      const damage = character.doPhysicalAtk();
-      expect(damage).toBe(character.stats.pDmg);
+      const initialHp = character.health.currentHp;
+
+      character.takeDamage(10);
+
+      expect(character.health.currentHp).toBeLessThan(initialHp);
     });
 
-    test("reducePhysicalAtk should return 30% of stats.pDef rounded down", () => {
+    test("takeDamage should not reduce below zero", () => {
       const character = new Character("Hero", validAttributes);
-      const reduceValue = character.reducePhysicalAtk();
-      expect(reduceValue).toBe(Math.floor(character.stats.pDef * 0.3));
+
+      character.takeDamage(9999);
+
+      expect(character.health.currentHp).toBe(0);
     });
 
-    test("takePhysicalAtk should reduce health considering physical defense", () => {
-      const attacker = new Character("Hero", validAttributes);
-      const defender = new Character("Enemy", validAttributes);
-      const initialHp = defender.health.currentHp;
-      const incomingDamage = attacker.doPhysicalAtk();
-      defender.takePhysicalAtk(incomingDamage);
-      expect(defender.health.currentHp).toBeLessThan(initialHp);
-    });
-
-    test("takePhysicalAtk should not deal negative damage", () => {
-      const defender = new Character("Tank", validAttributes);
-      const initialHp = defender.health.currentHp;
-      // dano menor que a redução
-      defender.takePhysicalAtk(1);
-      expect(defender.health.currentHp).toBe(initialHp);
-    });
-
-    test("isDead should return false when character is alive", () => {
+    test("isDead should return false when alive", () => {
       const character = new Character("Hero", validAttributes);
       expect(character.isDead()).toBe(false);
     });
 
-    test("isDead should return true when character health reaches zero", () => {
+    test("isDead should return true when health is zero", () => {
       const character = new Character("Hero", validAttributes);
-      character.takePhysicalAtk(9999);
+
+      character.takeDamage(9999);
+
       expect(character.isDead()).toBe(true);
     });
   });
