@@ -1,20 +1,14 @@
+// tests/game/systems/combat.integration.test.js
 import Character from "src/game/entities/character";
 import Combat from "src/game/systems/combat";
 
 describe("Combat - Integration Test", () => {
-  beforeEach(() => {
-    jest
-      .spyOn(Math, "random")
-      .mockReturnValueOnce(0.9) // evade false
-      .mockReturnValueOnce(0.9) // crit false
-      .mockReturnValue(0.9); // resto
-  });
-
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
-
   test("should run combat until one character dies and return combat log", () => {
+    // 🎲 RNG determinístico (nunca crita nem evade)
+    const rng = {
+      rollPercent: jest.fn().mockReturnValue(99),
+    };
+
     const player = new Character("Hero", {
       sta: 10,
       str: 5,
@@ -37,16 +31,18 @@ describe("Combat - Integration Test", () => {
       cha: 5,
     });
 
-    const combat = new Combat(player, enemy);
+    const combat = new Combat(player, enemy, undefined, undefined, rng);
 
     // ▶️ Act
     const combatLog = combat.startCombat();
-    console.log(combatLog);
 
     // ✅ Assert — efeitos observáveis
     expect(player.isDead() || enemy.isDead()).toBe(true);
     expect(combatLog).toContain("foi morto em combate");
     expect(typeof combatLog).toBe("string");
     expect(combatLog.length).toBeGreaterThan(0);
+
+    // 🧪 Garantia extra: RNG foi usado
+    expect(rng.rollPercent).toHaveBeenCalled();
   });
 });

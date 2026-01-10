@@ -38,6 +38,13 @@ describe("Character TESTS", () => {
       const character = new Character("Arthur", validAttributes);
       expect(character.health.maxHp).toBe(character.stats.maxHp);
     });
+
+    test("should initialize crit and evade systems", () => {
+      const character = new Character("Hero", validAttributes);
+
+      expect(character.critSystem).toBeDefined();
+      expect(character.evadeSystem).toBeDefined();
+    });
   });
 
   describe("Character STATE", () => {
@@ -69,6 +76,26 @@ describe("Character TESTS", () => {
       character.takeDamage(9999);
 
       expect(character.isDead()).toBe(true);
+    });
+
+    //RNG SYSTEMS
+    test("crit and evade systems should start with zero bonus", () => {
+      const character = new Character("Hero", validAttributes);
+
+      expect(character.critSystem.currentBonus).toBe(0);
+      expect(character.evadeSystem.currentBonus).toBe(0);
+    });
+
+    test("crit system reset should clear bonus", () => {
+      const character = new Character("Hero", validAttributes);
+
+      character.critSystem.currentBonus = 10;
+      character.critSystem.reset();
+      character.evadeSystem.currentBonus = 10;
+      character.evadeSystem.reset();
+
+      expect(character.critSystem.currentBonus).toBe(0);
+      expect(character.evadeSystem.currentBonus).toBe(0);
     });
   });
 });

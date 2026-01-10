@@ -8,6 +8,7 @@ export default class Combat {
     enemy,
     combatResolve = new CombatResolve(),
     combatTexts = new CombatTexts(),
+    rng = new SeedRNG(Date.now()),
   ) {
     //combatants
     this.player = player;
@@ -17,7 +18,7 @@ export default class Combat {
     this.combatTexts = combatTexts;
     this.combatLog = this.initialLog();
     //infra seeed
-    this.rng = new SeedRNG(Date.now());
+    this.rng = rng;
   }
 
   initialLog() {
