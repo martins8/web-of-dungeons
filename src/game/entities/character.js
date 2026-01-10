@@ -1,6 +1,8 @@
 import StatsCalculator from "src/game/services/statsCalculator";
 import Attributes from "src/game/value-objects/attributes";
 import Health from "src/game/gcomponents/health";
+import CritSystem from "../rng/critSystem";
+import EvadeSystem from "../rng/evadeSystem";
 import utils from "src/game/utils/utils";
 
 export default class Character {
@@ -10,6 +12,16 @@ export default class Character {
     this.attributes = new Attributes(attrValues);
     this.stats = StatsCalculator.calculate(this.attributes);
     this.health = new Health(this.stats.maxHp);
+    this.critSystem = new CritSystem({
+      baseChance: 0,
+      bonusPerFail: 2,
+      maxChance: 50,
+    });
+    this.evadeSystem = new EvadeSystem({
+      baseChance: 0,
+      bonusPerFail: 1,
+      maxChance: 40,
+    });
   }
 
   takeDamage(amount) {

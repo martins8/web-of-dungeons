@@ -2,9 +2,9 @@ import CombatActionResult from "./combatActionResult";
 
 export default class CombatResolve {
   //actions methods
-  physical(attacker, defender) {
+  physical(attacker, defender, { rng, critSystem, evadeSystem }) {
     //evasion test
-    const isEvaded = this.rollEvade(defender.stats.eva);
+    const isEvaded = evadeSystem.tryEvade(rng, defender.stats.eva);
     if (isEvaded) {
       return new CombatActionResult({
         attacker,
@@ -17,7 +17,7 @@ export default class CombatResolve {
     }
 
     //critical test
-    const isCritical = this.rollCrit(attacker.stats.critC);
+    const isCritical = critSystem.tryCrit(rng, attacker.stats.critC);
     let damage = attacker.stats.pDmg;
     if (isCritical) {
       damage = this.applyCrit(damage, attacker.stats.critD);
@@ -36,15 +36,6 @@ export default class CombatResolve {
       isEvaded: false,
       isDead: defender.isDead(),
     });
-  }
-
-  //suport methods
-  rollCrit(chance) {
-    return Math.random() * 100 < chance;
-  }
-
-  rollEvade(chance) {
-    return Math.random() * 100 < chance;
   }
 
   applyCrit(baseDamage, critDamage) {

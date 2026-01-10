@@ -1,8 +1,8 @@
-import { Character, Combat } from "src/game/api";
+import { Character, Combat } from "src/game/server";
 
 function CombatLog() {
   const player = new Character("Hero", {
-    sta: 10,
+    sta: 150,
     str: 5,
     con: 10,
     dex: 5,
@@ -12,7 +12,7 @@ function CombatLog() {
     cha: 5,
   });
   const enemy = new Character("Goblin", {
-    sta: 5,
+    sta: 150,
     str: 10,
     con: 5,
     dex: 10,
