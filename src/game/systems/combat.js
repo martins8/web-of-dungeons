@@ -42,11 +42,10 @@ export default class Combat {
   }
 
   startCombat() {
-    /*
     this.player.critSystem.reset();
     this.player.evadeSystem.reset();
     this.enemy.critSystem.reset();
-    this.enemy.evadeSystem.reset();*/
+    this.enemy.evadeSystem.reset();
     const [first, second] = this.decideTurnOrder();
 
     while (true) {

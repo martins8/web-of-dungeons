@@ -13,12 +13,10 @@ export default class Character {
     this.stats = StatsCalculator.calculate(this.attributes);
     this.health = new Health(this.stats.maxHp);
     this.critSystem = new CritSystem({
-      baseChance: 0,
       bonusPerFail: 2,
       maxChance: 50,
     });
     this.evadeSystem = new EvadeSystem({
-      baseChance: 0,
       bonusPerFail: 1,
       maxChance: 40,
     });
