@@ -19,7 +19,7 @@ export default class StatsCalculator {
   static calculate(attributes) {
     return new Stats({
       maxHp: 20 + attributes.sta * 2 + attributes.con * 0.5,
-      pDmg: attributes.str * 2 + attributes.dex,
+      pDmg: attributes.str * 2,
       mDmg: attributes.int * 2 + attributes.wis,
       pDef: attributes.con * 2 + attributes.str,
       mDef: attributes.wis * 2 + attributes.int + attributes.con * 0.5,
@@ -30,6 +30,7 @@ export default class StatsCalculator {
       speed: attributes.agi,
       luck: attributes.cha * 4,
       hPower: attributes.wis * 2 + attributes.int,
+      maestry: attributes.dex,
     });
   }
 }

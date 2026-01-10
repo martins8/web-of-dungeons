@@ -12,6 +12,7 @@ export default class Stats {
     speed,
     maxHp,
     hPower,
+    maestry,
   }) {
     this.pDmg = pDmg;
     this.mDmg = mDmg;
@@ -25,5 +26,6 @@ export default class Stats {
     this.speed = speed;
     this.maxHp = maxHp;
     this.hPower = hPower;
+    this.maestry = maestry;
   }
 }
