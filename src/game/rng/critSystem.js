@@ -1,5 +1,5 @@
 export default class CritSystem {
-  constructor({ baseChance, bonusPerFail, maxChance }) {
+  constructor({ bonusPerFail, maxChance }) {
     /*The base chance can be used in the future if there
     are any intrinsic combat bonuses, such as having an
     active dungeon passive or global buff.*/

@@ -81,16 +81,16 @@ Acúmulo progressivo em caso de falha (anti-frustração)
 
 ```js
 export default class CritSystem {
-  constructor({ baseChance, bonusPerFail, maxChance }) {
-    this.baseChance = baseChance;
+  constructor({ bonusPerFail, maxChance }) {
+    //this.baseChance = baseChance;
     this.bonusPerFail = bonusPerFail;
     this.maxChance = maxChance;
     this.currentBonus = 0;
   }
 
-  tryCrit(rng) {
+  tryCrit(rng, baseChanceFromStats) {
     const finalChance = Math.min(
-      this.baseChance + this.currentBonus,
+      baseChanceFromStats + this.currentBonus,
       this.maxChance
     );
 
@@ -125,16 +125,16 @@ Determinar se um ataque recebido é evadido, usando lógica idêntica ao crit.
 
 ```js
 export default class EvadeSystem {
-  constructor({ baseChance, bonusPerFail, maxChance }) {
-    this.baseChance = baseChance;
+  constructor({ bonusPerFail, maxChance }) {
+    //this.baseChance = baseChance;
     this.bonusPerFail = bonusPerFail;
     this.maxChance = maxChance;
     this.currentBonus = 0;
   }
 
-  tryEvade(rng) {
+  tryEvade(rng, baseChanceFromStats) {
     const chance = Math.min(
-      this.baseChance + this.currentBonus,
+      baseChanceFromStats + this.currentBonus,
       this.maxChance
     );
 
