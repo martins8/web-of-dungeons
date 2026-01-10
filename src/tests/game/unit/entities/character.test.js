@@ -11,6 +11,8 @@ const validAttributes = {
   cha: 10,
 };
 
+const validSkills = [{ skillNumber1: 1 }, { skillNumber2: 2 }];
+
 describe("Character TESTS", () => {
   describe("Character NAME VALIDATION", () => {
     test("should create Character with valid name", () => {
@@ -44,6 +46,11 @@ describe("Character TESTS", () => {
 
       expect(character.critSystem).toBeDefined();
       expect(character.evadeSystem).toBeDefined();
+    });
+
+    test("should initialize with skills", () => {
+      const character = new Character("Hero", validAttributes, validSkills);
+      expect(character.skills).toBeDefined();
     });
   });
 

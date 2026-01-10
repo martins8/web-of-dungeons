@@ -1,5 +1,6 @@
 const buffSkills = [
   {
+    buffId: 1,
     rank: 1,
     name: "War Shout",
     type: "buff",
@@ -9,6 +10,7 @@ const buffSkills = [
     buff: { str: 1 },
   },
   {
+    buffId: 2,
     rank: 1,
     name: "Great Intellect",
     type: "buff",
@@ -18,6 +20,7 @@ const buffSkills = [
     buff: { int: 1 },
   },
   {
+    buffId: 3,
     rank: 1,
     name: "Wisdom Chant",
     type: "buff",
@@ -27,6 +30,7 @@ const buffSkills = [
     buff: { wis: 1 },
   },
   {
+    buffId: 4,
     rank: 1,
     name: "Iron Body",
     type: "buff",
@@ -36,6 +40,7 @@ const buffSkills = [
     buff: { con: 1 },
   },
   {
+    buffId: 5,
     rank: 1,
     name: "Endurance Cry",
     type: "buff",
@@ -45,6 +50,7 @@ const buffSkills = [
     buff: { sta: 1 },
   },
   {
+    buffId: 6,
     rank: 1,
     name: "Precision Focus",
     type: "buff",
@@ -54,6 +60,7 @@ const buffSkills = [
     buff: { dex: 1 },
   },
   {
+    buffId: 7,
     rank: 1,
     name: "Agile Step",
     type: "buff",
@@ -63,6 +70,7 @@ const buffSkills = [
     buff: { agi: 1 },
   },
   {
+    buffId: 8,
     rank: 1,
     name: "Charisma Aura",
     type: "buff",

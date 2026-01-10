@@ -14,6 +14,7 @@
 
 const offensiveSkills = [
   {
+    skillId: 1,
     rank: 1,
     name: "Bleed",
     type: "physical",
@@ -24,10 +25,11 @@ const offensiveSkills = [
       pDmg: 0.2,
     },
     dotMod: {
-      pDmg: 0.8,
+      pDmg: 0.9,
     },
   },
   {
+    skillId: 2,
     rank: 1,
     name: "Sword Strike",
     type: "physical",

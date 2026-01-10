@@ -6,7 +6,7 @@ import EvadeSystem from "../rng/evadeSystem";
 import utils from "src/game/utils/utils";
 
 export default class Character {
-  constructor(name, attrValues) {
+  constructor(name, attrValues, skills) {
     utils.validateName(name);
     this.name = name;
     this.attributes = new Attributes(attrValues);
@@ -20,6 +20,7 @@ export default class Character {
       bonusPerFail: 1,
       maxChance: 40,
     });
+    this.skills = skills;
   }
 
   takeDamage(amount) {
