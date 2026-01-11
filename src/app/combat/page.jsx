@@ -1,26 +1,34 @@
-import { Character, Combat } from "src/game/server";
-
+import actionSkills, { Character, Combat } from "src/game/server";
+const skills = actionSkills;
 function CombatLog() {
-  const player = new Character("Hero", {
-    sta: 150,
-    str: 5,
-    con: 10,
-    dex: 5,
-    int: 5,
-    wis: 5,
-    agi: 10,
-    cha: 5,
-  });
-  const enemy = new Character("Goblin", {
-    sta: 150,
-    str: 10,
-    con: 5,
-    dex: 10,
-    int: 5,
-    wis: 5,
-    agi: 10,
-    cha: 5,
-  });
+  const player = new Character(
+    "Hero",
+    {
+      sta: 150,
+      str: 5,
+      con: 10,
+      dex: 5,
+      int: 5,
+      wis: 5,
+      agi: 10,
+      cha: 5,
+    },
+    skills,
+  );
+  const enemy = new Character(
+    "Goblin",
+    {
+      sta: 150,
+      str: 10,
+      con: 5,
+      dex: 10,
+      int: 5,
+      wis: 5,
+      agi: 10,
+      cha: 5,
+    },
+    skills,
+  );
   const combat = new Combat(player, enemy);
   const result = combat.startCombat();
   const lines = result.split("\n").filter(Boolean);
