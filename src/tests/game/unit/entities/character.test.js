@@ -123,7 +123,7 @@ describe("Character", () => {
     test("getSkillById should return correct skill", () => {
       const character = new Character("Hero", validAttributes, validSkills);
 
-      const skill = character.getSkillById(2);
+      const skill = character.getSkillById("skill_002");
 
       expect(skill).toBeDefined();
       expect(skill.name).toBe("Sword Strike");
