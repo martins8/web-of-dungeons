@@ -6,7 +6,7 @@ import EvadeSystem from "../rng/evadeSystem";
 import utils from "src/game/utils/utils";
 
 export default class Character {
-  constructor(name, attrValues, skills) {
+  constructor(name, attrValues, skills = []) {
     utils.validateName(name);
     this.name = name;
     this.attributes = new Attributes(attrValues);
@@ -29,5 +29,10 @@ export default class Character {
 
   isDead() {
     return !this.health.isAlive();
+  }
+
+  getActionSkill(id) {
+    const skill = this.skills.find((skill) => skill.id === id);
+    return skill;
   }
 }

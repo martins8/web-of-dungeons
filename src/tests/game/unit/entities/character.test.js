@@ -1,5 +1,5 @@
 import Character from "src/game/entities/character";
-
+import actionSkills from "src/game/archetypes/skillsList/physical/action";
 const validAttributes = {
   sta: 10,
   str: 10,
@@ -11,8 +11,7 @@ const validAttributes = {
   cha: 10,
 };
 
-const validSkills = [{ skillNumber1: 1 }, { skillNumber2: 2 }];
-
+const validSkills = actionSkills;
 describe("Character TESTS", () => {
   describe("Character NAME VALIDATION", () => {
     test("should create Character with valid name", () => {
@@ -51,6 +50,8 @@ describe("Character TESTS", () => {
     test("should initialize with skills", () => {
       const character = new Character("Hero", validAttributes, validSkills);
       expect(character.skills).toBeDefined();
+      expect(Array.isArray(character.skills)).toBe(true);
+      expect(character.skills.length).toBeGreaterThan(0);
     });
   });
 
