@@ -4,6 +4,7 @@ import Health from "src/game/gcomponents/health";
 import CritSystem from "../rng/critSystem";
 import EvadeSystem from "../rng/evadeSystem";
 import utils from "src/game/utils/utils";
+import TurnSystem from "../systems/turnSystem";
 
 export default class Character {
   constructor(name, attrValues, skills = []) {
@@ -21,6 +22,7 @@ export default class Character {
       maxChance: 40,
     });
     this.skills = skills;
+    this.turnSystem = new TurnSystem();
   }
 
   takeDamage(amount) {
@@ -31,8 +33,16 @@ export default class Character {
     return !this.health.isAlive();
   }
 
-  getActionSkill(id) {
+  getSkillById(id) {
     const skill = this.skills.find((skill) => skill.id === id);
     return skill;
+  }
+
+  startTurn() {
+    this.turnSystem.startTurn();
+  }
+
+  endTurn() {
+    this.turnSystem.endTurn();
   }
 }
