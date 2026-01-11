@@ -1,5 +1,5 @@
-import actionSkills, { Character, Combat } from "src/game/server";
-const skills = actionSkills;
+import actionSkillsList, { Character, Combat } from "src/game/server";
+const skills = actionSkillsList;
 function CombatLog() {
   const player = new Character(
     "Hero",

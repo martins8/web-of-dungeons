@@ -1,5 +1,5 @@
 import Character from "src/game/entities/character";
-import actionSkills from "src/game/archetypes/skillsList/physical/action";
+import actionSkillsList from "src/game/archetypes/skillsList/physical/actionSkillsList";
 const validAttributes = {
   sta: 10,
   str: 10,
@@ -11,7 +11,7 @@ const validAttributes = {
   cha: 10,
 };
 
-const validSkills = actionSkills;
+const validSkills = actionSkillsList;
 describe("Character TESTS", () => {
   describe("Character NAME VALIDATION", () => {
     test("should create Character with valid name", () => {

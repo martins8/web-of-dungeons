@@ -1,8 +1,8 @@
 // tests/game/systems/combat.integration.test.js
 import Character from "src/game/entities/character";
 import Combat from "src/game/systems/combat";
-import actionSkills from "src/game/archetypes/skillsList/physical/action";
-const skills = actionSkills;
+import actionSkillsList from "src/game/archetypes/skillsList/physical/actionSkillsList";
+const skills = actionSkillsList;
 
 describe("Combat - Integration Test", () => {
   test("should run combat until one character dies and return combat log", () => {

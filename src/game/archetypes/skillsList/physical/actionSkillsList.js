@@ -13,7 +13,7 @@ import ActionSkill from "src/game/gcomponents/skills/actionSkill";
 
 */
 
-const actionSkills = [
+const actionSkillsList = [
   new ActionSkill({
     id: 1,
     rank: 1,
@@ -61,4 +61,4 @@ const actionSkills = [
   }),
 ];
 
-export default actionSkills;
+export default actionSkillsList;
