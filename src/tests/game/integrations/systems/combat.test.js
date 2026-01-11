@@ -1,6 +1,8 @@
 // tests/game/systems/combat.integration.test.js
 import Character from "src/game/entities/character";
 import Combat from "src/game/systems/combat";
+import actionSkills from "src/game/archetypes/skillsList/physical/action";
+const skills = actionSkills;
 
 describe("Combat - Integration Test", () => {
   test("should run combat until one character dies and return combat log", () => {
@@ -9,27 +11,35 @@ describe("Combat - Integration Test", () => {
       rollPercent: jest.fn().mockReturnValue(99),
     };
 
-    const player = new Character("Hero", {
-      sta: 10,
-      str: 5,
-      con: 10,
-      dex: 5,
-      int: 5,
-      wis: 5,
-      agi: 5,
-      cha: 5,
-    });
+    const player = new Character(
+      "Hero",
+      {
+        sta: 10,
+        str: 5,
+        con: 10,
+        dex: 5,
+        int: 5,
+        wis: 5,
+        agi: 5,
+        cha: 5,
+      },
+      skills,
+    );
 
-    const enemy = new Character("Goblin", {
-      sta: 5,
-      str: 10,
-      con: 5,
-      dex: 5,
-      int: 5,
-      wis: 5,
-      agi: 10,
-      cha: 5,
-    });
+    const enemy = new Character(
+      "Goblin",
+      {
+        sta: 5,
+        str: 10,
+        con: 5,
+        dex: 5,
+        int: 5,
+        wis: 5,
+        agi: 10,
+        cha: 5,
+      },
+      skills,
+    );
 
     const combat = new Combat(player, enemy, undefined, undefined, rng);
 

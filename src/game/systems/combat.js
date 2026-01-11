@@ -33,7 +33,8 @@ export default class Combat {
   }
 
   executeTurn(attacker, defender) {
-    const result = this.combatResolve.physical(attacker, defender, {
+    const skill = attacker.getActionSkill(1);
+    const result = this.combatResolve.action(attacker, defender, skill, {
       rng: this.rng,
       critSystem: attacker.critSystem,
       evadeSystem: defender.evadeSystem,
@@ -48,10 +49,11 @@ export default class Combat {
     this.enemy.critSystem.reset();
     this.enemy.evadeSystem.reset();
     const [first, second] = this.decideTurnOrder();
-
-    while (true) {
+    let maxTurn = 0;
+    while (true && maxTurn < 100) {
       if (this.executeTurn(first, second)) break;
       if (this.executeTurn(second, first)) break;
+      maxTurn += 1;
     }
 
     return this.combatLog;
