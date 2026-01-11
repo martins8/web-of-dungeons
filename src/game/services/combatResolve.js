@@ -2,14 +2,14 @@ import CombatActionResult from "./combatActionResult";
 
 export default class CombatResolve {
   //actions methods
-  physical(attacker, defender, { rng, critSystem, evadeSystem }) {
+  action(attacker, defender, skill, { rng, critSystem, evadeSystem }) {
     //evasion test
     const isEvaded = evadeSystem.tryEvade(rng, defender.stats.eva);
     if (isEvaded) {
       return new CombatActionResult({
         attacker,
         defender,
-        type: "physical",
+        typeDamage: skill.typeDamage,
         damage: 0,
         isEvaded: true,
         isDead: false,
@@ -18,19 +18,24 @@ export default class CombatResolve {
 
     //critical test
     const isCritical = critSystem.tryCrit(rng, attacker.stats.critC);
-    let damage = attacker.stats.pDmg;
+
+    //useActionSkill
+    let damage = skill.useActionSkill(attacker.stats);
     if (isCritical) {
       damage = this.applyCrit(damage, attacker.stats.critD);
     }
 
     //defender apply your defense stats
-    damage = this.applyDefense(damage, defender.stats.pDef);
+    damage =
+      skill.typeDamage === "physical"
+        ? this.applyDefense(damage, defender.stats.pDef)
+        : this.applyDefense(damage, defender.stats.mDef);
     defender.takeDamage(damage);
 
     return new CombatActionResult({
       attacker,
       defender,
-      type: "physical",
+      typeDamage: skill.typeDamage,
       damage,
       isCritical,
       isEvaded: false,
