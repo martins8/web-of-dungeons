@@ -15,7 +15,7 @@ import ActionSkill from "src/game/gcomponents/skills/actionSkill";
 
 const actionSkillsList = [
   new ActionSkill({
-    id: 1,
+    id: "skill_001",
     rank: 1,
     name: "Basic Attack",
     typeSkill: "action",
@@ -29,7 +29,7 @@ const actionSkillsList = [
     dotMod: {},
   }),
   new ActionSkill({
-    id: 2,
+    id: "skill_002",
     rank: 1,
     name: "Sword Strike",
     typeSkill: "action",
@@ -44,7 +44,7 @@ const actionSkillsList = [
     dotMod: {},
   }),
   new ActionSkill({
-    id: 3,
+    id: "skill_003",
     rank: 1,
     name: "Bleed",
     typeSkill: "action",
@@ -57,6 +57,7 @@ const actionSkillsList = [
     },
     dotMod: {
       pDmg: 0.9,
+      duration: 5,
     },
   }),
 ];

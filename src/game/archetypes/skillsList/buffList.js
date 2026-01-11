@@ -1,6 +1,6 @@
 const buffSkills = [
   {
-    buffId: 1,
+    id: "buff_001",
     rank: 1,
     name: "War Shout",
     type: "buff",
@@ -8,9 +8,10 @@ const buffSkills = [
     text: "Increase STR +1",
     rarity: "common",
     buff: { str: 1 },
+    duration: 10,
   },
   {
-    buffId: 2,
+    id: "buff_002",
     rank: 1,
     name: "Great Intellect",
     type: "buff",
@@ -18,9 +19,10 @@ const buffSkills = [
     text: "Increase INT +1",
     rarity: "common",
     buff: { int: 1 },
+    duration: 10,
   },
   {
-    buffId: 3,
+    id: "buff_003",
     rank: 1,
     name: "Wisdom Chant",
     type: "buff",
@@ -28,9 +30,10 @@ const buffSkills = [
     text: "Increase WIS +1",
     rarity: "common",
     buff: { wis: 1 },
+    duration: 10,
   },
   {
-    buffId: 4,
+    id: "buff_004",
     rank: 1,
     name: "Iron Body",
     type: "buff",
@@ -38,9 +41,10 @@ const buffSkills = [
     text: "Increase CON +1",
     rarity: "common",
     buff: { con: 1 },
+    duration: 10,
   },
   {
-    buffId: 5,
+    id: "buff_005",
     rank: 1,
     name: "Endurance Cry",
     type: "buff",
@@ -48,9 +52,10 @@ const buffSkills = [
     text: "Increase STA +1",
     rarity: "common",
     buff: { sta: 1 },
+    duration: 10,
   },
   {
-    buffId: 6,
+    id: "buff_006",
     rank: 1,
     name: "Precision Focus",
     type: "buff",
@@ -58,9 +63,10 @@ const buffSkills = [
     text: "Increase DEX +1",
     rarity: "common",
     buff: { dex: 1 },
+    duration: 10,
   },
   {
-    buffId: 7,
+    id: "buff_007",
     rank: 1,
     name: "Agile Step",
     type: "buff",
@@ -68,9 +74,10 @@ const buffSkills = [
     text: "Increase AGI +1",
     rarity: "common",
     buff: { agi: 1 },
+    duration: 10,
   },
   {
-    buffId: 8,
+    id: "buff_008",
     rank: 1,
     name: "Charisma Aura",
     type: "buff",
@@ -78,6 +85,7 @@ const buffSkills = [
     text: "Increase CHA +1",
     rarity: "common",
     buff: { cha: 1 },
+    duration: 10,
   },
 ];
 
