@@ -2,7 +2,7 @@ export default class CombatActionResult {
   constructor({
     attacker,
     defender,
-    type,
+    typeDamage,
     damage,
     isCritical = false,
     isEvaded = false,
@@ -10,7 +10,7 @@ export default class CombatActionResult {
   }) {
     this.attacker = attacker;
     this.defender = defender;
-    this.type = type;
+    this.typeDamage = typeDamage;
     this.damage = damage;
     this.isCritical = isCritical;
     this.isEvaded = isEvaded;

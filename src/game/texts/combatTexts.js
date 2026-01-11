@@ -1,6 +1,6 @@
 export default class CombatTexts {
   fromResult(result) {
-    if (result.type === "physical") {
+    if (result.typeDamage === "physical") {
       return this.physical(result);
     }
   }
