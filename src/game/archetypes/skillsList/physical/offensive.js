@@ -1,3 +1,4 @@
+import ActionSkill from "src/game/gcomponents/skills/actionSkill";
 /* 
   name: name of the skill
   types: offensive, defensive, buff, moviment
@@ -12,36 +13,52 @@
 
 */
 
-const offensiveSkills = [
-  {
-    skillId: 1,
+const actionSkills = [
+  new ActionSkill({
+    id: 1,
+    rank: 1,
+    name: "Basic Attack",
+    typeSkill: "action",
+    reach: "melee",
+    text: "a basic attack",
+    rarity: "common",
+    typeDamage: "physical",
+    damageMod: {
+      pDmg: 1,
+    },
+    dotMod: {},
+  }),
+  new ActionSkill({
+    id: 2,
+    rank: 1,
+    name: "Sword Strike",
+    typeSkill: "action",
+    reach: "melee",
+    text: "Dieee!!!",
+    rarity: "common",
+    typeDamage: "physical",
+    damageMod: {
+      pDmg: 1.1,
+      maestry: 0.5,
+    },
+    dotMod: {},
+  }),
+  new ActionSkill({
+    id: 3,
     rank: 1,
     name: "Bleed",
-    type: "physical",
+    typeSkill: "action",
     reach: "melee",
     text: "put your enemy to bleed",
     rarity: "common",
+    typeDamage: "physical",
     damageMod: {
       pDmg: 0.2,
     },
     dotMod: {
       pDmg: 0.9,
     },
-  },
-  {
-    skillId: 2,
-    rank: 1,
-    name: "Sword Strike",
-    type: "physical",
-    reach: "melee",
-    text: "Dieee!!!",
-    rarity: "common",
-    damageMod: {
-      pDmg: 1.1,
-      maestry: 0.5,
-    },
-    dotMod: {},
-  },
+  }),
 ];
 
-export default offensiveSkills;
+export default actionSkills;
