@@ -1,3 +1,7 @@
+/*classe that will be return the object which front gonna use to show combat data
+need to implement a return object with more informative data, not just a simple string. 
+*/
+
 export default class CombatTexts {
   fromResult(result) {
     if (result.typeDamage === "physical") {

@@ -20,10 +20,13 @@ export default class ActionSkill extends Skill {
   }
 
   useActionSkill(baseStats) {
-    const damage =
-      this.typeDamage === "physical"
-        ? baseStats.pDmg * this.damageMod.pDmg
-        : baseStats.mDmg * this.damageMod.mDmg;
-    return damage;
+    let damage = 0;
+
+    // percorre todos os modificadores definidos na skill
+    for (const [key, mod] of Object.entries(this.damageMod)) {
+      const statValue = baseStats[key] || 0; // se não existir, assume 0
+      damage += statValue * mod;
+    }
+    return damage * this.rank; // aplica rank como multiplicador
   }
 }
