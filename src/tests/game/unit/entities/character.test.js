@@ -105,5 +105,11 @@ describe("Character TESTS", () => {
       expect(character.critSystem.currentBonus).toBe(0);
       expect(character.evadeSystem.currentBonus).toBe(0);
     });
+
+    test("getActionSkill should return skill by id", () => {
+      const character = new Character("Hero", validAttributes, validSkills);
+      const skill = character.getActionSkill(2);
+      expect(skill.name).toBe("Sword Strike");
+    });
   });
 });
