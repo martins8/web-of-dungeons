@@ -18,19 +18,41 @@ será necessário definir soft cap critC & critD
 export default class StatsCalculator {
   static calculate(attributes) {
     return new Stats({
-      maxHp: 20 + attributes.sta * 2 + attributes.con * 0.5,
-      pDmg: attributes.str * 2 + attributes.dex,
-      mDmg: attributes.int * 2 + attributes.wis,
-      pDef: attributes.con * 2 + attributes.str,
-      mDef: attributes.wis * 2 + attributes.int + attributes.con * 0.5,
-      critC: 10 + attributes.dex * 0.5,
-      critD: 50 + attributes.dex * 0.5,
-      eva: 10 + attributes.agi * 1.5,
-      init: attributes.agi,
-      speed: attributes.agi,
-      luck: attributes.cha * 4,
-      hPower: attributes.wis * 2 + attributes.int,
-      maestry: attributes.dex,
+      maxHp: Math.floor(20 + attributes.sta * 2 + attributes.con * 0.5),
+      pDmg: Math.floor(attributes.str * 2 + attributes.dex),
+      mDmg: Math.floor(attributes.int * 2 + attributes.wis),
+      pDef: Math.floor(attributes.con * 2 + attributes.str),
+      mDef: Math.floor(
+        attributes.wis * 2 + attributes.int + attributes.con * 0.5,
+      ),
+      critC: Math.floor(10 + attributes.dex * 0.5),
+      critD: Math.floor(50 + attributes.dex * 0.5),
+      eva: Math.floor(10 + attributes.agi * 1.5),
+      init: Math.floor(attributes.agi),
+      speed: Math.floor(attributes.agi),
+      luck: Math.floor(attributes.cha * 4),
+      hPower: Math.floor(attributes.wis * 2 + attributes.int),
+      maestry: Math.floor(attributes.dex),
     });
+  }
+
+  static applyAttrBuff(attributes, buff) {
+    const buffedAttributes = { ...attributes };
+    for (const [key, value] of Object.entries(buff)) {
+      if (buffedAttributes[key] !== undefined) {
+        buffedAttributes[key] += value;
+      }
+    }
+    return this.calculate(buffedAttributes);
+  }
+
+  static applyStatsBuff(stats, buff) {
+    const buffedStats = { ...stats };
+    for (const [key, value] of Object.entries(buff)) {
+      if (buffedStats[key] !== undefined) {
+        buffedStats[key] += value;
+      }
+    }
+    return new Stats(buffedStats);
   }
 }
