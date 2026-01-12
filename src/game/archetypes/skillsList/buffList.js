@@ -1,5 +1,7 @@
+import BuffSkill from "src/game/gcomponents/skills/buffSkill";
+
 const buffSkills = [
-  {
+  new BuffSkill({
     id: "buff_001",
     rank: 1,
     name: "War Shout",
@@ -7,10 +9,11 @@ const buffSkills = [
     reach: "global",
     text: "Increase STR +1",
     rarity: "common",
+    typeBuff: "attribute",
     buff: { str: 1 },
     duration: 10,
-  },
-  {
+  }),
+  new BuffSkill({
     id: "buff_002",
     rank: 1,
     name: "Great Intellect",
@@ -18,10 +21,11 @@ const buffSkills = [
     reach: "global",
     text: "Increase INT +1",
     rarity: "common",
+    typeBuff: "attribute",
     buff: { int: 1 },
     duration: 10,
-  },
-  {
+  }),
+  new BuffSkill({
     id: "buff_003",
     rank: 1,
     name: "Wisdom Chant",
@@ -29,10 +33,11 @@ const buffSkills = [
     reach: "global",
     text: "Increase WIS +1",
     rarity: "common",
+    typeBuff: "attribute",
     buff: { wis: 1 },
     duration: 10,
-  },
-  {
+  }),
+  new BuffSkill({
     id: "buff_004",
     rank: 1,
     name: "Iron Body",
@@ -40,10 +45,11 @@ const buffSkills = [
     reach: "global",
     text: "Increase CON +1",
     rarity: "common",
+    typeBuff: "attribute",
     buff: { con: 1 },
     duration: 10,
-  },
-  {
+  }),
+  new BuffSkill({
     id: "buff_005",
     rank: 1,
     name: "Endurance Cry",
@@ -51,10 +57,11 @@ const buffSkills = [
     reach: "global",
     text: "Increase STA +1",
     rarity: "common",
+    typeBuff: "attribute",
     buff: { sta: 1 },
     duration: 10,
-  },
-  {
+  }),
+  new BuffSkill({
     id: "buff_006",
     rank: 1,
     name: "Precision Focus",
@@ -62,10 +69,11 @@ const buffSkills = [
     reach: "global",
     text: "Increase DEX +1",
     rarity: "common",
+    typeBuff: "attribute",
     buff: { dex: 1 },
     duration: 10,
-  },
-  {
+  }),
+  new BuffSkill({
     id: "buff_007",
     rank: 1,
     name: "Agile Step",
@@ -73,10 +81,11 @@ const buffSkills = [
     reach: "global",
     text: "Increase AGI +1",
     rarity: "common",
+    typeBuff: "attribute",
     buff: { agi: 1 },
     duration: 10,
-  },
-  {
+  }),
+  new BuffSkill({
     id: "buff_008",
     rank: 1,
     name: "Charisma Aura",
@@ -84,9 +93,10 @@ const buffSkills = [
     reach: "global",
     text: "Increase CHA +1",
     rarity: "common",
+    typeBuff: "attribute",
     buff: { cha: 1 },
     duration: 10,
-  },
+  }),
 ];
 
 export default buffSkills;

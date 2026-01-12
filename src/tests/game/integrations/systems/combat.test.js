@@ -2,11 +2,12 @@
 import Character from "src/game/entities/character";
 import Combat from "src/game/systems/combat";
 import actionSkillsList from "src/game/archetypes/skillsList/physical/actionSkillsList";
+
 const skills = actionSkillsList;
 
 describe("Combat - Integration Test", () => {
-  test("should run combat until one character dies and return combat log", () => {
-    // 🎲 RNG determinístico (nunca crita nem evade)
+  test("should run combat until one character dies and generate combat log", () => {
+    // 🎲 RNG determinístico (nunca evade nem crita)
     const rng = {
       rollPercent: jest.fn().mockReturnValue(99),
     };
@@ -32,7 +33,7 @@ describe("Combat - Integration Test", () => {
         sta: 5,
         str: 10,
         con: 5,
-        dex: 5,
+        dex: 10,
         int: 5,
         wis: 5,
         agi: 10,
@@ -41,18 +42,25 @@ describe("Combat - Integration Test", () => {
       skills,
     );
 
-    const combat = new Combat(player, enemy, undefined, undefined, rng);
+    const combat = new Combat(player, enemy, { rng });
 
-    // ▶️ Act
-    const combatLog = combat.startCombat();
+    // ▶️ Inicializa combate
+    combat.start();
 
-    // ✅ Assert — efeitos observáveis
+    // 🔁 Simula o loop de jogo
+    let result;
+    result = combat.performAction("skill_002"); // sempre a mesma skill
+    result = combat.performAction("skill_001");
+    console.log("🟢", result);
+
+    // ✅ Assert
+    console.log("🔴", combat.combatLog);
     expect(player.isDead() || enemy.isDead()).toBe(true);
-    expect(combatLog).toContain("foi morto em combate");
-    expect(typeof combatLog).toBe("string");
-    expect(combatLog.length).toBeGreaterThan(0);
+    expect(combat.combatLog).toContain("foi morto em combate");
+    expect(typeof combat.combatLog).toBe("string");
+    expect(combat.combatLog.length).toBeGreaterThan(0);
 
-    // 🧪 Garantia extra: RNG foi usado
+    // 🧪 RNG realmente foi usado
     expect(rng.rollPercent).toHaveBeenCalled();
   });
 });

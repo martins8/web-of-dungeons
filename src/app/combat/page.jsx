@@ -30,7 +30,7 @@ function CombatLog() {
     skills,
   );
   const combat = new Combat(player, enemy);
-  const result = combat.startCombat();
+  const result = combat.start();
   const lines = result.split("\n").filter(Boolean);
 
   return (
