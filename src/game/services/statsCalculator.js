@@ -35,24 +35,4 @@ export default class StatsCalculator {
       maestry: Math.floor(attributes.dex),
     });
   }
-
-  static applyAttrBuff(attributes, buff) {
-    const buffedAttributes = { ...attributes };
-    for (const [key, value] of Object.entries(buff)) {
-      if (buffedAttributes[key] !== undefined) {
-        buffedAttributes[key] += value;
-      }
-    }
-    return this.calculate(buffedAttributes);
-  }
-
-  static applyStatsBuff(stats, buff) {
-    const buffedStats = { ...stats };
-    for (const [key, value] of Object.entries(buff)) {
-      if (buffedStats[key] !== undefined) {
-        buffedStats[key] += value;
-      }
-    }
-    return new Stats(buffedStats);
-  }
 }
