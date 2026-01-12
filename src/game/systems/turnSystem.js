@@ -29,24 +29,42 @@ export default class TurnSystem {
     switch (skill.typeSkill) {
       case "action":
         if (this.actionSkillUsed) {
-          return { ok: false, reason: "ACTION_ALREADY_USED" };
+          return {
+            ok: false,
+            reason: "ACTION_ALREADY_USED",
+            skillName: skill.name,
+            actionRemains: this.actionsOnTurn,
+          };
         }
         this.actionSkillUsed = true;
         break;
 
       case "buff":
         if (this.buffSkillUsed) {
-          return { ok: false, reason: "BUFF_ALREADY_USED" };
+          return {
+            ok: false,
+            reason: "BUFF_ALREADY_USED",
+            skillName: skill.name,
+            actionRemains: this.actionsOnTurn,
+          };
         }
         this.buffSkillUsed = true;
         break;
 
       default:
-        return { ok: false, reason: "UNKNOWN_SKILL_TYPE" };
+        return {
+          ok: false,
+          reason: "UNKNOWN_SKILL_TYPE",
+          actionRemains: this.actionsOnTurn,
+        };
     }
 
     this.actionsOnTurn -= 1;
-    return { ok: true };
+    return {
+      ok: true,
+      skillName: skill.name,
+      actionRemains: this.actionsOnTurn,
+    };
   }
 
   isCrowdControlled(skill) {
