@@ -1,4 +1,4 @@
-import ActionSkill from "src/game/gcomponents/skills/actionSkill";
+import Skill from "src/game/gcomponents/skill";
 /* 
   name: name of the skill
   types: offensive, defensive, buff, moviment
@@ -13,53 +13,69 @@ import ActionSkill from "src/game/gcomponents/skills/actionSkill";
 
 */
 
-const actionSkillsList = [
-  new ActionSkill({
+const physicalSkillsList = [
+  new Skill({
     id: "skill_001",
     rank: 1,
-    name: "Basic Attack",
     typeSkill: "action",
     reach: "melee",
-    text: "a basic attack",
-    rarity: "common",
-    typeDamage: "physical",
-    damageMod: {
-      pDmg: 1,
+    cooldown: 0,
+    damage: {
+      typeDamage: "physical",
+      scaling: {
+        pDmg: 1,
+      },
     },
-    dotMod: {},
+    metadata: {
+      name: "Basic Attack",
+      text: "a basic attack",
+      rarity: "common",
+    },
   }),
-  new ActionSkill({
+  new Skill({
     id: "skill_002",
     rank: 1,
-    name: "Sword Strike",
     typeSkill: "action",
     reach: "melee",
-    text: "Dieee!!!",
-    rarity: "common",
-    typeDamage: "physical",
-    damageMod: {
-      pDmg: 1.1,
-      maestry: 0.5,
+    cooldown: 2,
+    damage: {
+      typeDamage: "physical",
+      scaling: {
+        pDmg: 1.1,
+        maestry: 0.5,
+      },
     },
-    dotMod: {},
+    metadata: {
+      name: "Sword Strike",
+      text: "Dieee!!!",
+      rarity: "common",
+    },
   }),
-  new ActionSkill({
+  new Skill({
     id: "skill_003",
     rank: 1,
-    name: "Bleed",
     typeSkill: "action",
     reach: "melee",
-    text: "put your enemy to bleed",
-    rarity: "common",
-    typeDamage: "physical",
-    damageMod: {
-      pDmg: 0.2,
+    cooldown: 2,
+    damage: {
+      typeDamage: "physical",
+      scaling: {
+        pDmg: 0.2,
+      },
     },
-    dotMod: {
-      pDmg: 0.9,
-      duration: 5,
+    effects: {
+      effectType: "bleed",
+      scaling: {
+        pDmg: 0.9,
+      },
+      ticks: 5,
+    },
+    metadata: {
+      name: "Bleeeeeeed",
+      text: "put your enemy to bleed",
+      rarity: "common",
     },
   }),
 ];
 
-export default actionSkillsList;
+export default physicalSkillsList;
