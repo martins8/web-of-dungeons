@@ -42,4 +42,12 @@ export default class Character {
   isDead() {
     return this.combatState?.isDead() ?? false;
   }
+
+  startTurn() {
+    this.turnSystem.startTurn();
+  }
+
+  endTurn() {
+    this.turnSystem.endTurn();
+  }
 }
