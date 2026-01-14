@@ -18,4 +18,8 @@ export default class Skill {
     this.effects = effects;
     this.metadata = metadata;
   }
+
+  get name() {
+    return this.metadata.name;
+  }
 }

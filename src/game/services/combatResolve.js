@@ -4,12 +4,14 @@ export default class CombatResolve {
   //actions methods
   action(attacker, defender, skill, { rng, critSystem, evadeSystem }) {
     //evasion test
-    const isEvaded = evadeSystem.tryEvade(rng, defender.stats.eva);
+    const attackerCombatState = attacker.combatState;
+    const defenderCombatState = defender.combatState;
+    const isEvaded = evadeSystem.tryEvade(rng, defenderCombatState.stats.eva);
     if (isEvaded) {
       return new CombatActionResult({
         attacker,
         defender,
-        typeDamage: skill.typeDamage,
+        typeDamage: skill.damage.typeDamage,
         damage: 0,
         isEvaded: true,
         isDead: false,
@@ -17,30 +19,42 @@ export default class CombatResolve {
     }
 
     //critical test
-    const isCritical = critSystem.tryCrit(rng, attacker.stats.critC);
+    const isCritical = critSystem.tryCrit(rng, attackerCombatState.stats.critC);
 
-    //useActionSkill
-    let damage = skill.useActionSkill(attacker.stats);
+    //useActionSkill    remover attackerCombatState.stats   por outra coisa
+    let damage = this.useSkill(skill, attackerCombatState.stats);
+
     if (isCritical) {
-      damage = this.applyCrit(damage, attacker.stats.critD);
+      damage = this.applyCrit(damage, attackerCombatState.stats.critD);
     }
 
     //defender apply your defense stats
     damage =
-      skill.typeDamage === "physical"
-        ? this.applyDefense(damage, defender.stats.pDef)
-        : this.applyDefense(damage, defender.stats.mDef);
-    defender.takeDamage(damage);
+      skill.damage.typeDamage === "physical"
+        ? this.applyDefense(damage, defenderCombatState.stats.pDef)
+        : this.applyDefense(damage, defenderCombatState.stats.mDef);
+    defenderCombatState.takeDamage(damage);
 
     return new CombatActionResult({
       attacker,
       defender,
-      typeDamage: skill.typeDamage,
+      typeDamage: skill.damage.typeDamage,
       damage,
       isCritical,
       isEvaded: false,
-      isDead: defender.isDead(),
+      isDead: defenderCombatState.isDead(),
     });
+  }
+
+  useSkill(skill, baseStats) {
+    let damage = 0;
+
+    // percorre todos os modificadores definidos na skill
+    for (const [key, mod] of Object.entries(skill.damage.scaling)) {
+      const statValue = baseStats[key] || 0; // se não existir, assume 0
+      damage += statValue * mod;
+    }
+    return damage * skill.rank; // aplica rank como multiplicador
   }
 
   applyCrit(baseDamage, critDamage) {

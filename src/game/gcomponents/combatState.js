@@ -1,5 +1,6 @@
 export default class CombatState {
   constructor(stats) {
+    this.stats = stats;
     this.currentHp = stats.maxHp;
 
     this.buffs = [];
