@@ -1,5 +1,4 @@
-import { BLOCKED_PAGES } from "next/dist/shared/lib/constants";
-import Skill from "src/game/gcomponents/skill";
+import Skill from "src/game/value-objects/skill";
 
 const skill = new Skill({
   id: "skill_001",
