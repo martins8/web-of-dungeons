@@ -1,3 +1,4 @@
+// need test file
 export default class Effect {
   constructor({ effectType, subtype = null, scaling = {}, duration = null }) {
     this.effectType = effectType;
