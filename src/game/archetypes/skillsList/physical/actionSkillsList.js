@@ -1,4 +1,5 @@
-import Skill from "src/game/gcomponents/skill";
+import Effect from "src/game/value-objects/effect";
+import Skill from "src/game/value-objects/skill";
 /* 
   name: name of the skill
   types: offensive, defensive, buff, moviment
@@ -63,13 +64,14 @@ const physicalSkillsList = [
         pDmg: 0.2,
       },
     },
-    effects: {
-      effectType: "bleed",
+    effects: new Effect({
+      effectType: "dot",
+      subtype: "bleed",
       scaling: {
         pDmg: 0.9,
       },
-      ticks: 5,
-    },
+      duration: 5,
+    }),
     metadata: {
       name: "Bleeeeeeed",
       text: "put your enemy to bleed",

@@ -1,4 +1,4 @@
-import Skill from "src/game/gcomponents/skill";
+import Skill from "src/game/value-objects/skill";
 
 const buffSkills = [
   new Skill({
@@ -8,9 +8,10 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
-      effectType: "attribute",
-      buff: { str: 1 },
-      ticks: 5,
+      effectType: "buff",
+      subtype: "attribute",
+      scaling: { str: 1 },
+      duration: 5,
     },
     metadata: {
       name: "War Shout",
@@ -25,9 +26,10 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
-      effectType: "attribute",
-      buff: { int: 1 },
-      ticks: 5,
+      effectType: "buff",
+      subtype: "attribute",
+      scaling: { int: 1 },
+      duration: 5,
     },
     metadata: {
       name: "Great Intellect",
@@ -42,9 +44,10 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
-      effectType: "attribute",
-      buff: { wis: 1 },
-      ticks: 5,
+      effectType: "buff",
+      subtype: "attribute",
+      scaling: { wis: 1 },
+      duration: 5,
     },
     metadata: {
       name: "Wisdom Chant",
@@ -59,9 +62,10 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
-      effectType: "attribute",
-      buff: { con: 1 },
-      ticks: 5,
+      effectType: "buff",
+      subtype: "attribute",
+      scaling: { con: 1 },
+      duration: 5,
     },
     metadata: {
       name: "Iron Body",
@@ -76,9 +80,10 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
-      effectType: "attribute",
-      buff: { sta: 1 },
-      ticks: 5,
+      effectType: "buff",
+      subtype: "attribute",
+      scaling: { sta: 1 },
+      duration: 5,
     },
     metadata: {
       name: "Endurance Cry",
@@ -93,9 +98,10 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
-      effectType: "attribute",
-      buff: { dex: 1 },
-      ticks: 5,
+      effectType: "buff",
+      subtype: "attribute",
+      scaling: { dex: 1 },
+      duration: 5,
     },
     metadata: {
       name: "Precision Focus",
@@ -110,9 +116,10 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
-      effectType: "attribute",
-      buff: { agi: 1 },
-      ticks: 5,
+      effectType: "buff",
+      subtype: "attribute",
+      scaling: { agi: 1 },
+      duration: 5,
     },
     metadata: {
       name: "Agile Step",
@@ -126,9 +133,10 @@ const buffSkills = [
     typeSkill: "buff",
     reach: "global",
     effects: {
-      effectType: "attribute",
-      buff: { cha: 1 },
-      ticks: 5,
+      effectType: "buff",
+      subtype: "attribute",
+      scaling: { cha: 1 },
+      duration: 5,
     },
     metadata: {
       name: "Charisma Aura",
