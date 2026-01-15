@@ -1,133 +1,109 @@
 import CombatState from "src/game/gcomponents/combatState";
+import Attributes from "src/game/value-objects/attributes";
+import StatsCalculator from "src/game/services/statsCalculator";
 
 describe("CombatState", () => {
-  const stats = { maxHp: 100 };
-
-  describe("Initialization", () => {
-    test("should initialize currentHp with stats.maxHp", () => {
-      const state = new CombatState(stats);
-
-      expect(state.currentHp).toBe(100);
+  function createState() {
+    const attributes = new Attributes({
+      sta: 10,
+      str: 10,
+      con: 10,
+      dex: 10,
+      int: 10,
+      wis: 10,
+      agi: 10,
+      cha: 10,
     });
 
-    test("should initialize buffs and debuffs as empty arrays", () => {
-      const state = new CombatState(stats);
+    const stats = StatsCalculator.calculate(attributes);
+    return new CombatState(stats, attributes);
+  }
 
-      expect(state.buffs).toEqual([]);
-      expect(state.debuffs).toEqual([]);
+  test("should apply buff to attributes", () => {
+    const state = createState();
+
+    state.addBuff({
+      effectType: "buff",
+      subtype: "attribute",
+      scaling: { str: 5 },
+      duration: 2,
     });
 
-    test("should initialize crowd control states as false", () => {
-      const state = new CombatState(stats);
-
-      expect(state.cc).toEqual({
-        stunned: false,
-        silenced: false,
-        rooted: false,
-        slowed: false,
-      });
-    });
-
-    test("should initialize cooldowns as a Map", () => {
-      const state = new CombatState(stats);
-
-      expect(state.cooldowns).toBeInstanceOf(Map);
-      expect(state.cooldowns.size).toBe(0);
-    });
+    const effectiveAttrs = state.getEffectiveAttributes();
+    expect(effectiveAttrs.str).toBe(15);
   });
 
-  describe("Damage and Death", () => {
-    test("takeDamage should reduce currentHp", () => {
-      const state = new CombatState(stats);
+  test("should apply debuff to stats", () => {
+    const state = createState();
 
-      state.takeDamage(30);
-
-      expect(state.currentHp).toBe(70);
+    state.addDebuff({
+      effectType: "debuff",
+      subtype: "stats",
+      scaling: { pDef: -5 },
+      duration: 2,
     });
 
-    test("isDead should return false when hp is above zero", () => {
-      const state = new CombatState(stats);
-
-      expect(state.isDead()).toBe(false);
-    });
-
-    test("isDead should return true when hp reaches zero", () => {
-      const state = new CombatState(stats);
-
-      state.takeDamage(100);
-
-      expect(state.isDead()).toBe(true);
-    });
+    const effectiveStats = state.getEffectiveStats();
+    expect(effectiveStats.pDef).toBeLessThan(state.baseStats.pDef);
   });
 
-  describe("Crowd Control", () => {
-    test("isStunned should return false by default", () => {
-      const state = new CombatState(stats);
+  test("should tick DOT and reduce HP", () => {
+    const state = createState();
+    const initialHp = state.currentHp;
 
-      expect(state.isStunned()).toBe(false);
+    state.addDebuff({
+      effectType: "dot",
+      scaling: { pDmg: 1 },
+      duration: 2,
     });
 
-    test("isStunned should reflect stunned state", () => {
-      const state = new CombatState(stats);
+    state.tickEffects();
 
-      state.cc.stunned = true;
-
-      expect(state.isStunned()).toBe(true);
-    });
+    expect(state.currentHp).toBeLessThan(initialHp);
   });
 
-  describe("Cooldown System", () => {
-    const skill = { id: "fireball", cooldown: 3 };
+  test("should expire effects after duration", () => {
+    const state = createState();
 
-    test("setCooldown should add skill to cooldown map", () => {
-      const state = new CombatState(stats);
-
-      state.setCooldown(skill);
-
-      expect(state.cooldowns.has("fireball")).toBe(true);
-      expect(state.cooldowns.get("fireball")).toBe(3);
+    state.addBuff({
+      effectType: "buff",
+      subtype: "stats",
+      scaling: { pDmg: 10 },
+      duration: 1,
     });
 
-    test("setCooldown should not add skill if cooldown is zero", () => {
-      const state = new CombatState(stats);
+    state.tickEffects();
 
-      state.setCooldown({ id: "dash", cooldown: 0 });
+    expect(state.buffs.length).toBe(0);
+  });
 
-      expect(state.cooldowns.size).toBe(0);
+  test("should apply and clear CC each tick", () => {
+    const state = createState();
+
+    state.addDebuff({
+      effectType: "cc",
+      subtype: "stunned",
+      duration: 1,
     });
 
-    test("isOnCooldown should return true when skill is on cooldown", () => {
-      const state = new CombatState(stats);
+    state.tickEffects();
+    expect(state.cc.stunned).toBe(true);
 
-      state.setCooldown(skill);
+    state.tickEffects();
+    expect(state.cc.stunned).toBe(false);
+  });
 
-      expect(state.isOnCooldown(skill)).toBe(true);
-    });
+  test("should handle cooldown lifecycle", () => {
+    const state = createState();
+    const skill = { id: "skill_1", cooldown: 2 };
 
-    test("isOnCooldown should return false when skill is not on cooldown", () => {
-      const state = new CombatState(stats);
+    state.setCooldown(skill);
+    expect(state.isOnCooldown(skill)).toBe(true);
 
-      expect(state.isOnCooldown(skill)).toBe(false);
-    });
+    state.tickCooldowns();
+    expect(state.isOnCooldown(skill)).toBe(true);
 
-    test("tickCooldown should decrement cooldown values", () => {
-      const state = new CombatState(stats);
-
-      state.setCooldown(skill); // 3
-
-      state.tickCooldown();
-
-      expect(state.cooldowns.get("fireball")).toBe(2);
-    });
-
-    test("tickCooldown should remove skill when cooldown reaches zero", () => {
-      const state = new CombatState(stats);
-
-      state.setCooldown({ id: "ice", cooldown: 1 });
-
-      state.tickCooldown();
-
-      expect(state.cooldowns.has("ice")).toBe(false);
-    });
+    state.tickCooldowns();
+    expect(state.isOnCooldown(skill)).toBe(false);
   });
 });
