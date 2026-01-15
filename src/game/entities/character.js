@@ -28,7 +28,7 @@ export default class Character {
   }
 
   initCombatState() {
-    this.combatState = new CombatState(this.stats);
+    this.combatState = new CombatState(this.stats, this.attributes);
   }
 
   finishCombatState() {
