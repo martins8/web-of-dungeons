@@ -5,6 +5,7 @@ import CritSystem from "../rng/critSystem";
 import EvadeSystem from "../rng/evadeSystem";
 import utils from "src/game/utils/utils";
 import TurnSystem from "../systems/turnSystem";
+import CombatState from "../gcomponents/combatState";
 
 export default class Character {
   constructor(name, attrValues, skills = []) {
@@ -23,19 +24,23 @@ export default class Character {
     });
     this.skills = skills;
     this.turnSystem = new TurnSystem();
+    this.combatState = null;
   }
 
-  takeDamage(amount) {
-    this.health.takeDamage(amount);
+  initCombatState() {
+    this.combatState = new CombatState(this.stats, this.attributes);
   }
 
-  isDead() {
-    return !this.health.isAlive();
+  finishCombatState() {
+    this.combatState = null;
   }
 
   getSkillById(id) {
-    const skill = this.skills.find((skill) => skill.id === id);
-    return skill;
+    return this.skills.find((skill) => skill.id === id);
+  }
+
+  isDead() {
+    return this.combatState?.isDead() ?? false;
   }
 
   startTurn() {

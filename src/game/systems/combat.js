@@ -1,26 +1,29 @@
 import CombatResolve from "src/game/services/combatResolve";
 import CombatTexts from "src/game/texts/combatTexts";
+import EffectSystem from "./effectSystem";
 import SeedRNG from "src/game/rng/seedRNG";
 
 export default class Combat {
-  constructor(
-    player,
-    enemy,
-    combatResolve = new CombatResolve(),
-    combatTexts = new CombatTexts(),
-    rng = new SeedRNG(Date.now()),
-  ) {
-    //combatants
+  constructor(player, enemy, { rng } = {}) {
     this.player = player;
     this.enemy = enemy;
-    //combat
-    this.combatResolve = combatResolve;
-    this.combatTexts = combatTexts;
-    this.combatLog = this.initialLog();
-    //infra seeed
-    this.rng = rng;
-  }
 
+    this.combatResolve = new CombatResolve();
+    this.combatTexts = new CombatTexts();
+
+    // RNG contract:
+    // - rollPercent(): number (0–100)
+    this.rng = rng ?? new SeedRNG(Date.now());
+    if (rng && typeof rng.rollPercent !== "function") {
+      throw new Error("Invalid RNG: rollPercent() not found");
+    }
+    this.turnOrder = [];
+    this.currentTurnIndex = 0;
+    this.combatLog = this.initialLog();
+
+    /* this.state = "FINISHED"; // RUNNING | FINISHED */
+    this.finished = false;
+  }
   initialLog() {
     return `${this.player.name}: ${this.player.health.maxHp} ❤️ ${this.enemy.name}: ${this.enemy.health.maxHp} ❤️\n`;
   }
@@ -31,31 +34,130 @@ export default class Combat {
     }
     return [this.enemy, this.player];
   }
-
-  executeTurn(attacker, defender) {
-    const skill = attacker.getActionSkill(1);
-    const result = this.combatResolve.action(attacker, defender, skill, {
-      rng: this.rng,
-      critSystem: attacker.critSystem,
-      evadeSystem: defender.evadeSystem,
-    });
-    this.combatLog += this.combatTexts.fromResult(result);
-    return result.isDead;
+  getCurrentAttacker() {
+    return this.turnOrder[this.currentTurnIndex];
   }
 
-  startCombat() {
+  getCurrentDefender() {
+    return this.turnOrder[(this.currentTurnIndex + 1) % 2];
+  }
+
+  start() {
+    //reset rng systems
     this.player.critSystem.reset();
-    this.player.evadeSystem.reset();
     this.enemy.critSystem.reset();
+    this.player.evadeSystem.reset();
     this.enemy.evadeSystem.reset();
-    const [first, second] = this.decideTurnOrder();
-    let maxTurn = 0;
-    while (true && maxTurn < 100) {
-      if (this.executeTurn(first, second)) break;
-      if (this.executeTurn(second, first)) break;
-      maxTurn += 1;
+    //initialize combat states
+    this.player.initCombatState();
+    this.enemy.initCombatState();
+    //decide turn order
+    this.turnOrder = this.decideTurnOrder();
+    this.currentTurnIndex = 0;
+    //catch the first attacker and start her turn
+    this.getCurrentAttacker().startTurn();
+    //initialize combat string log
+    this.combatLog = this.initialLog();
+  }
+  /*
+  1 turn has 2 actions (for now)
+  design decision: tick dot/hot only one time per turn 
+                   tick cooldown in every action
+  */
+  /*
+ this method ticks the effects timers and pass a boolean to 
+ combatResolve action method where the tick damage/heal is calculated
+ */
+  tickDotAndHot(attacker, defender) {
+    let ticked = false;
+    if (attacker.turnSystem.actionsOnTurn === 2) {
+      attacker.combatState.tickEffects();
+      defender.combatState.tickEffects();
+      ticked = true;
+    }
+    return ticked;
+  }
+  //method called by UI when player or enemy
+  performAction(skillId) {
+    if (this.finished) return null;
+    //tick cooldowns every action
+    this.player.combatState.tickCooldowns();
+    this.enemy.combatState.tickCooldowns();
+    //catch attacker and defender
+    const attacker = this.getCurrentAttacker();
+    const defender = this.getCurrentDefender();
+
+    //tick dot/hot one time per turn
+    const ticked = this.tickDotAndHot(attacker, defender);
+
+    //after implements UI remove this line and put the skill on the the parameter
+    const skill = attacker.getSkillById(skillId);
+
+    //check if skill is on cooldown
+    if (attacker.combatState.isOnCooldown(skill)) {
+      return { ok: false, reason: "SKILL_ON_COOLDOWN" };
     }
 
-    return this.combatLog;
+    //use turn of the attacker.  (2 action per turn)
+    const turnResult = attacker.turnSystem.useTurn(skill);
+    if (!turnResult.ok) {
+      return turnResult; // user interface decide o que fazer
+    }
+
+    //check if skill has buff or debuff effect and apply it before action resolve
+    if (skill.effects) {
+      const effectSystem = new EffectSystem(skill.effects);
+      const target =
+        skill.effects.target === "self"
+          ? attacker.combatState
+          : defender.combatState;
+
+      effectSystem.apply(target);
+    }
+
+    //resolve action in combatResolve service
+    const result = this.combatResolve.action(
+      attacker,
+      defender,
+      skill,
+      ticked,
+      {
+        rng: this.rng,
+        critSystem: attacker.critSystem,
+        evadeSystem: defender.evadeSystem,
+      },
+    );
+    //set skill on cooldown
+    attacker.combatState.setCooldown(skill);
+    //increment combat log
+    this.combatLog += this.combatTexts.fromResult(result);
+    //check if defender is dead
+    if (result.isDead) {
+      this.finished = true;
+      return result;
+    }
+
+    //check if attacker turn is over (2 actions per turn)
+    if (attacker.turnSystem.actionsOnTurn === 0) {
+      attacker.endTurn();
+      this.advanceTurn();
+      this.getCurrentAttacker().startTurn();
+    }
+
+    return result;
+  }
+
+  advanceTurn() {
+    //advance turn index
+    this.currentTurnIndex = (this.currentTurnIndex + 1) % this.turnOrder.length;
+  }
+
+  end() {
+    if (this.finished === true) {
+      this.player.finishCombatState();
+      this.enemy.finishCombatState();
+    } else {
+      return { ok: false, reason: "COMBAT_NOT_FINISHED" };
+    }
   }
 }

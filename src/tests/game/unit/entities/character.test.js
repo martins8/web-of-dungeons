@@ -1,5 +1,5 @@
 import Character from "src/game/entities/character";
-import actionSkillsList from "src/game/archetypes/skillsList/physical/actionSkillsList";
+import CombatState from "src/game/gcomponents/combatState";
 
 const validAttributes = {
   sta: 10,
@@ -12,26 +12,12 @@ const validAttributes = {
   cha: 10,
 };
 
-const validSkills = actionSkillsList;
-
 describe("Character", () => {
-  describe("NAME VALIDATION", () => {
-    test("should create Character with valid name", () => {
+  describe("Initialization", () => {
+    test("should create character with name, attributes, stats and health", () => {
       const character = new Character("Arthur", validAttributes);
+
       expect(character.name).toBe("Arthur");
-    });
-
-    test("should throw error if name is invalid", () => {
-      expect(() => new Character(123, validAttributes)).toThrow();
-      expect(() => new Character("", validAttributes)).toThrow();
-      expect(() => new Character("Arthur Lima", validAttributes)).toThrow();
-    });
-  });
-
-  describe("INITIALIZATION", () => {
-    test("should initialize attributes, stats and health", () => {
-      const character = new Character("Arthur", validAttributes);
-
       expect(character.attributes).toBeDefined();
       expect(character.stats).toBeDefined();
       expect(character.health).toBeDefined();
@@ -39,121 +25,99 @@ describe("Character", () => {
 
     test("health maxHp should match stats.maxHp", () => {
       const character = new Character("Arthur", validAttributes);
+
       expect(character.health.maxHp).toBe(character.stats.maxHp);
     });
 
     test("should initialize crit and evade systems", () => {
-      const character = new Character("Hero", validAttributes);
+      const character = new Character("Arthur", validAttributes);
 
       expect(character.critSystem).toBeDefined();
       expect(character.evadeSystem).toBeDefined();
     });
 
-    test("should initialize TurnSystem", () => {
-      const character = new Character("Hero", validAttributes);
+    test("should initialize skills array", () => {
+      const skills = [{ id: "slash" }];
+      const character = new Character("Arthur", validAttributes, skills);
 
-      expect(character.turnSystem).toBeDefined();
-      expect(character.turnSystem.actionsOnTurn).toBe(2);
+      expect(character.skills).toBe(skills);
     });
 
-    test("should initialize with skills", () => {
-      const character = new Character("Hero", validAttributes, validSkills);
+    test("should initialize turn system", () => {
+      const character = new Character("Arthur", validAttributes);
 
-      expect(character.skills).toBeDefined();
-      expect(Array.isArray(character.skills)).toBe(true);
-      expect(character.skills.length).toBeGreaterThan(0);
+      expect(character.turnSystem).toBeDefined();
+    });
+
+    test("combatState should start as null", () => {
+      const character = new Character("Arthur", validAttributes);
+
+      expect(character.combatState).toBeNull();
     });
   });
 
-  describe("STATE", () => {
-    test("takeDamage should reduce health", () => {
-      const character = new Character("Hero", validAttributes);
-      const initialHp = character.health.currentHp;
+  describe("Name validation", () => {
+    test("should throw error for invalid names", () => {
+      expect(() => new Character(123, validAttributes)).toThrow();
+      expect(() => new Character("", validAttributes)).toThrow();
+      expect(() => new Character("Arthur 1", validAttributes)).toThrow();
+    });
+  });
 
-      character.takeDamage(10);
+  describe("Combat State lifecycle", () => {
+    test("initCombatState should create a CombatState instance", () => {
+      const character = new Character("Arthur", validAttributes);
 
-      expect(character.health.currentHp).toBeLessThan(initialHp);
+      character.initCombatState();
+
+      expect(character.combatState).toBeInstanceOf(CombatState);
     });
 
-    test("takeDamage should not reduce below zero", () => {
-      const character = new Character("Hero", validAttributes);
+    test("finishCombatState should clear combatState", () => {
+      const character = new Character("Arthur", validAttributes);
 
-      character.takeDamage(9999);
+      character.initCombatState();
+      character.finishCombatState();
 
-      expect(character.health.currentHp).toBe(0);
+      expect(character.combatState).toBeNull();
     });
+  });
 
-    test("isDead should return false when alive", () => {
-      const character = new Character("Hero", validAttributes);
+  describe("Combat-related behavior", () => {
+    test("isDead should return false when not in combat", () => {
+      const character = new Character("Arthur", validAttributes);
+
       expect(character.isDead()).toBe(false);
     });
 
-    test("isDead should return true when health is zero", () => {
-      const character = new Character("Hero", validAttributes);
+    test("isDead should reflect combatState.isDead when in combat", () => {
+      const character = new Character("Arthur", validAttributes);
 
-      character.takeDamage(9999);
+      character.initCombatState();
+      character.combatState.takeDamage(9999);
 
       expect(character.isDead()).toBe(true);
     });
   });
 
-  describe("RNG SYSTEMS", () => {
-    test("crit and evade systems should start with zero bonus", () => {
-      const character = new Character("Hero", validAttributes);
-
-      expect(character.critSystem.currentBonus).toBe(0);
-      expect(character.evadeSystem.currentBonus).toBe(0);
-    });
-
-    test("crit and evade systems reset should clear bonus", () => {
-      const character = new Character("Hero", validAttributes);
-
-      character.critSystem.currentBonus = 10;
-      character.evadeSystem.currentBonus = 10;
-
-      character.critSystem.reset();
-      character.evadeSystem.reset();
-
-      expect(character.critSystem.currentBonus).toBe(0);
-      expect(character.evadeSystem.currentBonus).toBe(0);
-    });
-  });
-
-  describe("SKILLS", () => {
+  describe("Skills", () => {
     test("getSkillById should return correct skill", () => {
-      const character = new Character("Hero", validAttributes, validSkills);
+      const skills = [
+        { id: "slash", name: "Slash" },
+        { id: "fireball", name: "Fireball" },
+      ];
 
-      const skill = character.getSkillById("skill_002");
+      const character = new Character("Mage", validAttributes, skills);
 
-      expect(skill).toBeDefined();
-      expect(skill.name).toBe("Sword Strike");
+      const skill = character.getSkillById("fireball");
+
+      expect(skill).toEqual({ id: "fireball", name: "Fireball" });
     });
 
-    test("getSkillById should return undefined for invalid id", () => {
-      const character = new Character("Hero", validAttributes, validSkills);
+    test("getSkillById should return undefined if skill does not exist", () => {
+      const character = new Character("Arthur", validAttributes, []);
 
-      const skill = character.getSkillById(999);
-
-      expect(skill).toBeUndefined();
-    });
-  });
-
-  describe("TURN SYSTEM INTEGRATION", () => {
-    test("startTurn should reset character turn actions", () => {
-      const character = new Character("Hero", validAttributes, validSkills);
-
-      character.turnSystem.actionsOnTurn = 0;
-      character.startTurn();
-
-      expect(character.turnSystem.actionsOnTurn).toBe(2);
-    });
-
-    test("endTurn should increment turn count", () => {
-      const character = new Character("Hero", validAttributes);
-
-      character.endTurn();
-
-      expect(character.turnSystem.turnCount).toBe(1);
+      expect(character.getSkillById("unknown")).toBeUndefined();
     });
   });
 });

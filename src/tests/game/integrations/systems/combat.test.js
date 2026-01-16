@@ -2,20 +2,19 @@
 import Character from "src/game/entities/character";
 import Combat from "src/game/systems/combat";
 import actionSkillsList from "src/game/archetypes/skillsList/physical/actionSkillsList";
-const skills = actionSkillsList;
 
 describe("Combat - Integration Test", () => {
-  test("should run combat until one character dies and return combat log", () => {
-    // 🎲 RNG determinístico (nunca crita nem evade)
+  test("should run combat, tick DoT/HoT and finish when one character dies", () => {
+    // 🎲 RNG determinístico
     const rng = {
-      rollPercent: jest.fn().mockReturnValue(99),
+      rollPercent: jest.fn().mockReturnValue(99), // nunca evade nem crita
     };
 
     const player = new Character(
       "Hero",
       {
-        sta: 10,
-        str: 5,
+        sta: 12,
+        str: 2,
         con: 10,
         dex: 5,
         int: 5,
@@ -23,36 +22,131 @@ describe("Combat - Integration Test", () => {
         agi: 5,
         cha: 5,
       },
-      skills,
+      actionSkillsList,
     );
 
     const enemy = new Character(
       "Goblin",
       {
-        sta: 5,
-        str: 10,
-        con: 5,
+        sta: 8,
+        str: 8,
+        con: 8,
         dex: 5,
         int: 5,
         wis: 5,
-        agi: 10,
+        agi: 5,
         cha: 5,
       },
-      skills,
+      actionSkillsList,
     );
 
-    const combat = new Combat(player, enemy, undefined, undefined, rng);
+    const combat = new Combat(player, enemy, { rng });
 
-    // ▶️ Act
-    const combatLog = combat.startCombat();
+    // ▶️ Inicializa combate
+    combat.start();
 
-    // ✅ Assert — efeitos observáveis
-    expect(player.isDead() || enemy.isDead()).toBe(true);
-    expect(combatLog).toContain("foi morto em combate");
-    expect(typeof combatLog).toBe("string");
-    expect(combatLog.length).toBeGreaterThan(0);
+    let result;
+    let safety = 20; // evita loop infinito em caso de bug
 
-    // 🧪 Garantia extra: RNG foi usado
+    // 🔁 Loop de combate real
+    while (!combat.finished && safety-- > 0) {
+      const attacker = combat.getCurrentAttacker();
+      const skill = attacker.skills[0]; // usa sempre a primeira skill
+
+      result = combat.performAction(skill.id);
+
+      // sanity check
+      expect(result).not.toBeNull();
+    }
+    // ✅ Combate terminou
+    expect(combat.finished).toBe(true);
+
+    // ✅ Um dos personagens morreu
+    expect(player.combatState.isDead() || enemy.combatState.isDead()).toBe(
+      true,
+    );
+
+    // ✅ Log foi gerado corretamente
+    expect(typeof combat.combatLog).toBe("string");
+    expect(combat.combatLog.length).toBeGreaterThan(0);
+
+    // ✅ RNG realmente participou do fluxo
     expect(rng.rollPercent).toHaveBeenCalled();
+
+    combat.end();
+    expect(player.combatState && enemy.combatState).toBe(null);
+  });
+
+  test("should tick DOT and HOT only once per turn (on first action)", () => {
+    const rng = {
+      rollPercent: jest.fn().mockReturnValue(99), // nunca evade nem crita
+    };
+
+    const dotSkill = {
+      id: "dot_skill",
+      rank: 1,
+      typeSkill: "action",
+      cooldown: 0,
+      damage: {
+        typeDamage: "physical",
+        scaling: { pDmg: 0 },
+      },
+      effects: {
+        effectType: "dot",
+        scaling: { pDmg: 1 },
+        duration: 2,
+        target: "enemy",
+      },
+    };
+
+    const hotSkill = {
+      id: "hot_skill",
+      rank: 1,
+      typeSkill: "action",
+      cooldown: 0,
+      damage: {
+        typeDamage: "physical",
+        scaling: {},
+      },
+      effects: {
+        effectType: "hot",
+        scaling: { hPower: 1 },
+        duration: 2,
+        target: "self",
+      },
+    };
+
+    const player = new Character(
+      "Hero",
+      { sta: 10, str: 5, con: 10, dex: 5, int: 5, wis: 5, agi: 5, cha: 5 },
+      [dotSkill, hotSkill],
+    );
+
+    const enemy = new Character(
+      "Goblin",
+      { sta: 10, str: 5, con: 10, dex: 5, int: 5, wis: 5, agi: 5, cha: 5 },
+      [dotSkill, hotSkill],
+    );
+
+    const combat = new Combat(player, enemy, { rng });
+    combat.start();
+
+    const playerHpBefore = player.combatState.currentHp;
+    const enemyHpBefore = enemy.combatState.currentHp;
+
+    // 🟢 Primeira ação do turno → TICK ACONTECE
+    combat.performAction("dot_skill");
+
+    const enemyHpAfterFirstAction = enemy.combatState.currentHp;
+    expect(enemyHpAfterFirstAction).toBeLessThan(enemyHpBefore);
+
+    // 🟢 Segunda ação do MESMO turno → NÃO DEVE TICKAR
+    combat.performAction("hot_skill");
+
+    // 🧪 HOT foi aplicado (cura automática no tick)
+    expect(player.combatState.currentHp).toBeGreaterThanOrEqual(playerHpBefore);
+
+    const enemyHpAfterSecondAction = enemy.combatState.currentHp;
+    expect(enemyHpAfterSecondAction).toBe(enemyHpAfterFirstAction);
   });
 });

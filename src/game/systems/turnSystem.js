@@ -4,17 +4,13 @@ export default class TurnSystem {
     this.turnCount = 0;
     this.crowdControlEffects = [];
 
-    this.resetActions();
-  }
-
-  resetActions() {
-    this.actionsOnTurn = this.actionsPerTurn;
-    this.actionSkillUsed = false;
-    this.buffSkillUsed = false;
+    this.startTurn();
   }
 
   startTurn() {
-    this.resetActions();
+    this.actionsOnTurn = this.actionsPerTurn;
+    //this.actionSkillUsed = false;
+    //this.buffSkillUsed = false;
   }
 
   useTurn(skill) {
@@ -25,25 +21,20 @@ export default class TurnSystem {
     if (this.actionsOnTurn <= 0) {
       return { ok: false, reason: "NO_ACTIONS_LEFT" };
     }
-
-    switch (skill.typeSkill) {
-      case "action":
-        if (this.actionSkillUsed) {
-          return { ok: false, reason: "ACTION_ALREADY_USED" };
-        }
-        this.actionSkillUsed = true;
-        break;
-
-      case "buff":
-        if (this.buffSkillUsed) {
-          return { ok: false, reason: "BUFF_ALREADY_USED" };
-        }
-        this.buffSkillUsed = true;
-        break;
-
-      default:
-        return { ok: false, reason: "UNKNOWN_SKILL_TYPE" };
+    /*
+    if (skill.typeSkill === "action") {
+      if (this.actionSkillUsed) {
+        return { ok: false, reason: "ACTION_ALREADY_USED" };
+      }
+      this.actionSkillUsed = true;
     }
+
+    if (skill.typeSkill === "buff") {
+      if (this.buffSkillUsed) {
+        return { ok: false, reason: "BUFF_ALREADY_USED" };
+      }
+      this.buffSkillUsed = true;
+    }*/
 
     this.actionsOnTurn -= 1;
     return { ok: true };

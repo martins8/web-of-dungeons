@@ -1,4 +1,5 @@
-import ActionSkill from "src/game/gcomponents/skills/actionSkill";
+import Effect from "src/game/value-objects/effect";
+import Skill from "src/game/value-objects/skill";
 /* 
   name: name of the skill
   types: offensive, defensive, buff, moviment
@@ -11,55 +12,81 @@ import ActionSkill from "src/game/gcomponents/skills/actionSkill";
   *skill will be used for some classe to recalculate skill damage or buff effect
   example: damage = damage * rank
 
+effecttype = dot | hot | buff | debuff | cc
+subtypes------ 
+dot = bleed | poison | magical
+hot = 
+buff = stats | attribute 
+debuff = stats | attribute 
+cc = stun | silence | slow | rooted
+
 */
 
-const actionSkillsList = [
-  new ActionSkill({
+const physicalSkillsList = [
+  new Skill({
     id: "skill_001",
     rank: 1,
-    name: "Basic Attack",
     typeSkill: "action",
     reach: "melee",
-    text: "a basic attack",
-    rarity: "common",
-    typeDamage: "physical",
-    damageMod: {
-      pDmg: 1,
+    cooldown: 0,
+    damage: {
+      typeDamage: "physical",
+      scaling: {
+        pDmg: 1,
+      },
     },
-    dotMod: {},
+    metadata: {
+      name: "Basic Attack",
+      text: "a basic attack",
+      rarity: "common",
+    },
   }),
-  new ActionSkill({
+  new Skill({
     id: "skill_002",
     rank: 1,
-    name: "Sword Strike",
     typeSkill: "action",
     reach: "melee",
-    text: "Dieee!!!",
-    rarity: "common",
-    typeDamage: "physical",
-    damageMod: {
-      pDmg: 1.1,
-      maestry: 0.5,
+    cooldown: 2,
+    damage: {
+      typeDamage: "physical",
+      scaling: {
+        pDmg: 1.1,
+        maestry: 0.5,
+      },
     },
-    dotMod: {},
+    metadata: {
+      name: "Sword Strike",
+      text: "Dieee!!!",
+      rarity: "common",
+    },
   }),
-  new ActionSkill({
+  new Skill({
     id: "skill_003",
     rank: 1,
-    name: "Bleed",
     typeSkill: "action",
     reach: "melee",
-    text: "put your enemy to bleed",
-    rarity: "common",
-    typeDamage: "physical",
-    damageMod: {
-      pDmg: 0.2,
+    cooldown: 2,
+    damage: {
+      typeDamage: "physical",
+      scaling: {
+        pDmg: 0.2,
+      },
     },
-    dotMod: {
-      pDmg: 0.9,
+    effects: new Effect({
+      target: "enemy",
+      effectType: "dot",
+      subtype: "bleed",
+      scaling: {
+        pDmg: 0.9,
+      },
       duration: 5,
+    }),
+    metadata: {
+      name: "Bleeeeeeed",
+      text: "put your enemy to bleed",
+      rarity: "common",
     },
   }),
 ];
 
-export default actionSkillsList;
+export default physicalSkillsList;
