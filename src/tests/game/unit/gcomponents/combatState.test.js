@@ -57,9 +57,10 @@ describe("CombatState", () => {
       duration: 2,
     });
 
-    state.tickEffects();
+    const result = state.tickEffectsDamageAndHeal();
 
     expect(state.currentHp).toBeLessThan(initialHp);
+    expect(result.damage).toBeGreaterThan(0);
   });
 
   test("should expire effects after duration", () => {
@@ -91,6 +92,22 @@ describe("CombatState", () => {
 
     state.tickEffects();
     expect(state.cc.stunned).toBe(false);
+  });
+  test("should apply and clear CC correctly", () => {
+    const state = createState();
+
+    state.addDebuff({
+      effectType: "cc",
+      subtype: "stunned",
+      duration: 1,
+    });
+
+    state.tickEffects();
+    expect(state.cc.stunned).toBe(true);
+
+    state.tickEffects();
+    expect(state.cc.stunned).toBe(false);
+    expect(state.debuffs.length).toBe(0);
   });
 
   test("should handle cooldown lifecycle", () => {

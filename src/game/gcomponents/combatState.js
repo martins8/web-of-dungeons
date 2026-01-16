@@ -25,6 +25,7 @@ export default class CombatState {
 
   takeDamage(amount) {
     this.currentHp = Math.max(0, this.currentHp - amount);
+    return amount;
   }
 
   heal(amount) {
@@ -32,6 +33,7 @@ export default class CombatState {
       this.getEffectiveStats().maxHp,
       this.currentHp + amount,
     );
+    return amount;
   }
 
   isDead() {
@@ -98,7 +100,7 @@ export default class CombatState {
   }
 
   /* ---------------- TICK ---------------- */
-
+  //tick timers for buffs, debuffs, and crowd controll effects
   tickEffects() {
     this.clearCC();
 
@@ -106,7 +108,6 @@ export default class CombatState {
 
     allEffects.forEach((effect) => {
       const system = new EffectSystem(effect);
-      system.tick(this);
       effect.duration -= 1;
 
       if (system.isCC()) {
@@ -116,6 +117,23 @@ export default class CombatState {
 
     this.buffs = this.buffs.filter((e) => e.duration > 0);
     this.debuffs = this.debuffs.filter((e) => e.duration > 0);
+  }
+
+  //tick damage and healing effects (DoT and HoT)
+  tickEffectsDamageAndHeal() {
+    const allEffects = [...this.buffs, ...this.debuffs];
+    let damage = 0;
+    let heal = 0;
+    allEffects.forEach((effect) => {
+      const system = new EffectSystem(effect);
+      const value = system.tick(this);
+      if (system.isDot()) {
+        damage += this.takeDamage(value);
+      } else if (system.isHot()) {
+        heal += this.heal(value);
+      }
+    });
+    return { damage, heal };
   }
 
   /* ---------------- COOLDOWNS ---------------- */
