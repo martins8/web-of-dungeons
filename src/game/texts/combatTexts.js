@@ -20,7 +20,7 @@ export default class CombatTexts {
       text += "💥";
     }
 
-    text += ` — HP restante: ${result.defender.health.currentHp}🩸\n`;
+    text += ` — HP restante: ${result.defender.combatState.currentHp}🩸\n`;
 
     if (result.isDead) {
       text += `${result.defender.name} foi morto em combate ⚰️\n`;
