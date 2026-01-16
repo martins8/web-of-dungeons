@@ -37,15 +37,18 @@ export default class EffectSystem {
     }
   }
 
+  //in the future remove combatState and put just stats.
   tick(combatState) {
     if (this.isDot()) {
       const damage = this.calculateScaling(combatState.getEffectiveStats());
-      combatState.takeDamage(damage);
+      //combatState.takeDamage(damage);
+      return damage;
     }
 
     if (this.isHot()) {
       const heal = this.calculateScaling(combatState.getEffectiveStats());
-      combatState.heal(heal);
+      //combatState.heal(heal);
+      return heal;
     }
   }
 

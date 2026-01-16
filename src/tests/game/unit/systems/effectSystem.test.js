@@ -1,7 +1,7 @@
 import EffectSystem from "src/game/systems/effectSystem";
 
-describe("EFFECTSYSTEM TESTS", () => {
-  test("should apply DOT damage on tick", () => {
+describe("EffectSystem TESTS", () => {
+  test("should return DOT damage value on tick", () => {
     const effect = {
       effectType: "dot",
       scaling: { pDmg: 1 },
@@ -10,18 +10,14 @@ describe("EFFECTSYSTEM TESTS", () => {
 
     const combatState = {
       getEffectiveStats: () => ({ pDmg: 10 }),
-      takeDamage: jest.fn(),
-      heal: jest.fn(),
     };
 
     const system = new EffectSystem(effect);
-    system.tick(combatState);
+    const damage = system.tick(combatState);
 
-    expect(combatState.takeDamage).toHaveBeenCalledWith(10);
-    expect(combatState.heal).not.toHaveBeenCalled();
+    expect(damage).toBe(10);
   });
-
-  test("should apply HOT heal on tick", () => {
+  test("should return HOT heal value on tick", () => {
     const effect = {
       effectType: "hot",
       scaling: { hPower: 2 },
@@ -30,17 +26,13 @@ describe("EFFECTSYSTEM TESTS", () => {
 
     const combatState = {
       getEffectiveStats: () => ({ hPower: 5 }),
-      takeDamage: jest.fn(),
-      heal: jest.fn(),
     };
 
     const system = new EffectSystem(effect);
-    system.tick(combatState);
+    const heal = system.tick(combatState);
 
-    expect(combatState.heal).toHaveBeenCalledWith(10);
-    expect(combatState.takeDamage).not.toHaveBeenCalled();
+    expect(heal).toBe(10);
   });
-
   test("should apply CC correctly", () => {
     const effect = {
       effectType: "cc",
