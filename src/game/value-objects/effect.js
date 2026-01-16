@@ -1,6 +1,13 @@
 // need test file
 export default class Effect {
-  constructor({ effectType, subtype = null, scaling = {}, duration = null }) {
+  constructor({
+    target,
+    effectType,
+    subtype = null,
+    scaling = {},
+    duration = null,
+  }) {
+    this.target = target;
     this.effectType = effectType;
     this.subtype = subtype;
     this.scaling = scaling;

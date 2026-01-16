@@ -12,6 +12,14 @@ import Skill from "src/game/value-objects/skill";
   *skill will be used for some classe to recalculate skill damage or buff effect
   example: damage = damage * rank
 
+effecttype = dot | hot | buff | debuff | cc
+subtypes------ 
+dot = bleed | poison | magical
+hot = 
+buff = stats | attribute 
+debuff = stats | attribute 
+cc = stun | silence | slow | rooted
+
 */
 
 const physicalSkillsList = [
@@ -65,6 +73,7 @@ const physicalSkillsList = [
       },
     },
     effects: new Effect({
+      target: "enemy",
       effectType: "dot",
       subtype: "bleed",
       scaling: {

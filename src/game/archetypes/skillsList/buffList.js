@@ -8,6 +8,7 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
+      target: "self",
       effectType: "buff",
       subtype: "attribute",
       scaling: { str: 1 },
@@ -26,6 +27,7 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
+      target: "self",
       effectType: "buff",
       subtype: "attribute",
       scaling: { int: 1 },
@@ -44,6 +46,7 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
+      target: "self",
       effectType: "buff",
       subtype: "attribute",
       scaling: { wis: 1 },
@@ -62,6 +65,7 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
+      target: "self",
       effectType: "buff",
       subtype: "attribute",
       scaling: { con: 1 },
@@ -80,6 +84,7 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
+      target: "self",
       effectType: "buff",
       subtype: "attribute",
       scaling: { sta: 1 },
@@ -98,6 +103,7 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
+      target: "self",
       effectType: "buff",
       subtype: "attribute",
       scaling: { dex: 1 },
@@ -116,6 +122,7 @@ const buffSkills = [
     reach: "global",
     cooldown: 0,
     effects: {
+      target: "self",
       effectType: "buff",
       subtype: "attribute",
       scaling: { agi: 1 },
@@ -133,6 +140,7 @@ const buffSkills = [
     typeSkill: "buff",
     reach: "global",
     effects: {
+      target: "self",
       effectType: "buff",
       subtype: "attribute",
       scaling: { cha: 1 },
