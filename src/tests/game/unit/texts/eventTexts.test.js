@@ -31,7 +31,7 @@ describe("EventTexts", () => {
           target: { name: "Goblin" },
           damage: 20,
           damageType: "physical",
-          critical: true,
+          isCritical: true,
         },
       },
     ];
