@@ -1,22 +1,23 @@
 import CombatActionResult from "../value-objects/combatActionResult";
 
 export default class CombatResolve {
-  //actions methods
   action(attacker, defender, skill, ticked, { rng, critSystem, evadeSystem }) {
-    //tick damage if ticked is true
+    // 1️⃣ Tick DOT / HOT (one time per turn)
     const damageAndHealTicked = this.getDamageAndHealTicked(
       attacker,
       defender,
       ticked,
     );
-    //catch combat states
+
     const attackerCombatState = attacker.combatState;
     const defenderCombatState = defender.combatState;
-    //evasion test
+
+    // 2️⃣ Evasion test
     const isEvaded = evadeSystem.tryEvade(
       rng,
       defenderCombatState.getEffectiveStats().eva,
     );
+
     if (isEvaded) {
       return new CombatActionResult({
         attacker,
@@ -24,25 +25,35 @@ export default class CombatResolve {
         skill,
         typeDamage: skill.damage.typeDamage,
         damage: 0,
-        dot: {
-          onAttacker: damageAndHealTicked.attackerDotHot.damage,
-          onDefender: damageAndHealTicked.defenderDotHot.damage,
-        },
-        hot: {
-          onAttacker: damageAndHealTicked.attackerDotHot.heal,
-          onDefender: damageAndHealTicked.defenderDotHot.heal,
-        },
+        dot:
+          damageAndHealTicked.attackerDotHot.damage ||
+          damageAndHealTicked.defenderDotHot.damage
+            ? {
+                onAttacker: damageAndHealTicked.attackerDotHot.damage,
+                onDefender: damageAndHealTicked.defenderDotHot.damage,
+              }
+            : null,
+        hot:
+          damageAndHealTicked.attackerDotHot.heal ||
+          damageAndHealTicked.defenderDotHot.heal
+            ? {
+                onAttacker: damageAndHealTicked.attackerDotHot.heal,
+                onDefender: damageAndHealTicked.defenderDotHot.heal,
+              }
+            : null,
         isCritical: false,
         isEvaded: true,
         isDead: false,
       });
     }
-    //critical test
+
+    // 3️⃣ Crit test
     const isCritical = critSystem.tryCrit(
       rng,
       attackerCombatState.getEffectiveStats().critC,
     );
-    //useActionSkill
+
+    // 4️⃣ Get skill base damage
     let damage = this.useSkill(skill, attackerCombatState.getEffectiveStats());
 
     if (isCritical) {
@@ -51,19 +62,18 @@ export default class CombatResolve {
         attackerCombatState.getEffectiveStats().critD,
       );
     }
-    //defender apply your defense stats
-    damage =
+
+    // 5️⃣ Defense application
+    const defense =
       skill.damage.typeDamage === "physical"
-        ? this.applyDefense(
-            damage,
-            defenderCombatState.getEffectiveStats().pDef,
-          )
-        : this.applyDefense(
-            damage,
-            defenderCombatState.getEffectiveStats().mDef,
-          );
+        ? defenderCombatState.getEffectiveStats().pDef
+        : defenderCombatState.getEffectiveStats().mDef;
+
+    damage = this.applyDefense(damage, defense);
+
     defenderCombatState.takeDamage(damage);
 
+    // 6️⃣ Result
     return new CombatActionResult({
       attacker,
       defender,
@@ -84,15 +94,18 @@ export default class CombatResolve {
     });
   }
 
+  // =========================
+  // Helpers
+  // =========================
+
   useSkill(skill, baseStats) {
     let damage = 0;
 
-    // percorre todos os modificadores definidos na skill
     for (const [key, mod] of Object.entries(skill.damage.scaling)) {
-      const statValue = baseStats[key] || 0; // se não existir, assume 0
-      damage += statValue * mod;
+      damage += (baseStats[key] || 0) * mod;
     }
-    return damage * skill.rank; // aplica rank como multiplicador
+
+    return damage * skill.rank;
   }
 
   applyCrit(baseDamage, critDamage) {
@@ -103,30 +116,20 @@ export default class CombatResolve {
     if (defense >= 0) {
       return Math.floor(damage * (100 / (100 + defense)));
     }
-
-    // opcional: suporte a defesa negativa
     return Math.floor(damage * (2 - 100 / (100 - defense)));
   }
 
   getDamageAndHealTicked(attacker, defender, ticked) {
-    let attackerDotHot;
-    let defenderDotHot;
-    if (ticked) {
-      attackerDotHot = attacker.combatState.tickEffectsDamageAndHeal();
-      defenderDotHot = defender.combatState.tickEffectsDamageAndHeal();
-    } else {
-      attackerDotHot = { damage: 0, heal: 0 };
-      defenderDotHot = { damage: 0, heal: 0 };
+    if (!ticked) {
+      return {
+        attackerDotHot: { damage: 0, heal: 0 },
+        defenderDotHot: { damage: 0, heal: 0 },
+      };
     }
+
     return {
-      attackerDotHot: {
-        damage: attackerDotHot.damage > 0 ? attackerDotHot.damage : 0,
-        heal: attackerDotHot.heal > 0 ? attackerDotHot.heal : 0,
-      },
-      defenderDotHot: {
-        damage: defenderDotHot.damage > 0 ? defenderDotHot.damage : 0,
-        heal: defenderDotHot.heal > 0 ? defenderDotHot.heal : 0,
-      },
+      attackerDotHot: attacker.combatState.tickEffectsDamageAndHeal(),
+      defenderDotHot: defender.combatState.tickEffectsDamageAndHeal(),
     };
   }
 }
