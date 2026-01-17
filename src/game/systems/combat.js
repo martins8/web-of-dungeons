@@ -1,8 +1,8 @@
 import CombatResolve from "src/game/services/combatResolve";
-import CombatTexts from "src/game/texts/combatTexts";
+import EventTexts from "src/game/texts/eventTexts";
 import EffectSystem from "./effectSystem";
 import SeedRNG from "src/game/rng/seedRNG";
-import EventTexts from "src/game/texts/eventTexts";
+import EventFactory from "src/game/factories/eventFactory";
 
 export default class Combat {
   constructor(player, enemy, { rng } = {}) {
@@ -10,7 +10,6 @@ export default class Combat {
     this.enemy = enemy;
 
     this.combatResolve = new CombatResolve();
-    this.combatTexts = new CombatTexts();
 
     // RNG contract:
     // - rollPercent(): number (0–100)
@@ -131,8 +130,8 @@ export default class Combat {
     //set skill on cooldown
     attacker.combatState.setCooldown(skill);
     //increment combat log
-    result.events = EventTexts.fromActionResult(result);
-    this.combatLog += this.combatTexts.fromEvents(result.events);
+    result.events = EventFactory.fromActionResult(result);
+    this.combatLog += EventTexts.fromEvents(result.events);
     //check if defender is dead
     if (result.isDead) {
       this.finished = true;
