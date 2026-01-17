@@ -30,12 +30,12 @@ export default class EventTexts {
     }
   }
 
-  static attack({ source, target, damage, critical, damageType }) {
+  static attack({ source, target, damage, isCritical, damageType }) {
     let text = `${source.name} atacou ${target.name} causando ${damage}`;
 
     text += damageType === "physical" ? "⚔️" : "✨";
 
-    if (critical) text += "💥";
+    if (isCritical) text += "💥";
 
     text += "\n";
     return text;
