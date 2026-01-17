@@ -2,6 +2,7 @@ import CombatResolve from "src/game/services/combatResolve";
 import CombatTexts from "src/game/texts/combatTexts";
 import EffectSystem from "./effectSystem";
 import SeedRNG from "src/game/rng/seedRNG";
+import EventTexts from "src/game/texts/eventTexts";
 
 export default class Combat {
   constructor(player, enemy, { rng } = {}) {
@@ -130,7 +131,8 @@ export default class Combat {
     //set skill on cooldown
     attacker.combatState.setCooldown(skill);
     //increment combat log
-    this.combatLog += this.combatTexts.fromResult(result);
+    result.events = EventTexts.fromActionResult(result);
+    this.combatLog += this.combatTexts.fromEvents(result.events);
     //check if defender is dead
     if (result.isDead) {
       this.finished = true;
