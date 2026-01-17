@@ -16,6 +16,16 @@ export default class EventFactory {
       });
     }
 
+    if (result.isEvaded) {
+      events.push({
+        type: "EVADE",
+        payload: {
+          source: result.defender,
+          target: result.attacker,
+        },
+      });
+    }
+
     // 2️⃣ DOT
     if (result.dot?.onAttacker > 0) {
       events.push({
@@ -58,7 +68,7 @@ export default class EventFactory {
       });
     }
 
-    // 4️⃣ Morte
+    // 4️⃣ DEATH
     if (result.isDead) {
       events.push({
         type: "DEATH",
