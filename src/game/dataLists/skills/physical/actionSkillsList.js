@@ -87,6 +87,33 @@ const physicalSkillsList = [
       rarity: "common",
     },
   }),
+  new Skill({
+    id: "skill_004",
+    rank: 1,
+    typeSkill: "action",
+    reach: "melee",
+    cooldown: 0,
+    damage: {
+      typeDamage: "physical",
+      scaling: {
+        pDmg: 0.5,
+      },
+    },
+    effects: new Effect({
+      target: "enemy",
+      effectType: "dot",
+      subtype: "bleed",
+      scaling: {
+        pDmg: 0.1,
+      },
+      duration: 5,
+    }),
+    metadata: {
+      name: "Bite",
+      text: "Biteeeeeeeee",
+      rarity: "common",
+    },
+  }),
 ];
 
 export default physicalSkillsList;
