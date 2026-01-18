@@ -128,8 +128,12 @@ export default class CombatResolve {
     }
 
     return {
-      attackerDotHot: attacker.combatState.tickEffectsDamageAndHeal(),
-      defenderDotHot: defender.combatState.tickEffectsDamageAndHeal(),
+      attackerDotHot: attacker.combatState.tickEffectsDamageAndHeal(
+        defender.combatState.getEffectiveStats(),
+      ),
+      defenderDotHot: defender.combatState.tickEffectsDamageAndHeal(
+        attacker.combatState.getEffectiveStats(),
+      ),
     };
   }
 }
