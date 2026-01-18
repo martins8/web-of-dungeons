@@ -28,6 +28,7 @@ export default class Character {
   }
 
   initCombatState() {
+    if (this.combatState) return;
     this.combatState = new CombatState(this.stats, this.attributes);
   }
 
