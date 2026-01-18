@@ -2,6 +2,10 @@ export default class Attributes {
   constructor({ sta, str, con, dex, int, wis, agi, cha }) {
     if (
       [sta, str, con, dex, int, wis, agi, cha].some(
+        /* 
+        NEED TO IMPLEMENT A FLAG THAT ALLOW NEGATIVE ATTRIBUTES 
+        FOR DEBUFFS
+        */
         (v) => !Number.isInteger(v) || v <= 0,
       )
     ) {

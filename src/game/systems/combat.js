@@ -111,7 +111,7 @@ export default class Combat {
         skill.effects.target === "self"
           ? attacker.combatState
           : defender.combatState;
-
+      //effects on cast. (example: if is a debuff the tick just happen on combatResolve)
       effectSystem.apply(target);
     }
 
