@@ -48,6 +48,7 @@ describe("CombatState", () => {
   });
 
   test("should tick DOT and reduce HP", () => {
+    const stateApplyingDot = createState();
     const state = createState();
     const initialHp = state.currentHp;
 
@@ -57,7 +58,9 @@ describe("CombatState", () => {
       duration: 2,
     });
 
-    const result = state.tickEffectsDamageAndHeal();
+    const result = state.tickEffectsDamageAndHeal(
+      stateApplyingDot.getEffectiveStats(),
+    );
 
     expect(state.currentHp).toBeLessThan(initialHp);
     expect(result.damage).toBeGreaterThan(0);

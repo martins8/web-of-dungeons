@@ -11,9 +11,12 @@ describe("EffectSystem TESTS", () => {
     const combatState = {
       getEffectiveStats: () => ({ pDmg: 10 }),
     };
+    const combatEnemyStats = {
+      pDmg: 10,
+    };
 
     const system = new EffectSystem(effect);
-    const damage = system.tick(combatState);
+    const damage = system.tick(combatState, combatEnemyStats);
 
     expect(damage).toBe(10);
   });
