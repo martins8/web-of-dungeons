@@ -120,13 +120,13 @@ export default class CombatState {
   }
 
   //tick damage and healing effects (DoT and HoT)
-  tickEffectsDamageAndHeal() {
+  tickEffectsDamageAndHeal(enemyCombatStats) {
     const allEffects = [...this.buffs, ...this.debuffs];
     let damage = 0;
     let heal = 0;
     allEffects.forEach((effect) => {
       const system = new EffectSystem(effect);
-      const value = system.tick(this);
+      const value = system.tick(this, enemyCombatStats);
       if (system.isDot()) {
         damage += this.takeDamage(value);
       } else if (system.isHot()) {

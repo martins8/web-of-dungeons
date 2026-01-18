@@ -131,11 +131,12 @@ export default class Combat {
     attacker.combatState.setCooldown(skill);
     //increment combat log
     result.events = EventFactory.fromActionResult(result);
-    this.combatLog += EventTexts.fromEvents(result.events);
+    const resultText = EventTexts.fromEvents(result.events);
+    this.combatLog += resultText;
     //check if defender is dead
     if (result.isDead) {
       this.finished = true;
-      return result;
+      return resultText;
     }
 
     //check if attacker turn is over (2 actions per turn)
@@ -145,7 +146,7 @@ export default class Combat {
       this.getCurrentAttacker().startTurn();
     }
 
-    return result;
+    return resultText;
   }
 
   advanceTurn() {

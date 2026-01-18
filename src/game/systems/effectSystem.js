@@ -37,16 +37,18 @@ export default class EffectSystem {
     }
   }
 
-  //in the future remove combatState and put just stats.
-  tick(combatState) {
+  /* 
+  ACTUALLY TICKS CONSIDER DYNAMIC STATS IN THE FUTURE WE WILL PUT THE STATS SNAPSHOT WHEN apply() called in combat orchestrator
+  */
+  tick(selfCombatState, targetCombatStats) {
     if (this.isDot()) {
-      const damage = this.calculateScaling(combatState.getEffectiveStats());
+      const damage = this.calculateScaling(targetCombatStats);
       //combatState.takeDamage(damage);
       return damage;
     }
 
     if (this.isHot()) {
-      const heal = this.calculateScaling(combatState.getEffectiveStats());
+      const heal = this.calculateScaling(selfCombatState.getEffectiveStats());
       //combatState.heal(heal);
       return heal;
     }
