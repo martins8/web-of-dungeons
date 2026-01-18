@@ -117,7 +117,7 @@ describe("Character", () => {
     test("getSkillById should return undefined if skill does not exist", () => {
       const character = new Character("Arthur", validAttributes, []);
 
-      expect(character.getSkillById("unknown")).toBeUndefined();
+      expect(() => character.getSkillById("unknown")).toThrow();
     });
   });
 });

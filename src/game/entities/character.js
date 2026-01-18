@@ -37,7 +37,9 @@ export default class Character {
   }
 
   getSkillById(id) {
-    return this.skills.find((skill) => skill.id === id);
+    const skill = this.skills.find((s) => s.id === id);
+    if (!skill) throw new Error(`Skill ${id} not found`);
+    return skill;
   }
 
   isDead() {
