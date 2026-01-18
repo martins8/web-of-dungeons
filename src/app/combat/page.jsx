@@ -6,6 +6,7 @@ import skills from "src/game/archetypes/skillsList/physical/actionSkillsList";
 import AttributesRadar from "src/components/charts/AttributesRadar";
 import StatsBar from "src/components/charts/StatsBar";
 import StatsPanel from "src/components/panels/stats/StatsPanel";
+import CombatLog from "src/components/log/CombatLog";
 function attributesToPlain(attrs) {
   return {
     sta: attrs.sta,
@@ -96,8 +97,12 @@ export default function CombatPage() {
 
   // simulação simples só para visualização
   combat.performAction("skill_001");
+  combat.performAction("skill_003");
   combat.performAction("skill_002");
   combat.performAction("skill_003");
+  while (!combat.finished) {
+    combat.performAction("skill_001");
+  }
 
   const playerView = characterToView(player);
   const enemyView = characterToView(enemy);
@@ -105,11 +110,11 @@ export default function CombatPage() {
   return (
     <div
       style={{
-        display: "grid",
-        gridTemplateColumns: "320px minmax(400px, 1fr) 320px",
+        display: "flex",
         gap: 24,
         padding: 24,
-        alignItems: "start",
+        alignItems: "flex-start",
+        justifyContent: "center",
       }}
     >
       {/* PLAYER */}
@@ -119,65 +124,97 @@ export default function CombatPage() {
           padding: 16,
           borderRadius: 8,
           background: "#111",
+          width: 600,
+          display: "grid",
+          gridTemplateRows: "auto auto auto 1fr",
+          gap: 20,
         }}
       >
-        <h2>{playerView.name}</h2>
-        <p>
-          HP: {playerView.hp} / {playerView.maxHp}
-        </p>
+        {/* Nome */}
+        <div style={{ textAlign: "center" }}>
+          <h2>{playerView.name}</h2>
+          <p>
+            HP: {playerView.hp} / {playerView.maxHp}
+          </p>
+        </div>
 
-        <StatsPanel
-          title="Atributos"
-          data={playerView.attributes}
-          maxMap={{
-            str: 50,
-            dex: 50,
-            con: 50,
-            int: 50,
-            wis: 50,
-            agi: 50,
-            sta: 50,
-            cha: 50,
+        {/* Atributos */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 180px",
+            alignItems: "center",
+            gap: 12,
           }}
-          color="#22d3ee"
-        />
+        >
+          <div style={{ width: 180 }}>
+            <AttributesRadar
+              attributes={playerView.attributes}
+              label="Attributes"
+            />
+          </div>
+          <StatsPanel
+            title="Atributos"
+            data={playerView.attributes}
+            maxMap={{
+              str: 50,
+              dex: 50,
+              con: 50,
+              int: 50,
+              wis: 50,
+              agi: 50,
+              sta: 50,
+              cha: 50,
+            }}
+            color="#22d3ee"
+          />
+        </div>
 
-        <StatsPanel
-          title="Stats"
-          data={playerView.stats}
-          maxMap={{
-            pDmg: 200,
-            mDmg: 200,
-            pDef: 150,
-            mDef: 150,
-            critC: 100,
-            critD: 200,
-            eva: 100,
-            luck: 100,
-            init: 100,
-            speed: 100,
-            maxHp: 300,
-            hPower: 150,
-            maestry: 100,
+        {/* Stats */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 200px",
+            alignItems: "center",
+            gap: 12,
           }}
-          color="#facc15"
-        />
+        >
+          <div style={{ width: 200 }}>
+            <StatsBar stats={playerView.stats} />
+          </div>
+          <StatsPanel
+            title="Stats"
+            data={playerView.stats}
+            maxMap={{
+              pDmg: 200,
+              mDmg: 200,
+              pDef: 150,
+              mDef: 150,
+              critC: 100,
+              critD: 200,
+              eva: 100,
+              luck: 100,
+              init: 100,
+              speed: 100,
+              maxHp: 300,
+              hPower: 150,
+              maestry: 100,
+            }}
+            color="#facc15"
+          />
+        </div>
 
-        <AttributesRadar
-          attributes={playerView.attributes}
-          label="Player Attributes"
-        />
-
-        <StatsBar stats={playerView.stats} />
-
-        <h3>Skills</h3>
-        <ul>
-          {playerView.skills.map((s) => (
-            <li key={s.id}>
-              {s.name} {s.cooldown > 0 && `(CD ${s.cooldown})`}
-            </li>
-          ))}
-        </ul>
+        {/* Skills */}
+        <div>
+          <h3>Skills</h3>
+          <ul>
+            {playerView.skills.map((s) => (
+              <li key={s.id}>
+                {s.name} {s.cooldown > 0 && `(CD ${s.cooldown})`}
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       {/* COMBAT LOG */}
@@ -187,12 +224,13 @@ export default function CombatPage() {
           padding: 16,
           borderRadius: 8,
           background: "#0b0b0b",
-          maxHeight: "70vh",
+          width: 520,
+          maxHeight: "75vh",
           overflowY: "auto",
+          textAlign: "center",
         }}
       >
-        <h2>Combat Log</h2>
-        <pre style={{ whiteSpace: "pre-wrap" }}>{combat.combatLog}</pre>
+        <CombatLog log={combat.combatLog} />
       </section>
 
       {/* ENEMY */}
@@ -202,61 +240,99 @@ export default function CombatPage() {
           padding: 16,
           borderRadius: 8,
           background: "#111",
+          width: 600,
+          display: "grid",
+          gridTemplateRows: "auto auto auto 1fr",
+          gap: 20,
         }}
       >
-        <h2>{enemyView.name}</h2>
-        <p>
-          HP: {enemyView.hp} / {enemyView.maxHp}
-        </p>
-        <StatsPanel
-          title="Atributos"
-          data={enemyView.attributes}
-          maxMap={{
-            str: 50,
-            dex: 50,
-            con: 50,
-            int: 50,
-            wis: 50,
-            agi: 50,
-            sta: 50,
-            cha: 50,
-          }}
-          color="#22d3ee"
-        />
+        {/* Nome */}
+        <div style={{ textAlign: "center" }}>
+          <h2>{enemyView.name}</h2>
+          <p>
+            HP: {enemyView.hp} / {enemyView.maxHp}
+          </p>
+        </div>
 
-        <StatsPanel
-          title="Stats"
-          data={enemyView.stats}
-          maxMap={{
-            pDmg: 200,
-            mDmg: 200,
-            pDef: 150,
-            mDef: 150,
-            critC: 100,
-            critD: 200,
-            eva: 100,
-            luck: 100,
-            init: 100,
-            speed: 100,
-            maxHp: 300,
-            hPower: 150,
-            maestry: 100,
+        {/* Atributos */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 180px",
+            alignItems: "center",
+            gap: 12,
           }}
-          color="#facc15"
-        />
-        <AttributesRadar
-          attributes={playerView.attributes}
-          label="Player Attributes"
-        />
-        <StatsBar stats={enemyView.stats} />
-        <h3>Skills</h3>
-        <ul>
-          {enemyView.skills.map((s) => (
-            <li key={s.id}>
-              {s.name} {s.cooldown > 0 && `(CD ${s.cooldown})`}
-            </li>
-          ))}
-        </ul>
+        >
+          <StatsPanel
+            title="Atributos"
+            data={enemyView.attributes}
+            maxMap={{
+              str: 50,
+              dex: 50,
+              con: 50,
+              int: 50,
+              wis: 50,
+              agi: 50,
+              sta: 50,
+              cha: 50,
+            }}
+            color="#22d3ee"
+          />
+
+          <div style={{ width: 180 }}>
+            <AttributesRadar
+              attributes={enemyView.attributes}
+              label="Enemy Attributes"
+            />
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 200px",
+            alignItems: "center",
+            gap: 12,
+          }}
+        >
+          <StatsPanel
+            title="Stats"
+            data={enemyView.stats}
+            maxMap={{
+              pDmg: 200,
+              mDmg: 200,
+              pDef: 150,
+              mDef: 150,
+              critC: 100,
+              critD: 200,
+              eva: 100,
+              luck: 100,
+              init: 100,
+              speed: 100,
+              maxHp: 300,
+              hPower: 150,
+              maestry: 100,
+            }}
+            color="#facc15"
+          />
+
+          <div style={{ width: 200 }}>
+            <StatsBar stats={enemyView.stats} />
+          </div>
+        </div>
+
+        {/* Skills */}
+        <div>
+          <h3>Skills</h3>
+          <ul>
+            {enemyView.skills.map((s) => (
+              <li key={s.id}>
+                {s.name} {s.cooldown > 0 && `(CD ${s.cooldown})`}
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
     </div>
   );
