@@ -52,6 +52,8 @@ export default class EffectSystem {
       //combatState.heal(heal);
       return heal;
     }
+
+    return 0;
   }
 
   calculateScaling(stats) {

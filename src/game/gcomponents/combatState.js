@@ -3,7 +3,7 @@ import EffectSystem from "src/game/systems/effectSystem";
 
 export default class CombatState {
   constructor(stats, attributes) {
-    this.baseStats = stats;
+    this.baseStats = { ...stats };
     this.baseAttributes = attributes;
 
     this.currentHp = stats.maxHp;
@@ -50,12 +50,17 @@ export default class CombatState {
     this.debuffs.push(this.cloneEffect(effect));
   }
 
+  getAllEffects() {
+    return [...this.buffs, ...this.debuffs];
+  }
+
   cloneEffect(effect) {
     return {
       effectType: effect.effectType,
       subtype: effect.subtype,
       scaling: { ...effect.scaling },
       duration: effect.duration,
+      source: effect.source ?? null,
     };
   }
 
@@ -72,7 +77,7 @@ export default class CombatState {
   getEffectiveAttributes() {
     let attrs = this.baseAttributes;
 
-    [...this.buffs, ...this.debuffs].forEach((effect) => {
+    this.getAllEffects().forEach((effect) => {
       if (effect.subtype === "attribute") {
         for (const [attr, value] of Object.entries(effect.scaling)) {
           attrs = attrs.increase(attr, value);
@@ -86,9 +91,10 @@ export default class CombatState {
   /* ---------------- EFFECTIVE STATS ---------------- */
 
   getEffectiveStats() {
+    /* SNAPSHOT STATS IN THE FUTURE*/
     let stats = StatsCalculator.calculate(this.getEffectiveAttributes());
 
-    [...this.buffs, ...this.debuffs].forEach((effect) => {
+    this.getAllEffects().forEach((effect) => {
       if (effect.subtype === "stats") {
         for (const [key, value] of Object.entries(effect.scaling)) {
           stats[key] += value;
@@ -104,7 +110,7 @@ export default class CombatState {
   tickEffects() {
     this.clearCC();
 
-    const allEffects = [...this.buffs, ...this.debuffs];
+    const allEffects = this.getAllEffects();
 
     allEffects.forEach((effect) => {
       const system = new EffectSystem(effect);
@@ -121,7 +127,7 @@ export default class CombatState {
 
   //tick damage and healing effects (DoT and HoT)
   tickEffectsDamageAndHeal(enemyCombatStats) {
-    const allEffects = [...this.buffs, ...this.debuffs];
+    const allEffects = this.getAllEffects();
     let damage = 0;
     let heal = 0;
     allEffects.forEach((effect) => {
