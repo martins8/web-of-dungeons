@@ -1,4 +1,4 @@
-const validateName = (name) => {
+const validateName = (name, isMob) => {
   if (typeof name !== "string") {
     throw new Error("Name must be a string");
   }
@@ -8,8 +8,10 @@ const validateName = (name) => {
   if (/\d/.test(name)) {
     throw new Error("Name cannot contain numbers");
   }
-  if (/\s/.test(name)) {
-    throw new Error("Name cannot contain spaces");
+  if (!isMob) {
+    if (/\s/.test(name)) {
+      throw new Error("Name cannot contain spaces");
+    }
   }
 };
 

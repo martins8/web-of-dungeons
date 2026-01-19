@@ -8,8 +8,8 @@ import TurnSystem from "../systems/turnSystem";
 import CombatState from "../gcomponents/combatState";
 
 export default class Character {
-  constructor(name, attrValues, skills = []) {
-    utils.validateName(name);
+  constructor(name, attrValues, skills = [], isMob = false) {
+    utils.validateName(name, isMob);
     this.name = name;
     this.attributes = new Attributes(attrValues);
     this.stats = StatsCalculator.calculate(this.attributes);
