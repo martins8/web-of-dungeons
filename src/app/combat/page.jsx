@@ -2,7 +2,7 @@
 POSTERIORMENTE, SERÁ UTILIZADO API PARA INTEGRAR COM O FRONT-END */
 
 import { Combat, Character } from "src/game/server";
-import skills from "src/game/archetypes/skillsList/physical/actionSkillsList";
+import skills from "src/game/dataLists/skills/physical/actionSkillsList";
 import AttributesRadar from "src/components/charts/AttributesRadar";
 import StatsBar from "src/components/charts/StatsBar";
 import StatsPanel from "src/components/panels/stats/StatsPanel";

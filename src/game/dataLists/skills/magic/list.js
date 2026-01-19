@@ -22,9 +22,9 @@ cc = stun | silence | slow | rooted
 
 */
 
-const physicalSkillsList = [
+const magicalSkillsList = [
   new Skill({
-    id: "skill_001",
+    id: "skill_005",
     rank: 1,
     typeSkill: "action",
     reach: "melee",
@@ -41,52 +41,6 @@ const physicalSkillsList = [
       rarity: "common",
     },
   }),
-  new Skill({
-    id: "skill_002",
-    rank: 1,
-    typeSkill: "action",
-    reach: "melee",
-    cooldown: 2,
-    damage: {
-      typeDamage: "physical",
-      scaling: {
-        pDmg: 1.1,
-        maestry: 0.5,
-      },
-    },
-    metadata: {
-      name: "Sword Strike",
-      text: "Dieee!!!",
-      rarity: "common",
-    },
-  }),
-  new Skill({
-    id: "skill_003",
-    rank: 1,
-    typeSkill: "action",
-    reach: "melee",
-    cooldown: 2,
-    damage: {
-      typeDamage: "physical",
-      scaling: {
-        pDmg: 0.2,
-      },
-    },
-    effects: new Effect({
-      target: "enemy",
-      effectType: "dot",
-      subtype: "bleed",
-      scaling: {
-        pDmg: 0.9,
-      },
-      duration: 5,
-    }),
-    metadata: {
-      name: "Bleeeeeeed",
-      text: "put your enemy to bleed",
-      rarity: "common",
-    },
-  }),
 ];
 
-export default physicalSkillsList;
+export default magicalSkillsList;

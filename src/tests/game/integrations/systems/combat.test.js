@@ -1,7 +1,9 @@
 // tests/game/systems/combat.integration.test.js
 import Character from "src/game/entities/character";
 import Combat from "src/game/systems/combat";
-import actionSkillsList from "src/game/archetypes/skillsList/physical/actionSkillsList";
+import physicalSkillsList from "src/game/dataLists/skills/physical/actionSkillsList";
+
+const skills = physicalSkillsList;
 
 describe("Combat - Integration Test", () => {
   test("should run combat, tick DoT/HoT and finish when one character dies", () => {
@@ -22,7 +24,7 @@ describe("Combat - Integration Test", () => {
         agi: 5,
         cha: 5,
       },
-      actionSkillsList,
+      skills,
     );
 
     const enemy = new Character(
@@ -37,7 +39,7 @@ describe("Combat - Integration Test", () => {
         agi: 5,
         cha: 5,
       },
-      actionSkillsList,
+      skills,
     );
 
     const combat = new Combat(player, enemy, { rng });
