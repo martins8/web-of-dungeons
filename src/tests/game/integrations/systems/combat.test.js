@@ -3,7 +3,7 @@ import Character from "src/game/entities/character";
 import Combat from "src/game/systems/combat";
 import physicalSkillsList from "src/game/dataLists/skills/physical/actionSkillsList";
 
-const skills = physicalSkillsList.physicalSkillsList;
+const skills = physicalSkillsList;
 
 describe("Combat - Integration Test", () => {
   test("should run combat, tick DoT/HoT and finish when one character dies", () => {

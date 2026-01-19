@@ -1,7 +1,6 @@
 import Mob from "../entities/mob";
 import { mobDefinitions } from "src/game/dataLists/mob/normal";
-import register from "src/game/dataLists/skills/physical/actionSkillsList";
-
+import { skillRegistry } from "src/game/dataLists/skills/register";
 export default class MobFactory {
   static fromMobId(id) {
     const def = mobDefinitions[id];
@@ -10,7 +9,7 @@ export default class MobFactory {
       throw new Error(`Mob ${id} not found`);
     }
 
-    const skills = def.skills.map((skillId) => register.skillRegistry[skillId]);
+    const skills = def.skills.map((skillId) => skillRegistry[skillId]);
 
     return new Mob(
       def.name,
