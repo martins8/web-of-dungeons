@@ -116,4 +116,11 @@ const physicalSkillsList = [
   }),
 ];
 
-export default physicalSkillsList;
+const skillRegistry = Object.fromEntries(
+  physicalSkillsList.map((skill) => [skill.id, skill]),
+);
+
+export default {
+  skillRegistry,
+  physicalSkillsList,
+};
