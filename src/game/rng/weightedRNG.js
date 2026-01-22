@@ -1,3 +1,15 @@
+/**
+ * SeedRNG contract
+ * next() {
+    this.seed = (this.seed * 1664525 + 1013904223) % 4294967296;
+    return this.seed / 4294967296;
+  }
+
+  rollPercent() {
+    return this.next() * 100;
+  }
+ */
+
 export default class WeightedRNG {
   constructor(rng) {
     this.rng = rng;
@@ -11,7 +23,7 @@ export default class WeightedRNG {
     }
 
     const totalWeight = valid.reduce((sum, e) => sum + e.weight, 0);
-    const roll = this.rng.roll() * totalWeight;
+    const roll = this.rng.next() * totalWeight;
 
     let acc = 0;
     for (const entry of valid) {
