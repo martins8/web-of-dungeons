@@ -19,13 +19,12 @@ export default class Combat {
     }
     this.turnOrder = [];
     this.currentTurnIndex = 0;
-    this.combatLog = this.initialLog();
 
     /* this.state = "FINISHED"; // RUNNING | FINISHED */
     this.finished = false;
   }
   initialLog() {
-    return `${this.player.name}: ${this.player.health.maxHp} ❤️ ${this.enemy.name}: ${this.enemy.health.maxHp} ❤️\n`;
+    return `${this.player.name}: ${this.player.combatState.currentHp} ❤️ ${this.enemy.name}: ${this.enemy.combatState.currentHp} ❤️\n`;
   }
 
   decideTurnOrder() {
@@ -51,6 +50,8 @@ export default class Combat {
     //initialize combat states
     this.player.initCombatState();
     this.enemy.initCombatState();
+
+    this.combatLog = this.initialLog();
     //decide turn order
     this.turnOrder = this.decideTurnOrder();
     this.currentTurnIndex = 0;
