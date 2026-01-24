@@ -7,7 +7,7 @@ bosses: its a final encounter of the dungeon, with 100% more stats than a normal
 */
 VALID_TYPES = ["normal", "rare", "elite", "boss"];
 
-VALID_ARCHETYPES = ["humanoid", "beast", "demon", "dragon", "fairy"];
+VALID_ARCHETYPES = ["humanoid", "beast", "demon", "undead", "dragon", "fairy"];
 
 export default class Mob extends Character {
   constructor(
