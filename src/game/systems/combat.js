@@ -1,6 +1,6 @@
 import CombatResolve from "src/game/services/combatResolve";
 import EventTexts from "src/game/texts/eventTexts";
-import EffectSystem from "./effectSystem";
+import EffectSystem from "src/game/systems/effectSystem";
 import SeedRNG from "src/game/rng/seedRNG";
 import EventFactory from "src/game/factories/eventFactory";
 
