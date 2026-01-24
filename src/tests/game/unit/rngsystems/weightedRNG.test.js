@@ -2,7 +2,7 @@ import WeightedRNG from "src/game/rng/weightedRNG";
 
 describe("WeightedRNG", () => {
   const mockRng = {
-    roll: jest.fn(),
+    next: jest.fn(),
   };
 
   test("throws error if no entry has weight > 0", () => {
@@ -17,7 +17,7 @@ describe("WeightedRNG", () => {
   });
 
   test("picks entry based on weight (deterministic)", () => {
-    mockRng.roll.mockReturnValue(0.1); // baixo → primeiro item
+    mockRng.next.mockReturnValue(0.1); // baixo → primeiro item
 
     const rng = new WeightedRNG(mockRng);
 
@@ -30,7 +30,7 @@ describe("WeightedRNG", () => {
   });
 
   test("picks heavier entry when roll is high", () => {
-    mockRng.roll.mockReturnValue(0.9); // alto → segundo item
+    mockRng.next.mockReturnValue(0.9); // alto → segundo item
 
     const rng = new WeightedRNG(mockRng);
 
