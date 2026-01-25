@@ -42,6 +42,11 @@ export default class CombatState {
 
   /* ---------------- EFFECTS ---------------- */
 
+  resetEffects() {
+    this.buffs = [];
+    this.debuffs = [];
+  }
+
   addBuff(effect) {
     this.buffs.push(this.cloneEffect(effect));
   }

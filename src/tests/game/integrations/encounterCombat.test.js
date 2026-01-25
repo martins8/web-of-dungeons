@@ -1,8 +1,8 @@
-import EncounterSystem from "src/game/systems/encounterSystem";
-import Combat from "src/game/systems/combat";
+import EncounterCombat from "src/game/orchestrators/encounterCombat";
 import SeedRNG from "src/game/rng/seedRNG";
 import Character from "src/game/entities/character";
 import physicalSkillsList from "src/game/dataLists/skills/physical/actionSkillsList";
+
 const validAttributes = {
   sta: 10,
   str: 10,
@@ -14,17 +14,14 @@ const validAttributes = {
   cha: 10,
 };
 
-describe("Integration - Encounter → Combat", () => {
-  test("player clears encounter without infinite loops", () => {
-    const rng = new SeedRNG(12345);
+describe("Integration - EncounterCombat", () => {
+  test("player clears full encounter with deterministic flow and valid state transitions", () => {
+    // 🎲 RNG determinístico
+    const rng = new SeedRNG(1234);
 
-    const character = new Character(
-      "hero",
-      validAttributes,
-      physicalSkillsList,
-    );
+    const player = new Character("hero", validAttributes, physicalSkillsList);
 
-    const encounter = {
+    const encounterDefinition = {
       rounds: 3,
       pool: [
         { id: "rat_01", weight: 1 },
@@ -32,26 +29,56 @@ describe("Integration - Encounter → Combat", () => {
       ],
     };
 
-    const encounterSystem = new EncounterSystem(encounter, { rng });
-    const mobs = encounterSystem.generate();
+    const encounterCombat = new EncounterCombat(player, encounterDefinition, {
+      rng,
+    });
 
-    let combatsResolved = 0;
-    for (const mob of mobs) {
-      const combat = new Combat(character, mob, { rng });
-      combat.start();
+    encounterCombat.start();
 
-      while (!combat.finished) {
-        const attacker = combat.getCurrentAttacker();
-        const skill = attacker.skills[0];
-        combat.performAction(skill.id);
+    let safetyCounter = 0;
+    const MAX_ACTIONS = 100;
+
+    // 🔁 Loop principal do encounter
+    while (!encounterCombat.finished) {
+      const combat = encounterCombat.currentCombat;
+
+      expect(combat).toBeDefined();
+      expect(combat.finished).toBe(false);
+
+      const attacker = combat.getCurrentAttacker();
+      const skill = attacker.skills[0];
+
+      const result = encounterCombat.performAction(skill.id);
+
+      // 🔍 contrato de retorno
+      if (typeof result === "object") {
+        expect(result).toHaveProperty("ok");
+        expect(result).toHaveProperty("reason");
+      } else {
+        expect(typeof result).toBe("string");
+        expect(result.length).toBeGreaterThan(0);
       }
-      combat.end();
 
-      combatsResolved++;
-      console.log(combat.combatLog);
+      safetyCounter++;
+      if (safetyCounter > MAX_ACTIONS) {
+        throw new Error("Infinite loop detected in EncounterCombat");
+      }
     }
 
-    expect(combatsResolved).toBe(3);
-    expect(character.health.currentHp).toBeGreaterThan(0);
+    // 🧪 ASSERTS DE ESTADO ANTES DO .end()
+    expect(encounterCombat.finished).toBe(true);
+    expect(encounterCombat.currentCombatIndex).toBe(3);
+
+    // player ainda tem estado válido aqui
+    expect(player.combatState.currentHp).toBeGreaterThan(0);
+    expect(player.combatState.isDead()).toBe(false);
+
+    // log consolidado do encounter
+    expect(encounterCombat.log.length).toBeGreaterThan(0);
+
+    // 🧹 cleanup final do encounter
+    const endResult = encounterCombat.end();
+    expect(endResult.ok).toBe(true);
+    expect(endResult.reason).toBe("ENCOUNTER_FINISHED");
   });
 });

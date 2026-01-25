@@ -47,10 +47,13 @@ export default class Combat {
     this.enemy.critSystem.reset();
     this.player.evadeSystem.reset();
     this.enemy.evadeSystem.reset();
-    //initialize combat states
-    this.player.initCombatState();
-    this.enemy.initCombatState();
-
+    //initialize enemy combat state
+    if (!this.player.combatState || this.player.combatState === null) {
+      this.player.initCombatState();
+    }
+    if (!this.enemy.combatState || this.enemy.combatState === null) {
+      this.enemy.initCombatState();
+    }
     this.combatLog = this.initialLog();
     //decide turn order
     this.turnOrder = this.decideTurnOrder();
@@ -80,7 +83,7 @@ export default class Combat {
   }
   //method called by UI when player or enemy
   performAction(skillId) {
-    if (this.finished) return null;
+    if (this.finished) return { ok: true, reason: "COMBAT_FINISHED" };
     //tick cooldowns every action
     this.player.combatState.tickCooldowns();
     this.enemy.combatState.tickCooldowns();
@@ -157,8 +160,8 @@ export default class Combat {
 
   end() {
     if (this.finished === true) {
-      this.player.finishCombatState();
-      this.enemy.finishCombatState();
+      this.player.combatState.resetEffects();
+      this.enemy.combatState.resetEffects();
     } else {
       return { ok: false, reason: "COMBAT_NOT_FINISHED" };
     }
