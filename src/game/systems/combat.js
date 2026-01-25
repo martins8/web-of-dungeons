@@ -161,7 +161,7 @@ export default class Combat {
   end() {
     if (this.finished === true) {
       this.player.combatState.resetEffects();
-      this.enemy.combatState.resetEffects();
+      this.enemy.finishCombatState();
     } else {
       return { ok: false, reason: "COMBAT_NOT_FINISHED" };
     }
