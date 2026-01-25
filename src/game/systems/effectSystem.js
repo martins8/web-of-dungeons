@@ -63,7 +63,7 @@ export default class EffectSystem {
       value += (stats[key] || 0) * mod;
     }
 
-    return Math.floor(value);
+    return Math.floor(value) === 0 ? 1 : Math.floor(value);
   }
 }
 
