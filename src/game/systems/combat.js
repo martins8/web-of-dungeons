@@ -108,15 +108,10 @@ export default class Combat {
       return turnResult; // user interface decide o que fazer
     }
 
-    //check if skill has buff or debuff effect and apply it before action resolve
+    //check if skill has buff / debuff effect and target self / enemy
+    let effectSystem;
     if (skill.effects) {
-      const effectSystem = new EffectSystem(skill.effects);
-      const target =
-        skill.effects.target === "self"
-          ? attacker.combatState
-          : defender.combatState;
-      //effects on cast. (example: if is a debuff the tick just happen on combatResolve)
-      effectSystem.apply(target);
+      effectSystem = new EffectSystem(skill.effects);
     }
 
     //resolve action in combatResolve service
@@ -125,6 +120,7 @@ export default class Combat {
       defender,
       skill,
       ticked,
+      effectSystem,
       {
         rng: this.rng,
         critSystem: attacker.critSystem,
