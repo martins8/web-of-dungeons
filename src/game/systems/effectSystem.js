@@ -23,6 +23,10 @@ export default class EffectSystem {
     return this.effect.effectType === "cc";
   }
 
+  isRefresh() {
+    return this.effect.mechanic === "refresh";
+  }
+
   apply(combatState) {
     if (this.isBuff() || this.isHot()) {
       combatState.addBuff(this.effect);
