@@ -20,6 +20,7 @@ buff = stats | attribute
 debuff = stats | attribute 
 cc = stun | silence | slow | rooted
 
+mechanics: stack, refresh
 */
 
 const physicalSkillsList = [
@@ -100,8 +101,10 @@ const physicalSkillsList = [
       },
     },
     effects: new Effect({
+      id: "effect_001",
       target: "enemy",
       effectType: "dot",
+      mechanic: "refresh",
       subtype: "bleed",
       scaling: {
         pDmg: 0.1,

@@ -1,3 +1,4 @@
+import Effect from "src/game/value-objects/effect";
 import Skill from "src/game/value-objects/skill";
 
 const buffSkills = [
@@ -7,13 +8,15 @@ const buffSkills = [
     typeSkill: "buff",
     reach: "global",
     cooldown: 0,
-    effects: {
+    effects: new Effect({
+      id: "effect_009",
       target: "self",
       effectType: "buff",
+      mechanic: "refresh",
       subtype: "attribute",
       scaling: { str: 1 },
       duration: 5,
-    },
+    }),
     metadata: {
       name: "War Shout",
       text: "Increase STR +1",
@@ -26,13 +29,15 @@ const buffSkills = [
     typeSkill: "buff",
     reach: "global",
     cooldown: 0,
-    effects: {
+    effects: new Effect({
+      id: "effect_008",
       target: "self",
       effectType: "buff",
+      mechanic: "refresh",
       subtype: "attribute",
       scaling: { int: 1 },
       duration: 5,
-    },
+    }),
     metadata: {
       name: "Great Intellect",
       text: "Increase INT +1",
@@ -45,13 +50,15 @@ const buffSkills = [
     typeSkill: "buff",
     reach: "global",
     cooldown: 0,
-    effects: {
+    effects: new Effect({
+      id: "effect_007",
       target: "self",
       effectType: "buff",
+      mechanic: "refresh",
       subtype: "attribute",
       scaling: { wis: 1 },
       duration: 5,
-    },
+    }),
     metadata: {
       name: "Wisdom Chant",
       text: "Increase WIS +1",
@@ -64,13 +71,15 @@ const buffSkills = [
     typeSkill: "buff",
     reach: "global",
     cooldown: 0,
-    effects: {
+    effects: new Effect({
+      id: "effect_006",
       target: "self",
       effectType: "buff",
+      mechanic: "refresh",
       subtype: "attribute",
       scaling: { con: 1 },
       duration: 5,
-    },
+    }),
     metadata: {
       name: "Iron Body",
       text: "Increase CON +1",
@@ -83,13 +92,15 @@ const buffSkills = [
     typeSkill: "buff",
     reach: "global",
     cooldown: 0,
-    effects: {
+    effects: new Effect({
+      id: "effect_005",
       target: "self",
       effectType: "buff",
+      mechanic: "refresh",
       subtype: "attribute",
       scaling: { sta: 1 },
       duration: 5,
-    },
+    }),
     metadata: {
       name: "Endurance Cry",
       text: "Increase STA +1",
@@ -102,13 +113,15 @@ const buffSkills = [
     typeSkill: "buff",
     reach: "global",
     cooldown: 0,
-    effects: {
+    effects: new Effect({
+      id: "effect_004",
       target: "self",
       effectType: "buff",
+      mechanic: "refresh",
       subtype: "attribute",
       scaling: { dex: 1 },
       duration: 5,
-    },
+    }),
     metadata: {
       name: "Precision Focus",
       text: "Increase DEX +1",
@@ -121,13 +134,15 @@ const buffSkills = [
     typeSkill: "buff",
     reach: "global",
     cooldown: 0,
-    effects: {
+    effects: new Effect({
+      id: "effect_003",
       target: "self",
       effectType: "buff",
+      mechanic: "refresh",
       subtype: "attribute",
       scaling: { agi: 1 },
       duration: 5,
-    },
+    }),
     metadata: {
       name: "Agile Step",
       text: "Increase AGI +1",
@@ -139,13 +154,15 @@ const buffSkills = [
     rank: 1,
     typeSkill: "buff",
     reach: "global",
-    effects: {
+    effects: new Effect({
+      id: "effect_002",
       target: "self",
       effectType: "buff",
+      mechanic: "refresh",
       subtype: "attribute",
       scaling: { cha: 1 },
       duration: 5,
-    },
+    }),
     metadata: {
       name: "Charisma Aura",
       text: "Increase CHA +1",
