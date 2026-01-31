@@ -1,5 +1,10 @@
 import Effect from "src/game/value-objects/effect";
 import Skill from "src/game/value-objects/skill";
+
+/**
+ * Magical skills list: placeholder for magic-based skills. Structured like
+ * the physical skills list but intended for spells and magical effects.
+ */
 /* 
   name: name of the skill
   types: offensive, defensive, buff, moviment

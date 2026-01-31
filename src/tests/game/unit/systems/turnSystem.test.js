@@ -27,7 +27,7 @@ describe("TurnSystem", () => {
 
     const result = turnSystem.useTurn(actionSkill);
 
-    expect(result.ok).toBe(true);
+    expect(result.isSuccess()).toBe(true);
   });
 
   test("USE TURN: should block action when stunned", () => {
@@ -38,7 +38,7 @@ describe("TurnSystem", () => {
 
     const result = turnSystem.useTurn(actionSkill);
 
-    expect(result.ok).toBe(false);
+    expect(result.isFailure()).toBe(true);
     expect(result.reason).toBe("CROWD_CONTROLLED");
     expect(turnSystem.actionsOnTurn).toBe(2);
   });

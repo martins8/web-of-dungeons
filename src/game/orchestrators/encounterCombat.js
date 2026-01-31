@@ -1,6 +1,7 @@
 import Combat from "src/game/systems/combat";
 import EncounterSystem from "src/game/systems/encounterSystem";
 import SeedRNG from "src/game/rng/seedRNG";
+import ActionResult from "src/game/value-objects/actionResult";
 
 export default class EncounterCombat {
   constructor(player, encounterDefinition, { rng } = {}) {
@@ -32,10 +33,10 @@ export default class EncounterCombat {
 
   startNextCombat() {
     if (this.finished === true)
-      return { ok: true, reason: "ENCOUNTER_FINISHED" };
+      return ActionResult.success(null, "ENCOUNTER_FINISHED");
     if (this.currentCombatIndex >= this.mobs.length) {
       this.finished = true;
-      return { ok: true, reason: "ENCOUNTER_FINISHED" };
+      return ActionResult.success(null, "ENCOUNTER_FINISHED");
     }
 
     const enemy = this.mobs[this.currentCombatIndex];
@@ -50,13 +51,18 @@ export default class EncounterCombat {
 
   performAction(skillId) {
     if (this.finished === true) {
-      return { ok: true, reason: "ENCOUNTER_FINISHED" };
+      return ActionResult.failure("ENCOUNTER_FINISHED");
     }
 
-    const resultText = this.currentCombat.performAction(skillId);
+    const result = this.currentCombat.performAction(skillId);
 
-    if (resultText) {
-      this.log += resultText;
+    // Handle both success and failure results
+    if (result.isFailure()) {
+      return result;
+    }
+
+    if (result.data) {
+      this.log += result.data;
     }
 
     //if combat instance has finished
@@ -65,7 +71,7 @@ export default class EncounterCombat {
 
       if (this.player.combatState.isDead()) {
         this.finished = true;
-        return { ok: true, reason: "PLAYER_DEAD" }; //need to create system events to return
+        return ActionResult.failure("PLAYER_DEAD");
       }
       // 🔥 decisão importante de design:
       // resetar apenas estados de combate, não HP base
@@ -75,15 +81,15 @@ export default class EncounterCombat {
       this.startNextCombat();
     }
 
-    return resultText;
+    return result;
   }
 
   end() {
     if (this.finished === true) {
       this.player.finishCombatState();
-      return { ok: true, reason: "ENCOUNTER_FINISHED" };
+      return ActionResult.success(null, "ENCOUNTER_FINISHED");
     } else {
-      return { ok: false, reason: "ENCOUNTER_NOT_FINISHED" };
+      return ActionResult.failure("ENCOUNTER_NOT_FINISHED");
     }
   }
 }

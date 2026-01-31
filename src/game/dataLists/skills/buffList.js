@@ -1,6 +1,11 @@
 import Effect from "src/game/value-objects/effect";
 import Skill from "src/game/value-objects/skill";
 
+/**
+ * List of simple attribute buff skills. Each entry is a `Skill` instance
+ * populated with an `Effect` describing the buff. These are used by the
+ * `skillRegistry` and can be attached to mobs or players.
+ */
 const buffSkills = [
   new Skill({
     id: "buff_001",

@@ -1,15 +1,15 @@
 export default class Attributes {
+  /**
+   * Lightweight value object for base attributes.
+   * Accepts integer values (can be zero or negative for debuffs).
+   * @param {object} attrs - attributes map: { sta, str, con, dex, int, wis, agi, cha }
+   */
   constructor({ sta, str, con, dex, int, wis, agi, cha }) {
+    // Validate that all attributes are integers (can be negative for debuffs)
     if (
-      [sta, str, con, dex, int, wis, agi, cha].some(
-        /* 
-        NEED TO IMPLEMENT A FLAG THAT ALLOW NEGATIVE ATTRIBUTES 
-        FOR DEBUFFS
-        */
-        (v) => !Number.isInteger(v) || v <= 0,
-      )
+      [sta, str, con, dex, int, wis, agi, cha].some((v) => !Number.isInteger(v))
     ) {
-      throw new Error("Attributes must be positive");
+      throw new Error("Attributes must be integers");
     }
     this.sta = sta;
     this.str = str;

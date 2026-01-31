@@ -1,3 +1,10 @@
+import ActionResult from "src/game/value-objects/actionResult";
+
+/**
+ * TurnSystem tracks available actions per turn, turn count and crowd control
+ * effects that block actions. It exposes `useTurn()` which validates and
+ * consumes an action and returns an `ActionResult`.
+ */
 export default class TurnSystem {
   constructor(actionsPerTurn = 2) {
     this.actionsPerTurn = actionsPerTurn;
@@ -15,29 +22,29 @@ export default class TurnSystem {
 
   useTurn(skill) {
     if (this.isCrowdControlled(skill)) {
-      return { ok: false, reason: "CROWD_CONTROLLED" };
+      return ActionResult.failure("CROWD_CONTROLLED");
     }
 
     if (this.actionsOnTurn <= 0) {
-      return { ok: false, reason: "NO_ACTIONS_LEFT" };
+      return ActionResult.failure("NO_ACTIONS_LEFT");
     }
     /*
     if (skill.typeSkill === "action") {
       if (this.actionSkillUsed) {
-        return { ok: false, reason: "ACTION_ALREADY_USED" };
+        return ActionResult.failure("ACTION_ALREADY_USED");
       }
       this.actionSkillUsed = true;
     }
 
     if (skill.typeSkill === "buff") {
       if (this.buffSkillUsed) {
-        return { ok: false, reason: "BUFF_ALREADY_USED" };
+        return ActionResult.failure("BUFF_ALREADY_USED");
       }
       this.buffSkillUsed = true;
     }*/
 
     this.actionsOnTurn -= 1;
-    return { ok: true };
+    return ActionResult.success();
   }
 
   isCrowdControlled(skill) {

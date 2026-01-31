@@ -1,5 +1,11 @@
 import Effect from "src/game/value-objects/effect";
 import Skill from "src/game/value-objects/skill";
+
+/**
+ * Physical skills list: array of `Skill` instances representing melee
+ * and physical actions. Each Skill includes damage scaling and optional
+ * effects (DoT, debuffs).
+ */
 /* 
   name: name of the skill
   types: offensive, defensive, buff, moviment
