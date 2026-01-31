@@ -4,20 +4,20 @@ import Character from "src/game/entities/character";
 import physicalSkillsList from "src/game/dataLists/skills/physical/actionSkillsList";
 
 const validAttributes = {
-  sta: 10,
-  str: 10,
-  con: 10,
+  sta: 12,
+  str: 12,
+  con: 12,
   dex: 10,
-  int: 10,
-  wis: 10,
-  agi: 10,
-  cha: 10,
+  int: 8,
+  wis: 8,
+  agi: 8,
+  cha: 8,
 };
 
 describe("Integration - EncounterCombat", () => {
   test("player clears full encounter with deterministic flow and valid state transitions", () => {
     // 🎲 RNG determinístico
-    const rng = new SeedRNG(1234);
+    const rng = new SeedRNG(12345);
 
     const player = new Character("hero", validAttributes, physicalSkillsList);
 
@@ -26,6 +26,9 @@ describe("Integration - EncounterCombat", () => {
       pool: [
         { id: "rat_01", weight: 1 },
         { id: "wolf_01", weight: 1 },
+        //{ id: "bandit_01", weight: 1 },
+        //{ id: "bandit_02", weight: 1 },
+        //{ id: "mage_01", weight: 1 },
       ],
     };
 
@@ -64,6 +67,7 @@ describe("Integration - EncounterCombat", () => {
         throw new Error("Infinite loop detected in EncounterCombat");
       }
     }
+    console.log(encounterCombat.log);
 
     // 🧪 ASSERTS DE ESTADO ANTES DO .end()
     expect(encounterCombat.finished).toBe(true);
