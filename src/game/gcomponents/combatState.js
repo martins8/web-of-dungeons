@@ -1,12 +1,25 @@
 import StatsCalculator from "src/game/services/statsCalculator";
+import Health from "src/game/gcomponents/health";
 import EffectSystem from "src/game/systems/effectSystem";
+
+import StatsCalculator from "src/game/services/statsCalculator";
+import Health from "src/game/gcomponents/health";
+
+/**
+ * CombatState holds the runtime state for an entity while in combat.
+ * It aggregates base stats/attributes and mutable combat data such as
+ * current HP, active buffs/debuffs, crowd control flags and cooldowns.
+ *
+ * Public API intentionally mirrors domain actions: `takeDamage`, `heal`,
+ * `tickEffects`, `tickCooldowns`, `getEffectiveStats` and helpers.
+ */
 
 export default class CombatState {
   constructor(stats, attributes) {
     this.baseStats = { ...stats };
     this.baseAttributes = attributes;
 
-    this.currentHp = stats.maxHp;
+    this.health = new Health(stats.maxHp);
 
     this.buffs = [];
     this.debuffs = [];
@@ -23,21 +36,29 @@ export default class CombatState {
 
   /* ---------------- HP ---------------- */
 
+  // Health proxies
+  get currentHp() {
+    return this.health.currentHp;
+  }
+
   takeDamage(amount) {
-    this.currentHp = Math.max(0, this.currentHp - amount);
+    this.health.takeDamage(amount);
     return amount;
   }
 
   heal(amount) {
-    this.currentHp = Math.min(
-      this.getEffectiveStats().maxHp,
-      this.currentHp + amount,
-    );
+    // ensure we don't exceed dynamic maxHp
+    const maxHp = this.getEffectiveStats().maxHp;
+    // if maxHp changed, sync health max
+    if (this.health.maxHp !== maxHp) {
+      this.health.increaseMaxHp(maxHp - this.health.maxHp);
+    }
+    this.health.heal(amount);
     return amount;
   }
 
   isDead() {
-    return this.currentHp <= 0;
+    return !this.health.isAlive();
   }
 
   /* ---------------- EFFECTS ---------------- */
