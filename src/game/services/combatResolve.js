@@ -16,7 +16,7 @@ export default class CombatResolve {
           ? attacker.combatState
           : defender.combatState;
       //buff and debuff are aplied before resolve
-      if (effectSystem.isBuff() || effectSystem.isDebuff()) {
+      if (effectSystem?.isBuff() || effectSystem?.isDebuff()) {
         effectSystem.apply(effectTarget);
       }
     }
@@ -32,8 +32,8 @@ export default class CombatResolve {
 
     //offensive skills just apply effect if isEvaded false
     if (
-      (skill.effects && !isEvaded && effectSystem.isDot()) ||
-      effectSystem.isHot()
+      (skill.effects && !isEvaded && effectSystem?.isDot()) ||
+      effectSystem?.isHot()
     ) {
       effectSystem.apply(effectTarget);
     }
