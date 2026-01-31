@@ -54,13 +54,13 @@ describe("Integration - EncounterCombat", () => {
       const result = encounterCombat.performAction(skill.id);
 
       // 🔍 contrato de retorno
-      if (typeof result === "object") {
-        expect(result).toHaveProperty("ok");
-        expect(result).toHaveProperty("reason");
-      } else {
-        expect(typeof result).toBe("string");
-        expect(result.length).toBeGreaterThan(0);
-      }
+      expect(result).toHaveProperty("ok");
+      expect(result).toHaveProperty("reason");
+      expect(typeof result.ok).toBe("boolean");
+      // reason can be a string for failures or null for successful actions
+      expect(result.reason === null || typeof result.reason === "string").toBe(
+        true,
+      );
 
       safetyCounter++;
       if (safetyCounter > MAX_ACTIONS) {
@@ -82,7 +82,7 @@ describe("Integration - EncounterCombat", () => {
 
     // 🧹 cleanup final do encounter
     const endResult = encounterCombat.end();
-    expect(endResult.ok).toBe(true);
+    expect(endResult.isSuccess()).toBe(true);
     expect(endResult.reason).toBe("ENCOUNTER_FINISHED");
   });
 });

@@ -3,6 +3,7 @@ import EventTexts from "src/game/texts/eventTexts";
 import EffectSystem from "src/game/systems/effectSystem";
 import SeedRNG from "src/game/rng/seedRNG";
 import EventFactory from "src/game/factories/eventFactory";
+import ActionResult from "src/game/value-objects/actionResult";
 
 export default class Combat {
   constructor(player, enemy, { rng } = {}) {
@@ -83,7 +84,9 @@ export default class Combat {
   }
   //method called by UI when player or enemy
   performAction(skillId) {
-    if (this.finished) return { ok: true, reason: "COMBAT_FINISHED" };
+    if (this.finished) {
+      return ActionResult.failure("COMBAT_FINISHED");
+    }
     //tick cooldowns every action
     this.player.combatState.tickCooldowns();
     this.enemy.combatState.tickCooldowns();
@@ -99,12 +102,12 @@ export default class Combat {
 
     //check if skill is on cooldown
     if (attacker.combatState.isOnCooldown(skill)) {
-      return { ok: false, reason: "SKILL_ON_COOLDOWN" };
+      return ActionResult.failure("SKILL_ON_COOLDOWN");
     }
 
     //use turn of the attacker.  (2 action per turn)
     const turnResult = attacker.turnSystem.useTurn(skill);
-    if (!turnResult.ok) {
+    if (turnResult.isFailure()) {
       return turnResult; // user interface decide o que fazer
     }
 
@@ -136,7 +139,7 @@ export default class Combat {
     //check if defender is dead
     if (result.isDead) {
       this.finished = true;
-      return resultText;
+      return ActionResult.success(resultText);
     }
 
     //check if attacker turn is over (2 actions per turn)
@@ -146,7 +149,7 @@ export default class Combat {
       this.getCurrentAttacker().startTurn();
     }
 
-    return resultText;
+    return ActionResult.success(resultText);
   }
 
   advanceTurn() {
