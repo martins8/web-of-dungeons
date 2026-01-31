@@ -20,9 +20,12 @@ describe("ATTRIBUTES TESTS", () => {
     expect(attrs.agi).toBe(10);
   });
 
-  test("should throw error if any attribute is zero or negative", () => {
-    expect(() => new Attributes({ ...validAttrs, str: 0 })).toThrow();
-    expect(() => new Attributes({ ...validAttrs, dex: -1 })).toThrow();
+  test("should allow negative attributes for debuffs", () => {
+    const attrs = new Attributes({ ...validAttrs, str: -5 });
+    expect(attrs.str).toBe(-5);
+
+    const attrs2 = new Attributes({ ...validAttrs, dex: 0 });
+    expect(attrs2.dex).toBe(0);
   });
 
   test("should throw error if any attribute is not integer", () => {
