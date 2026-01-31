@@ -82,6 +82,7 @@ describe("CombatResolve TESTS", () => {
       defender,
       skills[0],
       false, // ticked
+      undefined,
       { rng, critSystem, evadeSystem },
     );
 
@@ -126,11 +127,18 @@ describe("CombatResolve TESTS", () => {
 
     const combatResolve = new CombatResolve();
 
-    const result = combatResolve.action(attacker, defender, skills[1], false, {
-      rng,
-      critSystem,
-      evadeSystem,
-    });
+    const result = combatResolve.action(
+      attacker,
+      defender,
+      skills[1],
+      false,
+      undefined,
+      {
+        rng,
+        critSystem,
+        evadeSystem,
+      },
+    );
 
     expect(result).toBeInstanceOf(CombatActionResult);
     expect(result.damage).toBe(25);
@@ -173,17 +181,24 @@ describe("CombatResolve TESTS", () => {
 
     const combatResolve = new CombatResolve();
 
-    const result = combatResolve.action(attacker, defender, skills[0], false, {
-      rng,
-      critSystem,
-      evadeSystem,
-    });
+    const result = combatResolve.action(
+      attacker,
+      defender,
+      skills[0],
+      false,
+      undefined,
+      {
+        rng,
+        critSystem,
+        evadeSystem,
+      },
+    );
 
     expect(result.isEvaded).toBe(true);
     expect(result.damage).toBe(0);
     expect(defender.combatState.takeDamage).not.toHaveBeenCalled();
   });
-  test("should apply DoT and HoT when ticked is true", () => {
+  test("should apply direct damage, DoT and HoT when ticked is true", () => {
     const rng = { rollPercent: jest.fn().mockReturnValue(99) };
     const critSystem = { tryCrit: jest.fn().mockReturnValue(false) };
     const evadeSystem = { tryEvade: jest.fn().mockReturnValue(false) };
@@ -198,6 +213,8 @@ describe("CombatResolve TESTS", () => {
         tickEffectsDamageAndHeal: jest
           .fn()
           .mockReturnValue({ damage: 3, heal: 5 }), // HOT + DOT no atacante
+        addBuff: jest.fn(), // agora suportando refresh/stack
+        addDebuff: jest.fn(),
       },
     };
 
@@ -212,6 +229,8 @@ describe("CombatResolve TESTS", () => {
         tickEffectsDamageAndHeal: jest
           .fn()
           .mockReturnValue({ damage: 7, heal: 0 }), // DOT no defensor
+        addBuff: jest.fn(),
+        addDebuff: jest.fn(),
       },
     };
 
@@ -224,7 +243,29 @@ describe("CombatResolve TESTS", () => {
         typeDamage: "physical",
         scaling: { pDmg: 1 },
       },
+      effects: {
+        target: "self",
+        id: "effect_test",
+        effectType: "buff",
+        mechanic: "refresh", // agora testando refresh
+        scaling: { pDmg: 1 },
+        duration: 3,
+      },
     };
+
+    const effectSystem = {};
+    effectSystem.isBuff = jest.fn().mockReturnValue(true);
+    effectSystem.isDebuff = jest.fn().mockReturnValue(false);
+    effectSystem.isDot = jest.fn().mockReturnValue(true);
+    effectSystem.isHot = jest.fn().mockReturnValue(false);
+    effectSystem.apply = jest.fn((target) => {
+      if (effectSystem.isBuff()) {
+        target.addBuff && target.addBuff(skill.effects);
+      }
+      if (effectSystem.isDebuff()) {
+        target.addDebuff && target.addDebuff(skill.effects);
+      }
+    });
 
     const combatResolve = new CombatResolve();
 
@@ -233,6 +274,7 @@ describe("CombatResolve TESTS", () => {
       defender,
       skill,
       true, // 🔥 ticked ON
+      effectSystem,
       { rng, critSystem, evadeSystem },
     );
 
@@ -250,5 +292,17 @@ describe("CombatResolve TESTS", () => {
 
     // dano direto ainda aplicado
     expect(defender.combatState.takeDamage).toHaveBeenCalledWith(10);
+
+    // effectSystem.apply should have been called to apply the effect
+    expect(effectSystem.apply).toHaveBeenCalled();
+
+    // efeito refresh deve ter sido aplicado
+    expect(attacker.combatState.addBuff).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: "effect_test",
+        mechanic: "refresh",
+        duration: 3,
+      }),
+    );
   });
 });
