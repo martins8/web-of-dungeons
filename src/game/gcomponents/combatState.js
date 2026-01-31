@@ -1,7 +1,6 @@
 import StatsCalculator from "src/game/services/statsCalculator";
 import Health from "src/game/gcomponents/health";
 import EffectSystem from "src/game/systems/effectSystem";
-import Health from "src/game/gcomponents/health";
 
 /**
  * CombatState holds the runtime state for an entity while in combat.
