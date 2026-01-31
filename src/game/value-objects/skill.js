@@ -1,4 +1,16 @@
 export default class Skill {
+  /**
+   * Represents a skill usable in combat.
+   * @param {object} params
+   * @param {string} params.id
+   * @param {number} params.rank
+   * @param {string} params.typeSkill - e.g. 'action' | 'buff'
+   * @param {number} params.reach - target reach / distance
+   * @param {number} params.cooldown - turn cooldown
+   * @param {object|null} params.damage - damage definition or null
+   * @param {object} params.effects - effect payload
+   * @param {object} params.metadata - human-readable metadata (name, desc)
+   */
   constructor({
     id,
     rank,

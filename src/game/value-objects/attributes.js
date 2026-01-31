@@ -1,4 +1,9 @@
 export default class Attributes {
+  /**
+   * Lightweight value object for base attributes.
+   * Accepts integer values (can be zero or negative for debuffs).
+   * @param {object} attrs - attributes map: { sta, str, con, dex, int, wis, agi, cha }
+   */
   constructor({ sta, str, con, dex, int, wis, agi, cha }) {
     // Validate that all attributes are integers (can be negative for debuffs)
     if (

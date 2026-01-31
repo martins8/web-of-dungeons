@@ -3,6 +3,16 @@
  * MOBS HAS 10 ATTR POINTS TO DISTRIBUTE
  *
  */
+/**
+ * mobDefinitions is a simple lookup of mob templates used by the encounter
+ * system and factories. Each entry contains:
+ * - `name`: display name
+ * - `attributes`: base Attributes object shape
+ * - `skills`: array of skill ids
+ * - `type`: one of normal|rare|elite|boss
+ * - `archetype`: category (humanoid, beast, etc)
+ * - `description`: human readable description
+ */
 
 export const mobDefinitions = {
   wolf_01: {

@@ -1,5 +1,10 @@
 import ActionResult from "src/game/value-objects/actionResult";
 
+/**
+ * TurnSystem tracks available actions per turn, turn count and crowd control
+ * effects that block actions. It exposes `useTurn()` which validates and
+ * consumes an action and returns an `ActionResult`.
+ */
 export default class TurnSystem {
   constructor(actionsPerTurn = 2) {
     this.actionsPerTurn = actionsPerTurn;

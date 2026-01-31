@@ -15,7 +15,10 @@ export default class ActionResult {
   }
 
   /**
-   * Create a successful result
+   * Create a successful result.
+   * @param {any} data - optional payload for success (e.g. combat log text)
+   * @param {string|null} reason - optional reason string (mostly unused for success)
+   * @returns {ActionResult}
    */
   static success(data = null, reason = null) {
     return new ActionResult(true, data, reason);

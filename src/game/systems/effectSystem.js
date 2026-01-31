@@ -1,8 +1,14 @@
+/**
+ * EffectSystem models a single effect (buff / debuff / dot / hot / cc)
+ * and provides helpers to apply and tick that effect against a
+ * `CombatState` instance.
+ */
 export default class EffectSystem {
   constructor(effect) {
     this.effect = effect;
   }
 
+  /** Returns true when effect is a buff (applied to self stats) */
   isBuff() {
     return this.effect.effectType === "buff";
   }

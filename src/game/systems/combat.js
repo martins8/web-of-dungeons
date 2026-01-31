@@ -5,6 +5,17 @@ import SeedRNG from "src/game/rng/seedRNG";
 import EventFactory from "src/game/factories/eventFactory";
 import ActionResult from "src/game/value-objects/actionResult";
 
+/**
+ * Combat orchestrates a duel between two entities (player and enemy).
+ * It is responsible for turn order, ticking cooldowns/effects and
+ * delegating resolution details to `CombatResolve`.
+ *
+ * Public methods:
+ * - `start()` initializes combat
+ * - `performAction(skillId)` executes an action from the current attacker
+ * - `end()` finalizes the combat
+ */
+
 export default class Combat {
   constructor(player, enemy, { rng } = {}) {
     this.player = player;
@@ -69,10 +80,7 @@ export default class Combat {
   design decision: tick dot/hot only one time per turn 
                    tick cooldown in every action
   */
-  /*
- this method ticks the effects timers and pass a boolean to 
- combatResolve action method where the tick damage/heal is calculated
- */
+
   tickDotAndHot(attacker, defender) {
     let ticked = false;
     if (attacker.turnSystem.actionsOnTurn === 2) {

@@ -1,5 +1,10 @@
 import CombatActionResult from "../value-objects/combatActionResult";
 
+/**
+ * CombatResolve contains the deterministic logic that computes the result
+ * of a single skill execution: evasion, crit, damage calculation, defense
+ * application and applying the computed damage to the defender.
+ */
 export default class CombatResolve {
   action(
     attacker,
