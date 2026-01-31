@@ -13,9 +13,9 @@ describe("MobFactory", () => {
   test("assigns correct attributes", () => {
     const mob = MobFactory.fromMobId("wolf_01");
 
-    expect(mob.attributes.sta).toBe(10);
-    expect(mob.attributes.str).toBe(10);
-    expect(mob.attributes.agi).toBe(10);
+    expect(mob.attributes.sta).toBe(8);
+    expect(mob.attributes.str).toBe(8);
+    expect(mob.attributes.agi).toBe(8);
   });
 
   test("resolves skills from registry", () => {

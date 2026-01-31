@@ -19,13 +19,12 @@ export default class Combat {
     }
     this.turnOrder = [];
     this.currentTurnIndex = 0;
-    this.combatLog = this.initialLog();
 
     /* this.state = "FINISHED"; // RUNNING | FINISHED */
     this.finished = false;
   }
   initialLog() {
-    return `${this.player.name}: ${this.player.health.maxHp} ❤️ ${this.enemy.name}: ${this.enemy.health.maxHp} ❤️\n`;
+    return `${this.player.name}: ${this.player.combatState.currentHp} ❤️ ${this.enemy.name}: ${this.enemy.combatState.currentHp} ❤️\n`;
   }
 
   decideTurnOrder() {
@@ -48,9 +47,14 @@ export default class Combat {
     this.enemy.critSystem.reset();
     this.player.evadeSystem.reset();
     this.enemy.evadeSystem.reset();
-    //initialize combat states
-    this.player.initCombatState();
-    this.enemy.initCombatState();
+    //initialize enemy combat state
+    if (!this.player.combatState || this.player.combatState === null) {
+      this.player.initCombatState();
+    }
+    if (!this.enemy.combatState || this.enemy.combatState === null) {
+      this.enemy.initCombatState();
+    }
+    this.combatLog = this.initialLog();
     //decide turn order
     this.turnOrder = this.decideTurnOrder();
     this.currentTurnIndex = 0;
@@ -79,7 +83,7 @@ export default class Combat {
   }
   //method called by UI when player or enemy
   performAction(skillId) {
-    if (this.finished) return null;
+    if (this.finished) return { ok: true, reason: "COMBAT_FINISHED" };
     //tick cooldowns every action
     this.player.combatState.tickCooldowns();
     this.enemy.combatState.tickCooldowns();
@@ -104,15 +108,10 @@ export default class Combat {
       return turnResult; // user interface decide o que fazer
     }
 
-    //check if skill has buff or debuff effect and apply it before action resolve
+    //check if skill has buff / debuff effect and target self / enemy
+    let effectSystem;
     if (skill.effects) {
-      const effectSystem = new EffectSystem(skill.effects);
-      const target =
-        skill.effects.target === "self"
-          ? attacker.combatState
-          : defender.combatState;
-      //effects on cast. (example: if is a debuff the tick just happen on combatResolve)
-      effectSystem.apply(target);
+      effectSystem = new EffectSystem(skill.effects);
     }
 
     //resolve action in combatResolve service
@@ -121,6 +120,7 @@ export default class Combat {
       defender,
       skill,
       ticked,
+      effectSystem,
       {
         rng: this.rng,
         critSystem: attacker.critSystem,
@@ -156,7 +156,7 @@ export default class Combat {
 
   end() {
     if (this.finished === true) {
-      this.player.finishCombatState();
+      this.player.combatState.resetEffects();
       this.enemy.finishCombatState();
     } else {
       return { ok: false, reason: "COMBAT_NOT_FINISHED" };

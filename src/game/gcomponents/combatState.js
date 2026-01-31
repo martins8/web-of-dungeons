@@ -42,21 +42,43 @@ export default class CombatState {
 
   /* ---------------- EFFECTS ---------------- */
 
+  resetEffects() {
+    this.buffs = [];
+    this.debuffs = [];
+  }
+
+  addEffect(effect, targetArray) {
+    const cloneEffect = this.cloneEffect(effect);
+    const existingEffect = this.getEffectById(cloneEffect);
+
+    if (cloneEffect.mechanic === "refresh" && existingEffect) {
+      existingEffect.duration = cloneEffect.duration;
+    } else {
+      targetArray.push(cloneEffect);
+    }
+  }
+
   addBuff(effect) {
-    this.buffs.push(this.cloneEffect(effect));
+    this.addEffect(effect, this.buffs);
   }
 
   addDebuff(effect) {
-    this.debuffs.push(this.cloneEffect(effect));
+    this.addEffect(effect, this.debuffs);
   }
 
   getAllEffects() {
     return [...this.buffs, ...this.debuffs];
   }
 
+  getEffectById(cloneEffect) {
+    const allEffects = this.getAllEffects();
+    return allEffects.find((effect) => effect.id === cloneEffect.id);
+  }
+
   cloneEffect(effect) {
     return {
       effectType: effect.effectType,
+      mechanic: effect.mechanic,
       subtype: effect.subtype,
       scaling: { ...effect.scaling },
       duration: effect.duration,

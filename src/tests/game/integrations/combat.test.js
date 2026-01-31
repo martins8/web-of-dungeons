@@ -76,7 +76,7 @@ describe("Combat - Integration Test", () => {
     expect(rng.rollPercent).toHaveBeenCalled();
 
     combat.end();
-    expect(player.combatState && enemy.combatState).toBe(null);
+    expect(enemy.combatState).toBe(null);
   });
 
   test("should tick DOT and HOT only once per turn (on first action)", () => {

@@ -1,13 +1,25 @@
 import CombatActionResult from "../value-objects/combatActionResult";
 
 export default class CombatResolve {
-  action(attacker, defender, skill, ticked, { rng, critSystem, evadeSystem }) {
-    // 1️⃣ Tick DOT / HOT (one time per turn)
-    const damageAndHealTicked = this.getDamageAndHealTicked(
-      attacker,
-      defender,
-      ticked,
-    );
+  action(
+    attacker,
+    defender,
+    skill,
+    ticked,
+    effectSystem,
+    { rng, critSystem, evadeSystem },
+  ) {
+    let effectTarget;
+    if (skill.effects) {
+      effectTarget =
+        skill.effects.target === "self"
+          ? attacker.combatState
+          : defender.combatState;
+      //buff and debuff are aplied before resolve
+      if (effectSystem?.isBuff() || effectSystem?.isDebuff()) {
+        effectSystem.apply(effectTarget);
+      }
+    }
 
     const attackerCombatState = attacker.combatState;
     const defenderCombatState = defender.combatState;
@@ -16,6 +28,21 @@ export default class CombatResolve {
     const isEvaded = evadeSystem.tryEvade(
       rng,
       defenderCombatState.getEffectiveStats().eva,
+    );
+
+    //offensive skills just apply effect if isEvaded false
+    if (
+      (skill.effects && !isEvaded && effectSystem?.isDot()) ||
+      effectSystem?.isHot()
+    ) {
+      effectSystem.apply(effectTarget);
+    }
+
+    // 1️⃣ Tick DOT / HOT (one time per turn)
+    const damageAndHealTicked = this.getDamageAndHealTicked(
+      attacker,
+      defender,
+      ticked,
     );
 
     if (isEvaded) {
