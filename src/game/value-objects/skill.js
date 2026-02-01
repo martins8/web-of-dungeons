@@ -7,6 +7,7 @@ export default class Skill {
    * @param {string} params.typeSkill - e.g. 'action' | 'buff'
    * @param {number} params.reach - target reach / distance
    * @param {number} params.cooldown - turn cooldown
+   * @param {object|null} params.heal - brute heal definition or null
    * @param {object|null} params.damage - damage definition or null
    * @param {object} params.effects - effect payload
    * @param {object} params.metadata - human-readable metadata (name, desc)
@@ -17,6 +18,7 @@ export default class Skill {
     typeSkill,
     reach,
     cooldown,
+    heal = null,
     damage = null,
     effects = {},
     metadata,
@@ -27,6 +29,7 @@ export default class Skill {
     this.reach = reach;
     this.cooldown = cooldown;
     this.damage = damage;
+    this.heal = heal;
     this.effects = effects;
     this.metadata = metadata;
   }
