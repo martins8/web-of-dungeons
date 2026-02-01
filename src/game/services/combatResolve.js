@@ -29,6 +29,17 @@ export default class CombatResolve {
     const attackerCombatState = attacker.combatState;
     const defenderCombatState = defender.combatState;
 
+    // if skill has heal
+    let heal = 0;
+    if (skill.heal) {
+      heal = this.useSkill(
+        skill,
+        attackerCombatState.getEffectiveStats(),
+        "heal",
+      );
+    }
+    attackerCombatState.heal(heal);
+
     // 2️⃣ Evasion test
     const isEvaded = evadeSystem.tryEvade(
       rng,
@@ -55,7 +66,8 @@ export default class CombatResolve {
         attacker,
         defender,
         skill,
-        typeDamage: skill.damage.typeDamage,
+        typeDamage: skill.damage?.typeDamage,
+        heal: heal,
         damage: 0,
         dot:
           damageAndHealTicked.attackerDotHot.damage ||
@@ -86,7 +98,14 @@ export default class CombatResolve {
     );
 
     // 4️⃣ Get skill base damage
-    let damage = this.useSkill(skill, attackerCombatState.getEffectiveStats());
+    let damage = 0;
+    if (skill.damage) {
+      damage = this.useSkill(
+        skill,
+        attackerCombatState.getEffectiveStats(),
+        "damage",
+      );
+    }
 
     if (isCritical) {
       damage = this.applyCrit(
@@ -96,13 +115,14 @@ export default class CombatResolve {
     }
 
     // 5️⃣ Defense application
-    const defense =
-      skill.damage.typeDamage === "physical"
-        ? defenderCombatState.getEffectiveStats().pDef
-        : defenderCombatState.getEffectiveStats().mDef;
+    if (damage > 0) {
+      const defense =
+        skill.damage.typeDamage === "physical"
+          ? defenderCombatState.getEffectiveStats().pDef
+          : defenderCombatState.getEffectiveStats().mDef;
 
-    damage = this.applyDefense(damage, defense);
-
+      damage = this.applyDefense(damage, defense);
+    }
     defenderCombatState.takeDamage(damage);
 
     // 6️⃣ Result
@@ -110,8 +130,9 @@ export default class CombatResolve {
       attacker,
       defender,
       skill,
-      typeDamage: skill.damage.typeDamage,
+      typeDamage: skill.damage?.typeDamage,
       damage,
+      heal: heal,
       dot: {
         onAttacker: damageAndHealTicked.attackerDotHot.damage,
         onDefender: damageAndHealTicked.defenderDotHot.damage,
@@ -130,14 +151,14 @@ export default class CombatResolve {
   // Helpers
   // =========================
 
-  useSkill(skill, baseStats) {
-    let damage = 0;
+  useSkill(skill, baseStats, prop) {
+    let value = 0;
 
-    for (const [key, mod] of Object.entries(skill.damage.scaling)) {
-      damage += (baseStats[key] || 0) * mod;
+    for (const [key, mod] of Object.entries(skill[prop].scaling)) {
+      value += (baseStats[key] || 0) * mod;
     }
 
-    return damage * skill.rank;
+    return value * skill.rank;
   }
 
   applyCrit(baseDamage, critDamage) {

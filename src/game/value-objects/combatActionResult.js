@@ -5,6 +5,7 @@ export default class CombatActionResult {
     skill,
     typeDamage = null,
     damage = null,
+    heal = null,
     dot = {},
     hot = {},
     isCritical = false,
@@ -16,6 +17,7 @@ export default class CombatActionResult {
     this.skill = skill;
     this.typeDamage = typeDamage;
     this.damage = damage;
+    this.heal = heal;
     this.dot = dot;
     this.hot = hot;
     this.isCritical = isCritical;

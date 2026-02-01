@@ -25,7 +25,7 @@ const skills = [
     id: "skill_002",
     rank: 1,
     typeSkill: "action",
-    reach: "melee",
+    reach: "range",
     cooldown: 2,
     damage: {
       typeDamage: "magical",
@@ -36,6 +36,23 @@ const skills = [
     metadata: {
       name: "Sword Strike",
       text: "Dieee!!!",
+      rarity: "common",
+    },
+  },
+  {
+    id: "skill_003",
+    rank: 1,
+    typeSkill: "support",
+    reach: "range",
+    cooldown: 3,
+    heal: {
+      scaling: {
+        hPower: 1,
+      },
+    },
+    metadata: {
+      name: "Basic heal",
+      text: "a basic healing",
       rarity: "common",
     },
   },
@@ -58,6 +75,7 @@ describe("CombatResolve TESTS", () => {
         tickEffectsDamageAndHeal: jest
           .fn()
           .mockReturnValue({ damage: 0, heal: 0 }),
+        heal: jest.fn().mockReturnValue(0),
       },
     };
 
@@ -108,6 +126,7 @@ describe("CombatResolve TESTS", () => {
         tickEffectsDamageAndHeal: jest
           .fn()
           .mockReturnValue({ damage: 0, heal: 0 }),
+        heal: jest.fn().mockReturnValue(0),
       },
     };
 
@@ -162,6 +181,7 @@ describe("CombatResolve TESTS", () => {
         tickEffectsDamageAndHeal: jest
           .fn()
           .mockReturnValue({ damage: 0, heal: 0 }),
+        heal: jest.fn().mockReturnValue(0),
       },
     };
 
@@ -213,6 +233,7 @@ describe("CombatResolve TESTS", () => {
         tickEffectsDamageAndHeal: jest
           .fn()
           .mockReturnValue({ damage: 3, heal: 5 }), // HOT + DOT no atacante
+        heal: jest.fn().mockReturnValue(0),
         addBuff: jest.fn(), // agora suportando refresh/stack
         addDebuff: jest.fn(),
       },
@@ -304,5 +325,55 @@ describe("CombatResolve TESTS", () => {
         duration: 3,
       }),
     );
+  });
+
+  test("should apply heal when skill.heal", () => {
+    const rng = { rollPercent: jest.fn().mockReturnValue(99) };
+    const critSystem = { tryCrit: jest.fn().mockReturnValue(false) };
+    const evadeSystem = { tryEvade: jest.fn().mockReturnValue(false) };
+    const attacker = {
+      combatState: {
+        getEffectiveStats: jest.fn().mockReturnValue({
+          hPower: 25,
+          critC: 0,
+          critD: 50,
+        }),
+        tickEffectsDamageAndHeal: jest
+          .fn()
+          .mockReturnValue({ damage: 0, heal: 0 }),
+        heal: jest.fn().mockReturnValue(0),
+      },
+    };
+    const defender = {
+      combatState: {
+        getEffectiveStats: jest.fn().mockReturnValue({
+          mDef: 0,
+          eva: 0,
+        }),
+        takeDamage: jest.fn(),
+        isDead: jest.fn().mockReturnValue(false),
+        tickEffectsDamageAndHeal: jest
+          .fn()
+          .mockReturnValue({ damage: 0, heal: 0 }),
+      },
+    };
+
+    const combatResolve = new CombatResolve();
+
+    const result = combatResolve.action(
+      attacker,
+      defender,
+      skills[2],
+      false,
+      undefined,
+      { rng, critSystem, evadeSystem },
+    );
+    console.log(result);
+    expect(result).toBeInstanceOf(CombatActionResult);
+    expect(result.damage).toBe(0);
+    expect(result.isCritical).toBe(false);
+    expect(result.isEvaded).toBe(false);
+    expect(result.heal).toBe(25);
+    expect(attacker.combatState.heal).toHaveBeenCalledWith(25);
   });
 });
