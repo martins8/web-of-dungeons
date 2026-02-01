@@ -25,7 +25,16 @@ export default class EventFactory {
         },
       });
     }
-
+    // HEAL
+    if (result.heal > 0) {
+      events.push({
+        type: "HEAL",
+        payload: {
+          source: result.attacker,
+          heal: result.heal,
+        },
+      });
+    }
     // 2️⃣ DOT
     if (result.dot?.onAttacker > 0) {
       events.push({

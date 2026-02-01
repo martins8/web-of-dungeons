@@ -13,6 +13,9 @@ export default class EventTexts {
       case "ATTACK":
         return this.attack(payload);
 
+      case "HEAL":
+        return this.heal(payload);
+
       case "EVADE":
         return this.evade(payload);
 
@@ -39,6 +42,10 @@ export default class EventTexts {
 
     text += "\n";
     return text;
+  }
+
+  static heal({ source, heal }) {
+    return `${source.name} se curou em ${heal} 💚`;
   }
 
   static evade({ source, target }) {
