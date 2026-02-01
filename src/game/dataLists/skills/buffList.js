@@ -10,7 +10,7 @@ const buffSkills = [
   new Skill({
     id: "buff_001",
     rank: 1,
-    typeSkill: "buff",
+    typeSkill: "support",
     reach: "global",
     cooldown: 0,
     effects: new Effect({
@@ -31,7 +31,7 @@ const buffSkills = [
   new Skill({
     id: "buff_002",
     rank: 1,
-    typeSkill: "buff",
+    typeSkill: "support",
     reach: "global",
     cooldown: 0,
     effects: new Effect({
@@ -52,7 +52,7 @@ const buffSkills = [
   new Skill({
     id: "buff_003",
     rank: 1,
-    typeSkill: "buff",
+    typeSkill: "support",
     reach: "global",
     cooldown: 0,
     effects: new Effect({
@@ -73,7 +73,7 @@ const buffSkills = [
   new Skill({
     id: "buff_004",
     rank: 1,
-    typeSkill: "buff",
+    typeSkill: "support",
     reach: "global",
     cooldown: 0,
     effects: new Effect({
@@ -94,7 +94,7 @@ const buffSkills = [
   new Skill({
     id: "buff_005",
     rank: 1,
-    typeSkill: "buff",
+    typeSkill: "support",
     reach: "global",
     cooldown: 0,
     effects: new Effect({
@@ -115,7 +115,7 @@ const buffSkills = [
   new Skill({
     id: "buff_006",
     rank: 1,
-    typeSkill: "buff",
+    typeSkill: "support",
     reach: "global",
     cooldown: 0,
     effects: new Effect({
@@ -136,7 +136,7 @@ const buffSkills = [
   new Skill({
     id: "buff_007",
     rank: 1,
-    typeSkill: "buff",
+    typeSkill: "support",
     reach: "global",
     cooldown: 0,
     effects: new Effect({
@@ -157,7 +157,7 @@ const buffSkills = [
   new Skill({
     id: "buff_008",
     rank: 1,
-    typeSkill: "buff",
+    typeSkill: "support",
     reach: "global",
     effects: new Effect({
       id: "effect_002",
