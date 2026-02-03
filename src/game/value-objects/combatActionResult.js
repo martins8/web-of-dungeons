@@ -11,6 +11,8 @@ export default class CombatActionResult {
     isCritical = false,
     isEvaded = false,
     isDead = false,
+    isDraw = false,
+    isDeadByDot = null,
   }) {
     this.attacker = attacker;
     this.defender = defender;
@@ -23,5 +25,7 @@ export default class CombatActionResult {
     this.isCritical = isCritical;
     this.isEvaded = isEvaded;
     this.isDead = isDead;
+    this.isDraw = isDraw;
+    this.isDeadByDot = isDeadByDot;
   }
 }

@@ -144,8 +144,8 @@ export default class Combat {
     result.events = EventFactory.fromActionResult(result);
     const resultText = EventTexts.fromEvents(result.events);
     this.combatLog += resultText;
-    //check if defender is dead
-    if (result.isDead) {
+    //check if have a dead or a draw
+    if (result.isDead || result.isDraw) {
       this.finished = true;
       return ActionResult.success(resultText);
     }

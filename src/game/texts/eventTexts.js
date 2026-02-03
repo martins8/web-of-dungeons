@@ -28,6 +28,12 @@ export default class EventTexts {
       case "DEATH":
         return this.death(payload);
 
+      case "DEATH_BY_DOT":
+        return this.deathByDot(payload);
+
+      case "DRAW":
+        return this.draw(payload);
+
       default:
         return "";
     }
@@ -62,5 +68,13 @@ export default class EventTexts {
 
   static death({ target }) {
     return `${target.name} foi morto em combate ⚰️\n`;
+  }
+
+  static deathByDot({ target }) {
+    return `${target.name} morreu sangrando ⚰️\n`;
+  }
+
+  static draw({ source, target }) {
+    return `Ocorreu um empate entre ${source.name} e ${target.name}`;
   }
 }
