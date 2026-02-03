@@ -61,6 +61,36 @@ export default class CombatResolve {
       ticked,
     );
 
+    //check if any combatant die for ticks before skill resolve.
+    if (attackerCombatState.isDead() || defenderCombatState.isDead()) {
+      let whoDie = null;
+      const draw = attackerCombatState.isDead() && defenderCombatState.isDead();
+      if (!draw) {
+        whoDie = attackerCombatState.isDead() ? "attacker" : "defender";
+      }
+      return new CombatActionResult({
+        attacker,
+        defender,
+        skill,
+        typeDamage: skill.damage?.typeDamage,
+        damage: 0,
+        heal: heal,
+        dot: {
+          onAttacker: damageAndHealTicked.attackerDotHot.damage,
+          onDefender: damageAndHealTicked.defenderDotHot.damage,
+        },
+        hot: {
+          onAttacker: damageAndHealTicked.attackerDotHot.heal,
+          onDefender: damageAndHealTicked.defenderDotHot.heal,
+        },
+        isCritical: false,
+        isEvaded: false,
+        isDead: true,
+        isDraw: draw === true ? draw : false,
+        isDeadByDot: whoDie,
+      });
+    }
+
     if (isEvaded) {
       return new CombatActionResult({
         attacker,

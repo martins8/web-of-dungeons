@@ -72,6 +72,7 @@ describe("CombatResolve TESTS", () => {
           critC: 0,
           critD: 50,
         }),
+        isDead: jest.fn().mockReturnValue(false),
         tickEffectsDamageAndHeal: jest
           .fn()
           .mockReturnValue({ damage: 0, heal: 0 }),
@@ -123,6 +124,7 @@ describe("CombatResolve TESTS", () => {
           critC: 0,
           critD: 50,
         }),
+        isDead: jest.fn().mockReturnValue(false),
         tickEffectsDamageAndHeal: jest
           .fn()
           .mockReturnValue({ damage: 0, heal: 0 }),
@@ -178,6 +180,7 @@ describe("CombatResolve TESTS", () => {
           critC: 0,
           critD: 0,
         }),
+        isDead: jest.fn().mockReturnValue(false),
         tickEffectsDamageAndHeal: jest
           .fn()
           .mockReturnValue({ damage: 0, heal: 0 }),
@@ -230,6 +233,7 @@ describe("CombatResolve TESTS", () => {
           critC: 0,
           critD: 0,
         }),
+        isDead: jest.fn().mockReturnValue(false),
         tickEffectsDamageAndHeal: jest
           .fn()
           .mockReturnValue({ damage: 3, heal: 5 }), // HOT + DOT no atacante
@@ -338,6 +342,7 @@ describe("CombatResolve TESTS", () => {
           critC: 0,
           critD: 50,
         }),
+        isDead: jest.fn().mockReturnValue(false),
         tickEffectsDamageAndHeal: jest
           .fn()
           .mockReturnValue({ damage: 0, heal: 0 }),
