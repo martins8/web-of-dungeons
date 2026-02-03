@@ -9,7 +9,7 @@
 // The function expects `attacker` and `defender` to be `Character` instances
 // used across the engine (they have `.skills`, `.combatState`, `.turnSystem`, `.stats`).
 
-export default function decideSkill(attacker, defender) {
+export default function decideSkill(attacker, defender = null) {
   if (!attacker || !attacker.skills || attacker.skills.length === 0)
     return null;
 
@@ -18,6 +18,7 @@ export default function decideSkill(attacker, defender) {
     ? attacker.combatState.getEffectiveStats()
     : attacker.stats;
 
+  //defenderstats will used when mob needs to detect something on player to decide your action.
   const defenderStats = defender?.combatState?.getEffectiveStats()
     ? defender.combatState.getEffectiveStats()
     : defender?.stats;
