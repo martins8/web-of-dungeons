@@ -45,7 +45,7 @@ export default class EventTexts {
   }
 
   static heal({ source, heal }) {
-    return `${source.name} se curou em ${heal} 💚`;
+    return `${source.name} se curou em ${heal}💚\n`;
   }
 
   static evade({ source, target }) {
@@ -57,7 +57,7 @@ export default class EventTexts {
   }
 
   static hot({ target, amount }) {
-    return `${target.name} recuperou ${amount}❤️\n`;
+    return `${target.name} recuperou ${amount}💚\n`;
   }
 
   static death({ target }) {
