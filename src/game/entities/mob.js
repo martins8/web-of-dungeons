@@ -18,6 +18,7 @@ export default class Mob extends Character {
     type,
     archetype,
     description = "Dont have any description about this enemy",
+    rewards,
   ) {
     if (!VALID_TYPES.includes(type)) {
       throw new Error("Invalid type");
@@ -30,5 +31,6 @@ export default class Mob extends Character {
     this.type = type;
     this.archetype = archetype;
     this.description = description;
+    this.rewards = rewards;
   }
 }

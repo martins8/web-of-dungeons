@@ -11,6 +11,11 @@ const validAttributes = {
   cha: 10,
 };
 
+const rewards = {
+  xp: 10,
+  gold: 1,
+};
+
 describe("Mob Entity", () => {
   test("should be create a valid mob instance", () => {
     const mob = new Mob(
@@ -21,6 +26,7 @@ describe("Mob Entity", () => {
       "normal",
       "beast",
       "test description",
+      rewards,
     );
 
     expect(mob.name).toBe("Test Mob");
@@ -28,6 +34,8 @@ describe("Mob Entity", () => {
     expect(mob.type).toBe("normal");
     expect(mob.archetype).toBe("beast");
     expect(mob.description).toBe("test description");
+    expect(mob.rewards.xp).toBe(10);
+    expect(mob.rewards.gold).toBe(1);
   });
 
   test("inherits from Character", () => {
