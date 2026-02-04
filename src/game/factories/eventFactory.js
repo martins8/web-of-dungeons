@@ -25,7 +25,16 @@ export default class EventFactory {
         },
       });
     }
-
+    // HEAL
+    if (result.heal > 0) {
+      events.push({
+        type: "HEAL",
+        payload: {
+          source: result.attacker,
+          heal: result.heal,
+        },
+      });
+    }
     // 2️⃣ DOT
     if (result.dot?.onAttacker > 0) {
       events.push({
@@ -69,10 +78,32 @@ export default class EventFactory {
     }
 
     // 4️⃣ DEATH
-    if (result.isDead) {
+    if (result.isDead && result.isDeadByDot === null) {
       events.push({
         type: "DEATH",
         payload: {
+          target: result.defender,
+        },
+      });
+    }
+
+    if (result.isDeadByDot !== null) {
+      events.push({
+        type: "DEATH_BY_DOT",
+        payload: {
+          target:
+            result.isDeadByDot === "attacker"
+              ? result.attacker
+              : result.defender,
+        },
+      });
+    }
+
+    if (result.isDraw) {
+      events.push({
+        type: "DRAW",
+        payload: {
+          source: result.attacker,
           target: result.defender,
         },
       });

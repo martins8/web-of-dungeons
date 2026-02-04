@@ -26,12 +26,12 @@ debuff = stats | attribute
 cc = stun | silence | slow | rooted
 
 */
-
+//offensive | moviment | support
 const magicalSkillsList = [
   new Skill({
     id: "skill_005",
     rank: 1,
-    typeSkill: "action",
+    typeSkill: "offensive",
     reach: "melee",
     cooldown: 0,
     damage: {
@@ -43,6 +43,23 @@ const magicalSkillsList = [
     metadata: {
       name: "Basic Attack",
       text: "a basic attack",
+      rarity: "common",
+    },
+  }),
+  new Skill({
+    id: "skill_006",
+    rank: 1,
+    typeSkill: "support",
+    reach: "range",
+    cooldown: 3,
+    heal: {
+      scaling: {
+        hPower: 1,
+      },
+    },
+    metadata: {
+      name: "Basic heal",
+      text: "a basic healing",
       rarity: "common",
     },
   }),

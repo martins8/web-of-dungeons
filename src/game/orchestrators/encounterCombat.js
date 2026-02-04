@@ -2,6 +2,7 @@ import Combat from "src/game/systems/combat";
 import EncounterSystem from "src/game/systems/encounterSystem";
 import SeedRNG from "src/game/rng/seedRNG";
 import ActionResult from "src/game/value-objects/actionResult";
+import decideSkill from "src/game/AI/normal";
 
 export default class EncounterCombat {
   constructor(player, encounterDefinition, { rng } = {}) {
@@ -49,9 +50,26 @@ export default class EncounterCombat {
     this.log += this.currentCombat.combatLog;
   }
 
+  isMobTurn() {
+    return this.currentCombat.getCurrentAttacker().isMob();
+  }
+
   performAction(skillId) {
+    let log = "";
+
     if (this.finished === true) {
       return ActionResult.failure("ENCOUNTER_FINISHED");
+    }
+
+    if (this.isMobTurn()) {
+      let safety = 10;
+      while (this.isMobTurn() && safety > 0) {
+        const mob = this.currentCombat.getCurrentAttacker();
+        const mobSkillId = decideSkill(mob, this.player);
+        const mobResult = this.currentCombat.performAction(mobSkillId);
+        log += mobResult.data;
+        safety -= 1;
+      }
     }
 
     const result = this.currentCombat.performAction(skillId);
@@ -62,7 +80,8 @@ export default class EncounterCombat {
     }
 
     if (result.data) {
-      this.log += result.data;
+      log += result.data;
+      this.log += log;
     }
 
     //if combat instance has finished

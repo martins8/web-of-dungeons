@@ -25,6 +25,12 @@ export default class Character {
     this.skills = skills;
     this.turnSystem = new TurnSystem();
     this.combatState = null;
+
+    this._isMob = isMob;
+  }
+
+  isMob() {
+    return this._isMob;
   }
 
   initCombatState() {

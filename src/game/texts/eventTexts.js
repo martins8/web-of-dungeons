@@ -13,6 +13,9 @@ export default class EventTexts {
       case "ATTACK":
         return this.attack(payload);
 
+      case "HEAL":
+        return this.heal(payload);
+
       case "EVADE":
         return this.evade(payload);
 
@@ -24,6 +27,12 @@ export default class EventTexts {
 
       case "DEATH":
         return this.death(payload);
+
+      case "DEATH_BY_DOT":
+        return this.deathByDot(payload);
+
+      case "DRAW":
+        return this.draw(payload);
 
       default:
         return "";
@@ -41,6 +50,10 @@ export default class EventTexts {
     return text;
   }
 
+  static heal({ source, heal }) {
+    return `${source.name} se curou em ${heal}💚\n`;
+  }
+
   static evade({ source, target }) {
     return `${source.name} esquivou do ataque de ${target.name} 🏃‍♂️\n`;
   }
@@ -50,10 +63,18 @@ export default class EventTexts {
   }
 
   static hot({ target, amount }) {
-    return `${target.name} recuperou ${amount}❤️\n`;
+    return `${target.name} recuperou ${amount}💚\n`;
   }
 
   static death({ target }) {
     return `${target.name} foi morto em combate ⚰️\n`;
+  }
+
+  static deathByDot({ target }) {
+    return `${target.name} morreu sangrando ⚰️\n`;
+  }
+
+  static draw({ source, target }) {
+    return `Ocorreu um empate entre ${source.name} e ${target.name}`;
   }
 }

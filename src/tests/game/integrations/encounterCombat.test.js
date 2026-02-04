@@ -48,11 +48,11 @@ describe("Integration - EncounterCombat", () => {
       expect(combat).toBeDefined();
       expect(combat.finished).toBe(false);
 
-      const attacker = combat.getCurrentAttacker();
+      const attacker = encounterCombat.player;
       const skill = attacker.skills[0];
 
       const result = encounterCombat.performAction(skill.id);
-
+      console.log(result);
       // 🔍 contrato de retorno
       expect(result).toHaveProperty("ok");
       expect(result).toHaveProperty("reason");

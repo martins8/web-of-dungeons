@@ -33,7 +33,7 @@ const physicalSkillsList = [
   new Skill({
     id: "skill_001",
     rank: 1,
-    typeSkill: "action",
+    typeSkill: "offensive",
     reach: "melee",
     cooldown: 0,
     damage: {
@@ -51,7 +51,7 @@ const physicalSkillsList = [
   new Skill({
     id: "skill_002",
     rank: 1,
-    typeSkill: "action",
+    typeSkill: "offensive",
     reach: "melee",
     cooldown: 2,
     damage: {
@@ -70,21 +70,23 @@ const physicalSkillsList = [
   new Skill({
     id: "skill_003",
     rank: 1,
-    typeSkill: "action",
+    typeSkill: "offensive",
     reach: "melee",
     cooldown: 2,
     damage: {
       typeDamage: "physical",
       scaling: {
-        pDmg: 0.2,
+        pDmg: 0.3,
       },
     },
     effects: new Effect({
+      id: "effect_001",
       target: "enemy",
       effectType: "dot",
+      mechanic: "refresh",
       subtype: "bleed",
       scaling: {
-        pDmg: 0.9,
+        pDmg: 0.2,
       },
       duration: 5,
     }),
@@ -97,7 +99,7 @@ const physicalSkillsList = [
   new Skill({
     id: "skill_004",
     rank: 1,
-    typeSkill: "action",
+    typeSkill: "offensive",
     reach: "melee",
     cooldown: 0,
     damage: {
@@ -107,7 +109,7 @@ const physicalSkillsList = [
       },
     },
     effects: new Effect({
-      id: "effect_001",
+      id: "effect_002",
       target: "enemy",
       effectType: "dot",
       mechanic: "refresh",
