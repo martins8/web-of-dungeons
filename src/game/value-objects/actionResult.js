@@ -14,7 +14,7 @@ export default class ActionResult {
     this.reason = reason;
   }
 
-  /**
+  /** dataEvent | dataText future feature
    * Create a successful result.
    * @param {any} data - optional payload for success (e.g. combat log text)
    * @param {string|null} reason - optional reason string (mostly unused for success)
