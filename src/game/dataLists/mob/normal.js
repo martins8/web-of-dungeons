@@ -32,6 +32,10 @@ export const mobDefinitions = {
     archetype: "beast",
     description: `a lone young wolf who, after being disowned by 
       his pack, struggles to survive in forest`,
+    rewards: {
+      xp: 10,
+      gold: 1,
+    },
   },
   rat_01: {
     name: "Giant Rat",
@@ -49,6 +53,10 @@ export const mobDefinitions = {
     type: "normal",
     archetype: "beast",
     description: `a giant rat`,
+    rewards: {
+      xp: 10,
+      gold: 1,
+    },
   },
 
   bandit_01: {
@@ -68,6 +76,10 @@ export const mobDefinitions = {
     archetype: "humanoid",
     description: `This disastrous pickpocket has a 
       great talent for being anything. Except being a thief.`,
+    rewards: {
+      xp: 10,
+      gold: 1,
+    },
   },
 
   mage_01: {
@@ -86,6 +98,10 @@ export const mobDefinitions = {
     type: "normal",
     archetype: "humanoid",
     description: `This a mage.`,
+    rewards: {
+      xp: 10,
+      gold: 1,
+    },
   },
 
   bandit_02: {
@@ -105,5 +121,9 @@ export const mobDefinitions = {
     archetype: "humanoid",
     description: `This disastrous pickpocket has a 
       great talent for being anything. Except being a thief.`,
+    rewards: {
+      xp: 20,
+      gold: 2,
+    },
   },
 };

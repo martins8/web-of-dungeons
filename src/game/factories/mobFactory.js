@@ -19,6 +19,7 @@ export default class MobFactory {
       def.type,
       def.archetype,
       def.description,
+      def.rewards,
     );
   }
 }
