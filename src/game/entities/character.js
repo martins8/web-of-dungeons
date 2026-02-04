@@ -6,9 +6,23 @@ import EvadeSystem from "../rng/evadeSystem";
 import utils from "src/game/utils/utils";
 import TurnSystem from "../systems/turnSystem";
 import CombatState from "../gcomponents/combatState";
+import LevelCalculator from "../services/levelCalculator";
 
+const BASE_ATTR_POINTS = 14;
+const ATTR_POINTS_PER_LEVEL = 2;
+
+/**
+ * PERSIST
+ * NAME
+ * ATTR
+ * SKILLS
+ * ISMOB
+ * GOLD
+ * XP
+ * EQUIPS
+ */
 export default class Character {
-  constructor(name, attrValues, skills = [], isMob = false) {
+  constructor(name, attrValues, skills = [], isMob = false, gold = 0, xp = 0) {
     utils.validateName(name, isMob);
     this.name = name;
     this.attributes = new Attributes(attrValues);
@@ -27,6 +41,54 @@ export default class Character {
     this.combatState = null;
 
     this._isMob = isMob;
+
+    this.gold = gold;
+    this.xp = xp;
+
+    this.unspentAttrPoints = 0;
+    this.initAttrPoints();
+  }
+
+  get level() {
+    return LevelCalculator.fromXP(this.xp);
+  }
+
+  initAttrPoints() {
+    if (this._isMob) {
+      this.unspentAttrPoints = 0;
+      return;
+    }
+    const level = this.level;
+    this.unspentAttrPoints =
+      BASE_ATTR_POINTS + (level - 1) * ATTR_POINTS_PER_LEVEL;
+  }
+
+  gainXP(amount) {
+    const oldLevel = this.level;
+    this.xp += amount;
+    const newLevel = this.level;
+
+    if (newLevel > oldLevel) {
+      this.onLevelUp(oldLevel, newLevel);
+    }
+  }
+
+  onLevelUp(oldLevel, newLevel) {
+    this.unspentAttrPoints += (newLevel - oldLevel) * ATTR_POINTS_PER_LEVEL;
+  }
+
+  increaseAttr(attribute, amount) {
+    if (amount > this.unspentAttrPoints) {
+      throw new Error(
+        `Error: insufficient attribute points amount: ${amount} | u have: ${this.unspentAttrPoints}`,
+      );
+    }
+    if (amount < 1) {
+      throw new Error("Error: increase needs to be a positive number");
+    }
+
+    this.attributes.increase(attribute, amount);
+    this.unspentAttrPoints -= amount;
   }
 
   isMob() {
