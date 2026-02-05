@@ -1,4 +1,4 @@
-import database from "src/infra/database.js";
+import database from "src/infra/database";
 
 //server status endpoint
 export async function GET(request) {
