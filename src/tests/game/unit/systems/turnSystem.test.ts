@@ -1,4 +1,5 @@
 import TurnSystem from "src/game/systems/turnSystem";
+import type Skill from "src/game/value-objects/skill";
 
 describe("TurnSystem", () => {
   test("INITIALIZATION: should initialize with default values", () => {
@@ -23,7 +24,7 @@ describe("TurnSystem", () => {
   test("USE TURN: should consume action when using action skill", () => {
     const turnSystem = new TurnSystem();
 
-    const actionSkill = { typeSkill: "action" };
+    const actionSkill = { typeSkill: "action" } as Skill;
 
     const result = turnSystem.useTurn(actionSkill);
 
@@ -32,7 +33,7 @@ describe("TurnSystem", () => {
 
   test("USE TURN: should block action when stunned", () => {
     const turnSystem = new TurnSystem();
-    const actionSkill = { typeSkill: "action" };
+    const actionSkill = { typeSkill: "action" } as Skill;
 
     turnSystem.crowdControlEffects.push("stun");
 

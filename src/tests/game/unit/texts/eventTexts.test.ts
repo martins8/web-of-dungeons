@@ -1,8 +1,8 @@
-import EventTexts from "src/game/texts/eventTexts";
+import EventTexts, { type CombatEvent } from "src/game/texts/eventTexts";
 
 describe("EventTexts", () => {
   test("should render physical attack text", () => {
-    const events = [
+    const events: CombatEvent[] = [
       {
         type: "ATTACK",
         payload: {
@@ -10,7 +10,7 @@ describe("EventTexts", () => {
           target: { name: "Goblin" },
           damage: 12,
           damageType: "physical",
-          critical: false,
+          isCritical: false,
         },
       },
     ];
@@ -23,7 +23,7 @@ describe("EventTexts", () => {
   });
 
   test("should render critical attack", () => {
-    const events = [
+    const events: CombatEvent[] = [
       {
         type: "ATTACK",
         payload: {
@@ -42,7 +42,7 @@ describe("EventTexts", () => {
   });
 
   test("should render dot tick", () => {
-    const events = [
+    const events: CombatEvent[] = [
       {
         type: "DOT_TICK",
         payload: {
@@ -60,7 +60,7 @@ describe("EventTexts", () => {
   });
 
   test("should render death event", () => {
-    const events = [
+    const events: CombatEvent[] = [
       {
         type: "DEATH",
         payload: {

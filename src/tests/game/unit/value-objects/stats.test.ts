@@ -15,6 +15,7 @@ describe("STATS", () => {
       speed: 10,
       maxHp: 45,
       hPower: 30,
+      maestry: 5,
     });
 
     expect(stats.pDmg).toBe(30);
@@ -37,6 +38,7 @@ describe("STATS", () => {
       speed: 1,
       maxHp: 1,
       hPower: 1,
+      maestry: 1,
     });
 
     [

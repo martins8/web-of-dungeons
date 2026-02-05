@@ -12,9 +12,11 @@ import SeedRNG from "src/game/rng/seedRNG";
 describe("EncounterSystem", () => {
   const mockRng = {
     next: jest.fn(),
+    rollPercent: jest.fn(),
   };
 
   const encounter = {
+    type: "world",
     rounds: 5,
     pool: [
       { id: "a", weight: 1, maxAppear: 2 },
@@ -54,6 +56,7 @@ describe("EncounterSystem", () => {
     mockRng.next.mockReturnValue(0.9);
 
     const fixedEncounter = {
+      type: "world",
       rounds: 3,
       pool: [
         { id: "boss", weight: 1, fixedRound: 3 },
@@ -69,6 +72,7 @@ describe("EncounterSystem", () => {
 
   test("throws error if no valid mobs can fill encounter", () => {
     const brokenEncounter = {
+      type: "world",
       rounds: 2,
       pool: [{ id: "a", weight: 1, maxAppear: 1 }],
     };
@@ -96,6 +100,7 @@ describe("EncounterSystem - deterministic seed", () => {
     const seed = 123456;
 
     const encounter = {
+      type: "world",
       rounds: 6,
       pool: [
         { id: "wolf", weight: 1, maxAppear: 3 },
@@ -118,6 +123,7 @@ describe("EncounterSystem - deterministic seed", () => {
 
   test("different seeds generate different encounters", () => {
     const encounter = {
+      type: "world",
       rounds: 6,
       pool: [
         { id: "wolf", weight: 1 },

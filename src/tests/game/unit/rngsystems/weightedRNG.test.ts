@@ -3,6 +3,7 @@ import WeightedRNG from "src/game/rng/weightedRNG";
 describe("WeightedRNG", () => {
   const mockRng = {
     next: jest.fn(),
+    rollPercent: jest.fn(),
   };
 
   test("throws error if no entry has weight > 0", () => {

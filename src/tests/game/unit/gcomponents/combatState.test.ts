@@ -1,6 +1,7 @@
 import CombatState from "src/game/gcomponents/combatState";
 import Attributes from "src/game/value-objects/attributes";
 import StatsCalculator from "src/game/services/statsCalculator";
+import Effect from "src/game/value-objects/effect";
 
 describe("CombatState", () => {
   function createState() {
@@ -22,12 +23,17 @@ describe("CombatState", () => {
   test("should apply buff to attributes", () => {
     const state = createState();
 
-    state.addBuff({
-      effectType: "buff",
-      subtype: "attribute",
-      scaling: { str: 5 },
-      duration: 2,
-    });
+    state.addBuff(
+      new Effect({
+        id: "buff_attr_1",
+        target: "self",
+        effectType: "buff",
+        mechanic: "refresh",
+        subtype: "attribute",
+        scaling: { str: 5 },
+        duration: 2,
+      }),
+    );
 
     const effectiveAttrs = state.getEffectiveAttributes();
     expect(effectiveAttrs.str).toBe(15);
@@ -36,12 +42,17 @@ describe("CombatState", () => {
   test("should apply debuff to stats", () => {
     const state = createState();
 
-    state.addDebuff({
-      effectType: "debuff",
-      subtype: "stats",
-      scaling: { pDef: -5 },
-      duration: 2,
-    });
+    state.addDebuff(
+      new Effect({
+        id: "debuff_stats_1",
+        target: "enemy",
+        effectType: "debuff",
+        mechanic: "refresh",
+        subtype: "stats",
+        scaling: { pDef: -5 },
+        duration: 2,
+      }),
+    );
 
     const effectiveStats = state.getEffectiveStats();
     expect(effectiveStats.pDef).toBeLessThan(state.baseStats.pDef);
@@ -52,11 +63,17 @@ describe("CombatState", () => {
     const state = createState();
     const initialHp = state.currentHp;
 
-    state.addDebuff({
-      effectType: "dot",
-      scaling: { pDmg: 1 },
-      duration: 2,
-    });
+    state.addDebuff(
+      new Effect({
+        id: "dot_1",
+        target: "enemy",
+        effectType: "dot",
+        mechanic: "refresh",
+        subtype: "bleed",
+        scaling: { pDmg: 1 },
+        duration: 2,
+      }),
+    );
 
     const result = state.tickEffectsDamageAndHeal(
       stateApplyingDot.getEffectiveStats(),
@@ -69,12 +86,17 @@ describe("CombatState", () => {
   test("should expire effects after duration", () => {
     const state = createState();
 
-    state.addBuff({
-      effectType: "buff",
-      subtype: "stats",
-      scaling: { pDmg: 10 },
-      duration: 1,
-    });
+    state.addBuff(
+      new Effect({
+        id: "buff_stats_1",
+        target: "self",
+        effectType: "buff",
+        mechanic: "refresh",
+        subtype: "stats",
+        scaling: { pDmg: 10 },
+        duration: 1,
+      }),
+    );
 
     state.tickEffects();
 
@@ -84,11 +106,16 @@ describe("CombatState", () => {
   test("should apply and clear CC each tick", () => {
     const state = createState();
 
-    state.addDebuff({
-      effectType: "cc",
-      subtype: "stunned",
-      duration: 1,
-    });
+    state.addDebuff(
+      new Effect({
+        id: "cc_1",
+        target: "enemy",
+        effectType: "cc",
+        mechanic: "refresh",
+        subtype: "stunned" as any,
+        duration: 1,
+      }),
+    );
 
     state.tickEffects();
     expect(state.cc.stunned).toBe(true);
@@ -99,11 +126,16 @@ describe("CombatState", () => {
   test("should apply and clear CC correctly", () => {
     const state = createState();
 
-    state.addDebuff({
-      effectType: "cc",
-      subtype: "stunned",
-      duration: 1,
-    });
+    state.addDebuff(
+      new Effect({
+        id: "cc_2",
+        target: "enemy",
+        effectType: "cc",
+        mechanic: "refresh",
+        subtype: "stunned" as any,
+        duration: 1,
+      }),
+    );
 
     state.tickEffects();
     expect(state.cc.stunned).toBe(true);

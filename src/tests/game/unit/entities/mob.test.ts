@@ -46,6 +46,8 @@ describe("Mob Entity", () => {
       "mob_01",
       "normal",
       "beast",
+      "test description",
+      rewards,
     );
 
     expect(mob).toHaveProperty("attributes");

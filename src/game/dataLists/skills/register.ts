@@ -19,4 +19,3 @@ const allSkills: Skill[] = [
 export const skillRegistry: Record<string, Skill> = Object.fromEntries(
   allSkills.map((skill) => [skill.id, skill]),
 ) as Record<string, Skill>;
-

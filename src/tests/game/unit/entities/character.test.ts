@@ -37,7 +37,7 @@ describe("Character", () => {
     });
 
     test("should initialize skills array", () => {
-      const skills = [{ id: "slash" }];
+      const skills: any = [{ id: "slash" }];
       const character = new Character("Arthur", validAttributes, skills);
 
       expect(character.skills).toBe(skills);
@@ -58,6 +58,7 @@ describe("Character", () => {
 
   describe("Name validation", () => {
     test("should throw error for invalid names", () => {
+      // @ts-expect-error - test invalid input in runtime
       expect(() => new Character(123, validAttributes)).toThrow();
       expect(() => new Character("", validAttributes)).toThrow();
       expect(() => new Character("Arthur 1", validAttributes)).toThrow();
@@ -94,7 +95,7 @@ describe("Character", () => {
       const character = new Character("Arthur", validAttributes);
 
       character.initCombatState();
-      character.combatState.takeDamage(9999);
+      character.combatState!.takeDamage(9999);
 
       expect(character.isDead()).toBe(true);
     });
@@ -102,7 +103,7 @@ describe("Character", () => {
 
   describe("Skills", () => {
     test("getSkillById should return correct skill", () => {
-      const skills = [
+      const skills: any = [
         { id: "slash", name: "Slash" },
         { id: "fireball", name: "Fireball" },
       ];

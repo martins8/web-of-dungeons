@@ -2,6 +2,7 @@ import EncounterCombat from "src/game/orchestrators/encounterCombat";
 import SeedRNG from "src/game/rng/seedRNG";
 import Character from "src/game/entities/character";
 import physicalSkillsList from "src/game/dataLists/skills/physical/actionSkillsList";
+import { EncounterDefinition } from "src/game/systems/encounterSystem";
 
 const validAttributes = {
   sta: 12,
@@ -21,7 +22,8 @@ describe("Integration - EncounterCombat", () => {
 
     const player = new Character("hero", validAttributes, physicalSkillsList);
 
-    const encounterDefinition = {
+    const encounterDefinition: EncounterDefinition = {
+      type: "standard",
       rounds: 3,
       pool: [
         { id: "rat_01", weight: 1 },
@@ -46,7 +48,7 @@ describe("Integration - EncounterCombat", () => {
       const combat = encounterCombat.currentCombat;
 
       expect(combat).toBeDefined();
-      expect(combat.finished).toBe(false);
+      expect(combat!.finished).toBe(false);
 
       const attacker = encounterCombat.player;
       const skill = attacker.skills[0];
@@ -74,8 +76,8 @@ describe("Integration - EncounterCombat", () => {
     expect(encounterCombat.currentCombatIndex).toBe(3);
 
     // player ainda tem estado válido aqui
-    expect(player.combatState.currentHp).toBeGreaterThan(0);
-    expect(player.combatState.isDead()).toBe(false);
+    expect(player.combatState!.currentHp).toBeGreaterThan(0);
+    expect(player.combatState!.isDead()).toBe(false);
 
     // log consolidado do encounter
     expect(encounterCombat.log.length).toBeGreaterThan(0);
