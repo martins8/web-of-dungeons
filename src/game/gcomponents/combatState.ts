@@ -13,7 +13,7 @@ export interface ClonedEffect {
   mechanic: string;
   subtype: string | null;
   scaling: Record<string, number>;
-  duration: number;
+  duration: number | null;
   source: unknown;
 }
 
@@ -124,7 +124,7 @@ export default class CombatState {
       mechanic: anyEffect.mechanic,
       subtype: anyEffect.subtype ?? null,
       scaling: { ...(anyEffect.scaling ?? {}) },
-      duration: anyEffect.duration ?? 0,
+      duration: anyEffect.duration === undefined ? 0 : anyEffect.duration,
       source: anyEffect.source ?? null,
     } as ClonedEffect;
   }
@@ -181,21 +181,28 @@ export default class CombatState {
 
     allEffects.forEach((effect) => {
       const system = new EffectSystem(effect as any);
-      effect.duration -= 1;
+      if (typeof effect.duration === "number") {
+        effect.duration -= 1;
+      }
 
       if (system.isCC()) {
         this.applyCC(effect.subtype as CrowdControlKey);
       }
     });
 
-    this.buffs = this.buffs.filter((e) => e.duration > 0);
-    this.debuffs = this.debuffs.filter((e) => e.duration > 0);
+    this.buffs = this.buffs.filter(
+      (e) => e.duration === null || e.duration > 0,
+    );
+    this.debuffs = this.debuffs.filter(
+      (e) => e.duration === null || e.duration > 0,
+    );
   }
 
   // tick damage and healing effects (DoT and HoT)
-  tickEffectsDamageAndHeal(
-    enemyCombatStats: StatsProps,
-  ): { damage: number; heal: number } {
+  tickEffectsDamageAndHeal(enemyCombatStats: StatsProps): {
+    damage: number;
+    heal: number;
+  } {
     const allEffects = this.getAllEffects();
     let damage = 0;
     let heal = 0;
@@ -229,4 +236,3 @@ export default class CombatState {
     return this.cooldowns.has(skill.id);
   }
 }
-
