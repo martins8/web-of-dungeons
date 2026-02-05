@@ -7,6 +7,8 @@ import utils from "src/game/utils/utils";
 import TurnSystem from "../systems/turnSystem";
 import CombatState from "../gcomponents/combatState";
 import LevelCalculator from "../services/levelCalculator";
+import Experience from "../gcomponents/experience";
+import Gold from "../gcomponents/gold";
 
 const BASE_ATTR_POINTS = 14;
 const ATTR_POINTS_PER_LEVEL = 2;
@@ -22,7 +24,15 @@ const ATTR_POINTS_PER_LEVEL = 2;
  * EQUIPS
  */
 export default class Character {
-  constructor(name, attrValues, skills = [], isMob = false, gold = 0, xp = 0) {
+  constructor(
+    name,
+    attrValues,
+    skills = [],
+    isMob = false,
+    gold = 0,
+    xp = 0,
+    attrPoints = 0,
+  ) {
     utils.validateName(name, isMob);
     this.name = name;
     this.attributes = new Attributes(attrValues);
@@ -42,31 +52,31 @@ export default class Character {
 
     this._isMob = isMob;
 
-    this.gold = gold;
-    this.xp = xp;
+    this.gold = new Gold(gold);
+    this.xp = new Experience(xp);
 
-    this.unspentAttrPoints = 0;
-    this.initAttrPoints();
+    if (!this._isMob && attrPoints < 0) {
+      throw new Error("Invalid attrPoints state");
+    }
+    this.attrPoints = attrPoints;
   }
 
-  get level() {
-    return LevelCalculator.fromXP(this.xp);
-  }
-
+  //this method needs to go a factory
+  /*
   initAttrPoints() {
     if (this._isMob) {
-      this.unspentAttrPoints = 0;
+      this.attrPoints = 0;
       return;
     }
-    const level = this.level;
-    this.unspentAttrPoints =
-      BASE_ATTR_POINTS + (level - 1) * ATTR_POINTS_PER_LEVEL;
+    const level = this.xp.level;
+    this.attrPoints = BASE_ATTR_POINTS + (level - 1) * ATTR_POINTS_PER_LEVEL;
   }
+  */
 
   gainXP(amount) {
-    const oldLevel = this.level;
-    this.xp += amount;
-    const newLevel = this.level;
+    const oldLevel = this.xp.level;
+    this.xp.gain(amount);
+    const newLevel = this.xp.level;
 
     if (newLevel > oldLevel) {
       this.onLevelUp(oldLevel, newLevel);
@@ -74,13 +84,13 @@ export default class Character {
   }
 
   onLevelUp(oldLevel, newLevel) {
-    this.unspentAttrPoints += (newLevel - oldLevel) * ATTR_POINTS_PER_LEVEL;
+    this.attrPoints += (newLevel - oldLevel) * ATTR_POINTS_PER_LEVEL;
   }
 
   increaseAttr(attribute, amount) {
-    if (amount > this.unspentAttrPoints) {
+    if (amount > this.attrPoints) {
       throw new Error(
-        `Error: insufficient attribute points amount: ${amount} | u have: ${this.unspentAttrPoints}`,
+        `Error: insufficient attribute points amount: ${amount} | u have: ${this.attrPoints}`,
       );
     }
     if (amount < 1) {
@@ -88,7 +98,7 @@ export default class Character {
     }
 
     this.attributes.increase(attribute, amount);
-    this.unspentAttrPoints -= amount;
+    this.attrPoints -= amount;
   }
 
   isMob() {
