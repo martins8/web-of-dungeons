@@ -121,4 +121,50 @@ describe("Character", () => {
       expect(() => character.getSkillById("unknown")).toThrow();
     });
   });
+
+  describe("character needs to be able to increase attributes with points", () => {
+    test("should increase attribute and decrease attrPoints", () => {
+      const character = new Character("Arthur", validAttributes, []);
+      character.attrPoints = 5;
+      character.increaseAttr("str", 3);
+      expect(character.attributes.str).toBe(13);
+      expect(character.attrPoints).toBe(2);
+    });
+
+    test("should throw error if trying to increase more than available points", () => {
+      const character = new Character("Arthur", validAttributes, []);
+      character.attrPoints = 2;
+
+      expect(() => character.increaseAttr("str", 3)).toThrow();
+    });
+
+    test("should throw error if trying to increase with non-positive amount", () => {
+      const character = new Character("Arthur", validAttributes, []);
+      character.attrPoints = 5;
+
+      expect(() => character.increaseAttr("str", 0)).toThrow();
+      expect(() => character.increaseAttr("str", -1)).toThrow();
+    });
+  });
+
+  describe("character should be gain XP and level up accordingly", () => {
+    test("gaining XP should increase amount and level", () => {
+      const character = new Character("Arthur", validAttributes, []);
+      const initialLevel = character.xp.level;
+
+      character.gainRewards({ gold: 0, xp: 1000 }); // Assuming this is enough for at least 1 level up
+      expect(character.xp.amount).toBe(1000);
+      expect(character.xp.level).toBeGreaterThan(initialLevel);
+    });
+
+    test("leveling up should grant attribute points", () => {
+      const character = new Character("Arthur", validAttributes, []);
+      const initialAttrPoints = character.attrPoints;
+
+      character.gainRewards({ gold: 0, xp: 1000 }); // Assuming this is enough for at least 1 level up
+      console.log(character.xp.level);
+      expect(character.attrPoints).toBeGreaterThan(initialAttrPoints);
+      console.log(character.attrPoints);
+    });
+  });
 });

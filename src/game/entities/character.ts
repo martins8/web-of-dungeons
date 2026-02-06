@@ -121,7 +121,7 @@ export default class Character {
       throw new Error("Error: increase needs to be a positive number");
     }
 
-    this.attributes.increase(attribute, amount);
+    this.attributes = this.attributes.increase(attribute, amount);
     this.attrPoints -= amount;
   }
 
