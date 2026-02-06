@@ -37,9 +37,7 @@ export default class Attributes implements AttributesProps {
   constructor({ sta, str, con, dex, int, wis, agi, cha }: AttributesProps) {
     // Validate that all attributes are integers (can be negative for debuffs)
     if (
-      [sta, str, con, dex, int, wis, agi, cha].some(
-        (v) => !Number.isInteger(v),
-      )
+      [sta, str, con, dex, int, wis, agi, cha].some((v) => !Number.isInteger(v))
     ) {
       throw new Error("Attributes must be integers");
     }
@@ -53,7 +51,7 @@ export default class Attributes implements AttributesProps {
     this.cha = cha;
   }
 
-  increase(attribute: AttributeKey, amount: number): Attributes {
+  public increase(attribute: AttributeKey, amount: number): Attributes {
     return new Attributes({
       sta: attribute === "sta" ? this.sta + amount : this.sta,
       str: attribute === "str" ? this.str + amount : this.str,
@@ -66,4 +64,3 @@ export default class Attributes implements AttributesProps {
     });
   }
 }
-
