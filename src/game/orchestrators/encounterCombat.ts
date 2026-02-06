@@ -5,6 +5,7 @@ import ActionResult from "src/game/value-objects/actionResult";
 import decideSkill from "src/game/AI/normal";
 import type Character from "src/game/entities/character";
 import type { EncounterDefinition } from "src/game/systems/encounterSystem";
+import type Mob from "../entities/mob";
 
 export interface EncounterCombatOptions {
   rng?: RandomSource;
@@ -14,7 +15,7 @@ export default class EncounterCombat {
   player: Character;
   rng: RandomSource;
   encounterSystem: EncounterSystem;
-  mobs: Character[];
+  mobs: Mob[];
   currentCombatIndex: number;
   currentCombat: Combat | null;
   finished: boolean;
@@ -33,7 +34,7 @@ export default class EncounterCombat {
       rng: this.rng,
     });
 
-    this.mobs = [];
+    this.mobs = [] as Mob[];
     this.currentCombatIndex = 0;
     this.currentCombat = null;
 
@@ -41,9 +42,9 @@ export default class EncounterCombat {
     this.log = "";
   }
 
-  start(): void {
+  public start(): void {
     this.player.initCombatState();
-    this.mobs = this.encounterSystem.generate() as Character[];
+    this.mobs = this.encounterSystem.generate() as Mob[];
     this.currentCombatIndex = 0;
     this.finished = false;
     this.log = "";
@@ -51,7 +52,7 @@ export default class EncounterCombat {
     this.startNextCombat();
   }
 
-  startNextCombat(): ActionResult<null> {
+  public startNextCombat(): ActionResult<null> {
     if (this.finished === true)
       return ActionResult.success(null, "ENCOUNTER_FINISHED");
     if (this.currentCombatIndex >= this.mobs.length) {
@@ -70,12 +71,12 @@ export default class EncounterCombat {
     return ActionResult.success(null);
   }
 
-  isMobTurn(): boolean {
+  private isMobTurn(): boolean {
     if (!this.currentCombat) return false;
     return this.currentCombat.getCurrentAttacker().isMob();
   }
 
-  performAction(skillId: string): ActionResult<any> {
+  public performAction(skillId: string): ActionResult<any> {
     let log = "";
 
     if (this.finished === true) {
@@ -120,6 +121,8 @@ export default class EncounterCombat {
         this.finished = true;
         return ActionResult.failure("PLAYER_DEAD");
       }
+      // before enter in next combat, grant rewards
+      this.player.gainRewards(this.mobs[this.currentCombatIndex].rewards);
 
       this.currentCombatIndex++;
       this.startNextCombat();
@@ -128,7 +131,7 @@ export default class EncounterCombat {
     return result;
   }
 
-  end(): ActionResult<null> {
+  public end(): ActionResult<null> {
     if (this.finished === true) {
       this.player.finishCombatState();
       return ActionResult.success(null, "ENCOUNTER_FINISHED");
@@ -137,4 +140,3 @@ export default class EncounterCombat {
     }
   }
 }
-

@@ -15,12 +15,12 @@ const validAttributes = {
   cha: 8,
 };
 
+const player = new Character("hero", validAttributes, physicalSkillsList);
+
 describe("Integration - EncounterCombat", () => {
   test("player clears full encounter with deterministic flow and valid state transitions", () => {
     // 🎲 RNG determinístico
     const rng = new SeedRNG(12345);
-
-    const player = new Character("hero", validAttributes, physicalSkillsList);
 
     const encounterDefinition: EncounterDefinition = {
       type: "standard",
@@ -86,5 +86,10 @@ describe("Integration - EncounterCombat", () => {
     const endResult = encounterCombat.end();
     expect(endResult.isSuccess()).toBe(true);
     expect(endResult.reason).toBe("ENCOUNTER_FINISHED");
+  });
+
+  test("players received rewards", () => {
+    expect(player.gold.amount).toBe(3);
+    expect(player.xp.amount).toBe(30);
   });
 });
