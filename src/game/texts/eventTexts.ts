@@ -1,54 +1,14 @@
 /* classe that will be return the object which front gonna use to show combat data
 need to implement a return object with more informative data, not just a simple string. 
 */
-
-export interface AttackPayload {
-  source: { name: string };
-  target: { name: string };
-  damage: number;
-  isCritical: boolean;
-  damageType: "physical" | "magical" | string;
-}
-
-export interface HealPayload {
-  source: { name: string };
-  heal: number;
-}
-
-export interface SimpleTargetPayload {
-  target: { name: string };
-}
-
-export interface DotHotPayload {
-  target: { name: string };
-  amount: number;
-}
-
-export interface DrawPayload {
-  source: { name: string };
-  target: { name: string };
-}
-
-export type EventPayload =
-  | AttackPayload
-  | HealPayload
-  | SimpleTargetPayload
-  | DotHotPayload
-  | DrawPayload
-  | any;
-
-export interface CombatEvent {
-  type:
-    | "ATTACK"
-    | "HEAL"
-    | "EVADE"
-    | "DOT_TICK"
-    | "HOT_TICK"
-    | "DEATH"
-    | "DEATH_BY_DOT"
-    | "DRAW";
-  payload: EventPayload;
-}
+import type { CombatEvent } from "../types/events.js";
+import type {
+  AttackPayload,
+  HealPayload,
+  DotHotPayload,
+  SimpleTargetPayload,
+  DrawPayload,
+} from "../types/events.js";
 
 export default class EventTexts {
   static fromEvents(events: CombatEvent[]): string {
@@ -65,7 +25,9 @@ export default class EventTexts {
         return this.heal(payload as HealPayload);
 
       case "EVADE":
-        return this.evade(payload as { source: { name: string }; target: { name: string } });
+        return this.evade(
+          payload as { source: { name: string }; target: { name: string } },
+        );
 
       case "DOT_TICK":
         return this.dot(payload as DotHotPayload);
@@ -94,7 +56,9 @@ export default class EventTexts {
     isCritical,
     damageType,
   }: AttackPayload): string {
-    let text = `${source.name} atacou ${target.name} causando ${damage}`;
+    const sourceName = typeof source === "object" ? source.name : source;
+    const targetName = typeof target === "object" ? target.name : target;
+    let text = `${sourceName} atacou ${targetName} causando ${damage}`;
 
     text += damageType === "physical" ? "⚔️" : "✨";
 
@@ -105,37 +69,45 @@ export default class EventTexts {
   }
 
   static heal({ source, heal }: HealPayload): string {
-    return `${source.name} se curou em ${heal}💚\n`;
+    const sourceName = typeof source === "object" ? source.name : source;
+    return `${sourceName} se curou em ${heal}💚\n`;
   }
 
   static evade({
     source,
     target,
   }: {
-    source: { name: string };
-    target: { name: string };
+    source: string | { name: string };
+    target: string | { name: string };
   }): string {
-    return `${source.name} esquivou do ataque de ${target.name} 🏃‍♂️\n`;
+    const sourceName = typeof source === "object" ? source.name : source;
+    const targetName = typeof target === "object" ? target.name : target;
+    return `${sourceName} esquivou do ataque de ${targetName} 🏃‍♂️\n`;
   }
 
   static dot({ target, amount }: DotHotPayload): string {
-    return `${target.name} sofreu ${amount}🩸 de dano contínuo\n`;
+    const targetName = typeof target === "object" ? target.name : target;
+    return `${targetName} sofreu ${amount}🩸 de dano contínuo\n`;
   }
 
   static hot({ target, amount }: DotHotPayload): string {
-    return `${target.name} recuperou ${amount}💚\n`;
+    const targetName = typeof target === "object" ? target.name : target;
+    return `${targetName} recuperou ${amount}💚\n`;
   }
 
   static death({ target }: SimpleTargetPayload): string {
-    return `${target.name} foi morto em combate ⚰️\n`;
+    const targetName = typeof target === "object" ? target.name : target;
+    return `${targetName} foi morto em combate ⚰️\n`;
   }
 
   static deathByDot({ target }: SimpleTargetPayload): string {
-    return `${target.name} morreu sangrando ⚰️\n`;
+    const targetName = typeof target === "object" ? target.name : target;
+    return `${targetName} morreu sangrando ⚰️\n`;
   }
 
   static draw({ source, target }: DrawPayload): string {
-    return `Ocorreu um empate entre ${source.name} e ${target.name}`;
+    const sourceName = typeof source === "object" ? source.name : source;
+    const targetName = typeof target === "object" ? target.name : target;
+    return `Ocorreu um empate entre ${sourceName} e ${targetName}`;
   }
 }
-

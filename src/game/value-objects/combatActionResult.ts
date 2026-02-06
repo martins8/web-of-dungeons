@@ -4,7 +4,10 @@ export interface DotHotPayload {
 }
 
 export type DeadByDotSide = "attacker" | "defender" | null;
-
+export interface Events {
+  type: string;
+  payload: any;
+}
 export interface CombatActionResultParams {
   attacker: any;
   defender: any;
@@ -19,6 +22,7 @@ export interface CombatActionResultParams {
   isDead?: boolean;
   isDraw?: boolean;
   isDeadByDot?: DeadByDotSide;
+  events?: Events[];
 }
 
 export default class CombatActionResult {
@@ -35,7 +39,7 @@ export default class CombatActionResult {
   isDead: boolean;
   isDraw: boolean;
   isDeadByDot: DeadByDotSide;
-
+  events?: Events[];
   constructor({
     attacker,
     defender,
@@ -66,4 +70,3 @@ export default class CombatActionResult {
     this.isDeadByDot = isDeadByDot ?? null;
   }
 }
-

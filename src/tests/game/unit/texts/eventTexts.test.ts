@@ -1,4 +1,5 @@
-import EventTexts, { type CombatEvent } from "src/game/texts/eventTexts";
+import EventTexts from "src/game/texts/eventTexts";
+import type { CombatEvent } from "src/game/types/events";
 
 describe("EventTexts", () => {
   test("should render physical attack text", () => {

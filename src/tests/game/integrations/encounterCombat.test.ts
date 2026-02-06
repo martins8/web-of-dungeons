@@ -54,7 +54,6 @@ describe("Integration - EncounterCombat", () => {
       const skill = attacker.skills[0];
 
       const result = encounterCombat.performAction(skill.id);
-      console.log(result);
       // 🔍 contrato de retorno
       expect(result).toHaveProperty("ok");
       expect(result).toHaveProperty("reason");
@@ -69,7 +68,8 @@ describe("Integration - EncounterCombat", () => {
         throw new Error("Infinite loop detected in EncounterCombat");
       }
     }
-    console.log(encounterCombat.log);
+    console.log(encounterCombat.textLog);
+    console.log(encounterCombat.eventLog);
 
     // 🧪 ASSERTS DE ESTADO ANTES DO .end()
     expect(encounterCombat.finished).toBe(true);
@@ -80,7 +80,7 @@ describe("Integration - EncounterCombat", () => {
     expect(player.combatState!.isDead()).toBe(false);
 
     // log consolidado do encounter
-    expect(encounterCombat.log.length).toBeGreaterThan(0);
+    expect(encounterCombat.textLog.length).toBeGreaterThan(0);
 
     // 🧹 cleanup final do encounter
     const endResult = encounterCombat.end();

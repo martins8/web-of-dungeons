@@ -6,6 +6,7 @@ import decideSkill from "src/game/AI/normal";
 import type Character from "src/game/entities/character";
 import type { EncounterDefinition } from "src/game/systems/encounterSystem";
 import type Mob from "../entities/mob";
+import { Events } from "../value-objects/combatActionResult";
 
 export interface EncounterCombatOptions {
   rng?: RandomSource;
@@ -19,7 +20,8 @@ export default class EncounterCombat {
   currentCombatIndex: number;
   currentCombat: Combat | null;
   finished: boolean;
-  log: string;
+  textLog: string;
+  eventLog: Events[];
 
   constructor(
     player: Character,
@@ -39,7 +41,8 @@ export default class EncounterCombat {
     this.currentCombat = null;
 
     this.finished = false;
-    this.log = "";
+    this.textLog = "";
+    this.eventLog = [];
   }
 
   public start(): void {
@@ -47,7 +50,8 @@ export default class EncounterCombat {
     this.mobs = this.encounterSystem.generate() as Mob[];
     this.currentCombatIndex = 0;
     this.finished = false;
-    this.log = "";
+    this.textLog = "";
+    this.eventLog = [];
 
     this.startNextCombat();
   }
@@ -67,7 +71,7 @@ export default class EncounterCombat {
     });
 
     this.currentCombat.start();
-    this.log += this.currentCombat.combatLog;
+    this.textLog += this.currentCombat.combatLog;
     return ActionResult.success(null);
   }
 
@@ -77,8 +81,8 @@ export default class EncounterCombat {
   }
 
   public performAction(skillId: string): ActionResult<any> {
-    let log = "";
-
+    let textLog = "";
+    let events: Events[] = [];
     if (this.finished === true) {
       return ActionResult.failure("ENCOUNTER_FINISHED");
     }
@@ -90,8 +94,9 @@ export default class EncounterCombat {
         const mobSkillId = decideSkill(mob, this.player);
         if (!mobSkillId) break;
         const mobResult = this.currentCombat.performAction(mobSkillId);
-        if (mobResult.data) {
-          log += mobResult.data;
+        if (mobResult.data.events) {
+          events = events.concat(mobResult.data.events);
+          textLog += mobResult.data.resultText;
         }
         safety -= 1;
       }
@@ -108,9 +113,11 @@ export default class EncounterCombat {
       return result;
     }
 
-    if (result.data) {
-      log += result.data;
-      this.log += log;
+    if (result.data.events) {
+      textLog += result.data.resultText;
+      events = events.concat(result.data.events);
+      this.eventLog = this.eventLog.concat(events);
+      this.textLog += textLog;
     }
 
     // if combat instance has finished

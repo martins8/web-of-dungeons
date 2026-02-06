@@ -6,6 +6,7 @@ import EventFactory from "src/game/factories/eventFactory";
 import ActionResult from "src/game/value-objects/actionResult";
 import type Character from "src/game/entities/character";
 import type Skill from "src/game/value-objects/skill";
+import { Events } from "../value-objects/combatActionResult";
 
 export interface CombatOptions {
   rng?: RandomSource;
@@ -22,6 +23,11 @@ export interface CombatOptions {
  * - `end()` finalizes the combat
  */
 
+export interface CombatResult {
+  resultText: string;
+  events: Events[];
+}
+
 export default class Combat {
   player: Character;
   enemy: Character;
@@ -32,7 +38,11 @@ export default class Combat {
   finished: boolean;
   combatLog: string;
 
-  constructor(player: Character, enemy: Character, { rng }: CombatOptions = {}) {
+  constructor(
+    player: Character,
+    enemy: Character,
+    { rng }: CombatOptions = {},
+  ) {
     this.player = player;
     this.enemy = enemy;
 
@@ -163,10 +173,14 @@ export default class Combat {
     (result as any).events = EventFactory.fromActionResult(result);
     const resultText = EventTexts.fromEvents((result as any).events);
     this.combatLog += resultText;
+    const resultPayload: CombatResult = {
+      events: (result as any).events ?? [],
+      resultText,
+    };
     // check if have a dead or a draw
     if (result.isDead || result.isDraw) {
       this.finished = true;
-      return ActionResult.success(resultText);
+      return ActionResult.success(resultPayload);
     }
 
     // check if attacker turn is over (2 actions per turn)
@@ -176,7 +190,7 @@ export default class Combat {
       this.getCurrentAttacker().startTurn();
     }
 
-    return ActionResult.success(resultText);
+    return ActionResult.success(resultPayload);
   }
 
   advanceTurn(): void {
@@ -193,4 +207,3 @@ export default class Combat {
     }
   }
 }
-

@@ -1,5 +1,5 @@
 import type CombatActionResult from "src/game/value-objects/combatActionResult";
-import type { CombatEvent } from "src/game/texts/eventTexts";
+import type { CombatEvent } from "src/game/types/events";
 
 export default class EventFactory {
   static fromActionResult(result: CombatActionResult): CombatEvent[] {
@@ -10,8 +10,8 @@ export default class EventFactory {
       events.push({
         type: "ATTACK",
         payload: {
-          source: result.attacker,
-          target: result.defender,
+          source: result.attacker.name,
+          target: result.defender.name,
           damage: result.damage,
           isCritical: result.isCritical,
           damageType: result.typeDamage,
@@ -23,8 +23,8 @@ export default class EventFactory {
       events.push({
         type: "EVADE",
         payload: {
-          source: result.defender,
-          target: result.attacker,
+          source: result.defender.name,
+          target: result.attacker.name,
         },
       });
     }
@@ -33,7 +33,7 @@ export default class EventFactory {
       events.push({
         type: "HEAL",
         payload: {
-          source: result.attacker,
+          source: result.attacker.name,
           heal: result.heal,
         },
       });
@@ -43,7 +43,7 @@ export default class EventFactory {
       events.push({
         type: "DOT_TICK",
         payload: {
-          target: result.attacker,
+          target: result.attacker.name,
           amount: result.dot.onAttacker,
         },
       });
@@ -53,7 +53,7 @@ export default class EventFactory {
       events.push({
         type: "DOT_TICK",
         payload: {
-          target: result.defender,
+          target: result.defender.name,
           amount: result.dot.onDefender,
         },
       });
@@ -64,7 +64,7 @@ export default class EventFactory {
       events.push({
         type: "HOT_TICK",
         payload: {
-          target: result.attacker,
+          target: result.attacker.name,
           amount: result.hot.onAttacker,
         },
       });
@@ -74,7 +74,7 @@ export default class EventFactory {
       events.push({
         type: "HOT_TICK",
         payload: {
-          target: result.defender,
+          target: result.defender.name,
           amount: result.hot.onDefender,
         },
       });
@@ -85,7 +85,7 @@ export default class EventFactory {
       events.push({
         type: "DEATH",
         payload: {
-          target: result.defender,
+          target: result.defender.name,
         },
       });
     }
@@ -96,8 +96,8 @@ export default class EventFactory {
         payload: {
           target:
             result.isDeadByDot === "attacker"
-              ? result.attacker
-              : result.defender,
+              ? result.attacker.name
+              : result.defender.name,
         },
       });
     }
@@ -106,8 +106,8 @@ export default class EventFactory {
       events.push({
         type: "DRAW",
         payload: {
-          source: result.attacker,
-          target: result.defender,
+          source: result.attacker.name,
+          target: result.defender.name,
         },
       });
     }
@@ -115,4 +115,3 @@ export default class EventFactory {
     return events;
   }
 }
-
