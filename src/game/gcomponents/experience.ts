@@ -1,18 +1,17 @@
 import LevelCalculator from "../services/levelCalculator";
 
 export default class Experience {
-  xp: number;
+  amount: number;
 
-  constructor(xp: number = 0) {
-    this.xp = xp;
+  constructor(amount: number = 0) {
+    this.amount = amount;
   }
 
-  gain(amount: number): void {
-    this.xp += amount;
+  public gain(amount: number): void {
+    this.amount += amount;
   }
 
   get level(): number {
-    return LevelCalculator.fromXP(this.xp);
+    return LevelCalculator.fromXP(this.amount);
   }
 }
-

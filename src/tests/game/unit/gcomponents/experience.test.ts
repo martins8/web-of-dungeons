@@ -3,13 +3,13 @@ import Experience from "src/game/gcomponents/experience";
 describe("Experience TEST", () => {
   test("Experience should be initialized with the correct amount", () => {
     const experience = new Experience(200);
-    expect(experience.xp).toBe(200);
+    expect(experience.amount).toBe(200);
   });
 
   test("Experience should be able to add XP", () => {
     const experience = new Experience(200);
     experience.gain(75);
-    expect(experience.xp).toBe(275);
+    expect(experience.amount).toBe(275);
   });
 
   test("Experience should calculate level based on XP", () => {
