@@ -13,6 +13,7 @@ import Experience from "../gcomponents/experience";
 import Gold from "../gcomponents/gold";
 import type Skill from "src/game/value-objects/skill";
 import type Stats from "src/game/value-objects/stats";
+import { MobRewards } from "./mob";
 
 const BASE_ATTR_POINTS = 14;
 const ATTR_POINTS_PER_LEVEL = 2;
@@ -91,7 +92,12 @@ export default class Character {
   }
   */
 
-  gainXP(amount: number): void {
+  public gainRewards(rewards: MobRewards): void {
+    this.gold.add(rewards.gold);
+    this.gainXP(rewards.xp);
+  }
+
+  private gainXP(amount: number): void {
     const oldLevel = this.xp.level;
     this.xp.gain(amount);
     const newLevel = this.xp.level;
@@ -101,11 +107,11 @@ export default class Character {
     }
   }
 
-  onLevelUp(oldLevel: number, newLevel: number): void {
+  private onLevelUp(oldLevel: number, newLevel: number): void {
     this.attrPoints += (newLevel - oldLevel) * ATTR_POINTS_PER_LEVEL;
   }
 
-  increaseAttr(attribute: AttributeKey, amount: number): void {
+  public increaseAttr(attribute: AttributeKey, amount: number): void {
     if (amount > this.attrPoints) {
       throw new Error(
         `Error: insufficient attribute points amount: ${amount} | u have: ${this.attrPoints}`,
@@ -119,35 +125,34 @@ export default class Character {
     this.attrPoints -= amount;
   }
 
-  isMob(): boolean {
+  public isMob(): boolean {
     return this._isMob;
   }
 
-  initCombatState(): void {
+  public initCombatState(): void {
     if (this.combatState) return;
     this.combatState = new CombatState(this.stats, this.attributes);
   }
 
-  finishCombatState(): void {
+  public finishCombatState(): void {
     this.combatState = null;
   }
 
-  getSkillById(id: string): Skill {
+  public getSkillById(id: string): Skill {
     const skill = this.skills.find((s) => s.id === id);
     if (!skill) throw new Error(`Skill ${id} not found`);
     return skill;
   }
 
-  isDead(): boolean {
+  public isDead(): boolean {
     return this.combatState?.isDead() ?? false;
   }
 
-  startTurn(): void {
+  public startTurn(): void {
     this.turnSystem.startTurn();
   }
 
-  endTurn(): void {
+  public endTurn(): void {
     this.turnSystem.endTurn();
   }
 }
-
