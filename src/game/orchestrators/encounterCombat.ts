@@ -130,6 +130,7 @@ export default class EncounterCombat {
       }
       // before enter in next combat, grant rewards
       this.player.gainRewards(this.mobs[this.currentCombatIndex].rewards);
+      result.data.rewards = this.mobs[this.currentCombatIndex].rewards;
 
       this.currentCombatIndex++;
       this.startNextCombat();
