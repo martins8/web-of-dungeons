@@ -1,5 +1,5 @@
 import Inventory from "src/game/gcomponents/inventory";
-import { Items } from "src/game/gcomponents/inventory";
+import { Item } from "src/game/gcomponents/inventory";
 describe("Inventory TESTS", () => {
   test("should initialize inventory with default values", () => {
     const inventory = new Inventory();
@@ -9,7 +9,7 @@ describe("Inventory TESTS", () => {
 
   test("should add items to inventory", () => {
     const inventory = new Inventory(5);
-    const item: Items = {
+    const item: Item = {
       id: "potion1",
       type: "consumable",
       metadata: { name: "Health Potion", description: "Restores 50 HP" },
@@ -20,7 +20,7 @@ describe("Inventory TESTS", () => {
 
   test("should remove items from inventory", () => {
     const inventory = new Inventory(5);
-    const item: Items = {
+    const item: Item = {
       id: "potion1",
       type: "consumable",
       metadata: { name: "Health Potion", description: "Restores 50 HP" },
@@ -32,7 +32,7 @@ describe("Inventory TESTS", () => {
 
   test("should get item by ID", () => {
     const inventory = new Inventory(5);
-    const item: Items = {
+    const item: Item = {
       id: "potion1",
       type: "consumable",
       metadata: { name: "Health Potion", description: "Restores 50 HP" },
@@ -50,7 +50,7 @@ describe("Inventory TESTS", () => {
 
   test("should not add items if not enough slots", () => {
     const inventory = new Inventory(2);
-    const items: Items[] = [
+    const items: Item[] = [
       {
         id: "item1",
         type: "consumable",
