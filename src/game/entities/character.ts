@@ -11,6 +11,7 @@ import TurnSystem from "../systems/turnSystem";
 import CombatState from "../gcomponents/combatState";
 import Experience from "../gcomponents/experience";
 import Gold from "../gcomponents/gold";
+import Inventory, { Items } from "../gcomponents/inventory";
 import type Skill from "src/game/value-objects/skill";
 import type Stats from "src/game/value-objects/stats";
 import { MobRewards } from "./mob";
@@ -42,7 +43,7 @@ export default class Character {
   gold: Gold;
   xp: Experience;
   attrPoints: number;
-
+  inventory: Inventory;
   constructor(
     name: string,
     attrValues: AttributesProps,
@@ -51,6 +52,8 @@ export default class Character {
     gold: number = 0,
     xp: number = 0,
     attrPoints: number = 0,
+    iSize: number = 20,
+    iItems: Items[] = [],
   ) {
     utils.validateName(name, isMob);
     this.name = name;
@@ -73,6 +76,7 @@ export default class Character {
 
     this.gold = new Gold(gold);
     this.xp = new Experience(xp);
+    this.inventory = new Inventory(iSize, iItems);
 
     if (!this._isMob && attrPoints < 0) {
       throw new Error("Invalid attrPoints state");
