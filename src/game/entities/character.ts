@@ -11,7 +11,7 @@ import TurnSystem from "../systems/turnSystem";
 import CombatState from "../gcomponents/combatState";
 import Experience from "../gcomponents/experience";
 import Gold from "../gcomponents/gold";
-import Inventory from "../gcomponents/inventory";
+import Inventory, { Items } from "../gcomponents/inventory";
 import type Skill from "src/game/value-objects/skill";
 import type Stats from "src/game/value-objects/stats";
 import { MobRewards } from "./mob";
@@ -53,7 +53,7 @@ export default class Character {
     xp: number = 0,
     attrPoints: number = 0,
     iSize: number = 20,
-    iItems: Inventory["items"] = [],
+    iItems: Items[] = [],
   ) {
     utils.validateName(name, isMob);
     this.name = name;
