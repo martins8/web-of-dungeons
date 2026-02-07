@@ -1,13 +1,4 @@
-export type Item = {
-  id: string;
-  type: "consumable" | "equipment" | "material" | "quest" | "misc";
-  metadata: {
-    name: string;
-    description: string;
-  };
-
-  //effect: (character: Character) => void;
-};
+import Item from "src/game/value-objects/item";
 
 export default class Inventory {
   items: Item[];
