@@ -12,12 +12,11 @@ import CombatState from "../gcomponents/combatState";
 import Experience from "../gcomponents/experience";
 import Gold from "../gcomponents/gold";
 import Inventory from "../gcomponents/inventory";
-import type Item from "src/game/value-objects/item";
+import Item, { ItemParam } from "src/game/value-objects/item";
 import type Skill from "src/game/value-objects/skill";
 import type Stats from "src/game/value-objects/stats";
 import { MobRewards } from "./mob";
 import EquipmentsSlots from "../gcomponents/equipmentSlots";
-import { ItemParam } from "src/game/value-objects/item";
 import type {
   EquipmentSlotsInit,
   EquipmentSlotKey,
@@ -150,9 +149,14 @@ export default class Character {
   }
 
   // Rewards and progression
-  public gainRewards(rewards: MobRewards): void {
+  public gainRewards(rewards: MobRewards, droppedItems: Item[] = []): void {
     this.gold.add(rewards.gold);
     this.gainXP(rewards.xp);
+
+    // Add dropped items to inventory
+    if (droppedItems.length > 0) {
+      this.inventory.addItem(droppedItems);
+    }
   }
 
   private gainXP(amount: number): void {
@@ -225,6 +229,6 @@ export default class Character {
       throw new Error("Inventory is full.");
     }
     this.equipmentSlots.unequipItem(item.equipmentItem.slot);
-    this.inventory.addItem([item]);
+    this.inventory.addItem([new Item(item)]);
   }
 }
