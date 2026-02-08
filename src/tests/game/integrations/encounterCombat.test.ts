@@ -15,7 +15,11 @@ const validAttributes = {
   cha: 8,
 };
 
-const player = new Character("hero", validAttributes, physicalSkillsList);
+const player = new Character({
+  name: "hero",
+  attrValues: validAttributes,
+  skills: physicalSkillsList,
+});
 
 describe("Integration - EncounterCombat", () => {
   test("player clears full encounter with deterministic flow and valid state transitions", () => {
