@@ -83,23 +83,39 @@ describe("EquipmentsSlots", () => {
     const mainhand = makeWeapon("sword", "mainhand");
     const necklace = makeAccessory("amulet", "necklace");
 
-    const slots = new EquipmentsSlots(
+    const slots = new EquipmentsSlots({
       head,
       body,
       shoulders,
-      null,
-      null,
-      null,
       mainhand,
-      null,
       necklace,
-    );
+    });
 
     expect(slots.head).toEqual(head);
     expect(slots.body).toEqual(body);
     expect(slots.shoulders).toEqual(shoulders);
     expect(slots.mainhand).toEqual(mainhand);
     expect(slots.necklace).toEqual(necklace);
+  });
+
+  test("should accept named slot initialization without null placeholders", () => {
+    const head = makeArmor("cap", "head");
+    const shoulders = makeArmor("mantle", "shoulders");
+    const mainhand = makeWeapon("sword", "mainhand");
+    const necklace = makeAccessory("amulet", "necklace");
+
+    const slots = new EquipmentsSlots({
+      head,
+      shoulders,
+      mainhand,
+      necklace,
+    });
+
+    expect(slots.head).toEqual(head);
+    expect(slots.shoulders).toEqual(shoulders);
+    expect(slots.mainhand).toEqual(mainhand);
+    expect(slots.necklace).toEqual(necklace);
+    expect(slots.body).toBeNull();
   });
 
   test("should throw when constructor receives non-equipment item", () => {
@@ -112,7 +128,7 @@ describe("EquipmentsSlots", () => {
       },
     };
 
-    expect(() => new EquipmentsSlots(consumable)).toThrow(
+    expect(() => new EquipmentsSlots({ head: consumable })).toThrow(
       "Invalid item type for equipment slot: consumable",
     );
   });
@@ -127,7 +143,7 @@ describe("EquipmentsSlots", () => {
       },
     } as ItemParam;
 
-    expect(() => new EquipmentsSlots(invalidEquipment)).toThrow(
+    expect(() => new EquipmentsSlots({ head: invalidEquipment })).toThrow(
       "Equipment item data is required for equipment slots.",
     );
   });
@@ -150,5 +166,16 @@ describe("EquipmentsSlots", () => {
     expect(() => slots.equipItem("offhand", weapon)).toThrow(
       "Equipment slot mismatch: item is mainhand but slot is offhand",
     );
+  });
+
+  test("should return item by id", () => {
+    const head = makeArmor("cap", "head");
+    const slots = new EquipmentsSlots({ head });
+
+    const foundItem = slots.getEquippedItemById("cap");
+    expect(foundItem).toEqual(head);
+
+    const notFoundItem = slots.getEquippedItemById("nonexistent");
+    expect(notFoundItem).toBeNull();
   });
 });
