@@ -1,5 +1,5 @@
 import Inventory from "src/game/gcomponents/inventory";
-import { Item } from "src/game/gcomponents/inventory";
+import type Item from "src/game/value-objects/item";
 describe("Inventory TESTS", () => {
   test("should initialize inventory with default values", () => {
     const inventory = new Inventory();
@@ -8,14 +8,16 @@ describe("Inventory TESTS", () => {
   });
 
   test("should add items to inventory", () => {
-    const inventory = new Inventory(5);
+    const inventory = new Inventory(1);
     const item: Item = {
       id: "potion1",
       type: "consumable",
+      equipmentItem: null,
       metadata: { name: "Health Potion", description: "Restores 50 HP" },
     };
     inventory.addItem([item]);
     expect(inventory.items).toContain(item);
+    expect(inventory.isFull()).toBe(true);
   });
 
   test("should remove items from inventory", () => {
@@ -23,6 +25,7 @@ describe("Inventory TESTS", () => {
     const item: Item = {
       id: "potion1",
       type: "consumable",
+      equipmentItem: null,
       metadata: { name: "Health Potion", description: "Restores 50 HP" },
     };
     inventory.addItem([item]);
@@ -35,6 +38,7 @@ describe("Inventory TESTS", () => {
     const item: Item = {
       id: "potion1",
       type: "consumable",
+      equipmentItem: null,
       metadata: { name: "Health Potion", description: "Restores 50 HP" },
     };
     inventory.addItem([item]);
@@ -54,16 +58,19 @@ describe("Inventory TESTS", () => {
       {
         id: "item1",
         type: "consumable",
+        equipmentItem: null,
         metadata: { name: "Item 1", description: "Description 1" },
       },
       {
         id: "item2",
         type: "consumable",
+        equipmentItem: null,
         metadata: { name: "Item 2", description: "Description 2" },
       },
       {
         id: "item3",
         type: "consumable",
+        equipmentItem: null,
         metadata: { name: "Item 3", description: "Description 3" },
       },
     ];
