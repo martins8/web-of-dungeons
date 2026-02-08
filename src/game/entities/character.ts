@@ -149,16 +149,6 @@ export default class Character {
     this.unequipToInventory(item);
   }
 
-  private unequipToInventory(
-    item: Extract<ItemParam, { type: "equipment" }>,
-  ): void {
-    if (this.inventory.isFull()) {
-      throw new Error("Inventory is full.");
-    }
-    this.equipmentSlots.unequipItem(item.equipmentItem.slot);
-    this.inventory.addItem([item]);
-  }
-
   // Rewards and progression
   public gainRewards(rewards: MobRewards): void {
     this.gold.add(rewards.gold);
@@ -226,5 +216,15 @@ export default class Character {
 
   public isDead(): boolean {
     return this.combatState?.isDead() ?? false;
+  }
+
+  private unequipToInventory(
+    item: Extract<ItemParam, { type: "equipment" }>,
+  ): void {
+    if (this.inventory.isFull()) {
+      throw new Error("Inventory is full.");
+    }
+    this.equipmentSlots.unequipItem(item.equipmentItem.slot);
+    this.inventory.addItem([item]);
   }
 }
