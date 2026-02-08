@@ -6,8 +6,7 @@ export type ItemType =
   | "equipment"
   | "material"
   | "quest"
-  | "misc"
-  | unknown;
+  | "misc";
 
 export interface ItemMetadata {
   name: string;
@@ -100,40 +99,104 @@ export type EquipmentItem =
   | ArmorEquipmentItem
   | AccessoryEquipmentItem;
 
-// Constructor params.
-type BaseItemParam = {
-  id: string;
-  type: Exclude<ItemType, "equipment">;
-  metadata: ItemMetadata;
-  equipmentItem?: never;
+// Consumable effects structure.
+export interface ConsumableEffects {
+  heal?: number;
+  mana?: number;
+  buffType?: string;
+  scaling?: number;
+  duration?: number;
+  curesEffect?: string;
+  [key: string]: unknown;
+}
 
-  //effect: (character: Character) => void;
+// Constructor params for each item type.
+export type MaterialItemParam = {
+  id: string;
+  type: "material";
+  metadata: ItemMetadata;
+  effects?: never;
+  equipmentItem?: never;
 };
 
-type EquipmentItemParam = {
+export type ConsumableItemParam = {
+  id: string;
+  type: "consumable";
+  metadata: ItemMetadata;
+  effects: ConsumableEffects;
+  equipmentItem?: never;
+};
+
+export type QuestItemParam = {
+  id: string;
+  type: "quest";
+  metadata: ItemMetadata;
+  effects?: never;
+  equipmentItem?: never;
+};
+
+export type MiscItemParam = {
+  id: string;
+  type: "misc";
+  metadata: ItemMetadata;
+  effects?: never;
+  equipmentItem?: never;
+};
+
+export type EquipmentItemParam = {
   id: string;
   type: "equipment";
   metadata: ItemMetadata;
+  effects?: never;
   equipmentItem: EquipmentItem;
-
-  //effect: (character: Character) => void;
 };
 
-export type ItemParam = BaseItemParam | EquipmentItemParam;
+export type ItemParam =
+  | MaterialItemParam
+  | ConsumableItemParam
+  | QuestItemParam
+  | MiscItemParam
+  | EquipmentItemParam;
 
 export default class Item {
-  id: string;
-  type: ItemType;
-  metadata: {
-    name: string;
-    description: string;
-  };
-  equipmentItem: EquipmentItem | null;
+  readonly id: string;
+  readonly type: ItemType;
+  readonly metadata: ItemMetadata;
+  readonly effects: ConsumableEffects | null;
+  readonly equipmentItem: EquipmentItem | null;
 
-  constructor({ id, type, metadata, equipmentItem }: ItemParam) {
+  constructor({ id, type, metadata, effects, equipmentItem }: ItemParam) {
     this.id = id;
     this.type = type;
     this.metadata = metadata;
+    this.effects = type === "consumable" ? (effects ?? null) : null;
     this.equipmentItem = type === "equipment" ? (equipmentItem ?? null) : null;
+  }
+
+  // Type guards for narrowing
+  isEquipment(): this is Item & {
+    equipmentItem: EquipmentItem;
+    type: "equipment";
+  } {
+    return this.type === "equipment" && this.equipmentItem !== null;
+  }
+
+  isConsumable(): this is Item & {
+    effects: ConsumableEffects;
+    type: "consumable";
+  } {
+    return this.type === "consumable" && this.effects !== null;
+  }
+
+  isMaterial(): this is Item & { type: "material" } {
+    return this.type === "material";
+  }
+
+  isQuest(): this is Item & { type: "quest" } {
+    return this.type === "quest";
+  }
+
+  isMisc(): this is Item & { type: "misc" } {
+    return this.type === "misc";
   }
 }
