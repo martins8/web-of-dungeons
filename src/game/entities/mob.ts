@@ -1,6 +1,7 @@
 import Character from "src/game/entities/character";
 import type { AttributesProps } from "src/game/value-objects/attributes";
 import type Skill from "src/game/value-objects/skill";
+import type { DropEntry } from "src/game/systems/dropSystem";
 
 /*
 normal: this is mobs for encounters and farming in world encounters
@@ -25,7 +26,7 @@ export type MobArchetype = (typeof VALID_ARCHETYPES)[number];
 export interface MobRewards {
   xp: number;
   gold: number;
-  [key: string]: unknown;
+  drops: DropEntry[] | null;
 }
 
 export default class Mob extends Character {
