@@ -51,7 +51,7 @@ export default class Mob extends Character {
     if (!VALID_ARCHETYPES.includes(archetype)) {
       throw new Error("Invalid archetype");
     }
-    super(name, attrValues, skills, true);
+    super({ name, attrValues, skills, isMob: true });
     this.id = id;
     this.type = type;
     this.archetype = archetype;
@@ -59,4 +59,3 @@ export default class Mob extends Character {
     this.rewards = rewards;
   }
 }
-

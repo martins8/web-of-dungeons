@@ -16,20 +16,25 @@ import type Item from "src/game/value-objects/item";
 import type Skill from "src/game/value-objects/skill";
 import type Stats from "src/game/value-objects/stats";
 import { MobRewards } from "./mob";
+import EquipmentsSlots from "../gcomponents/equipmentSlots";
+import type { EquipmentSlotsInit } from "../gcomponents/equipmentSlots";
 
 const BASE_ATTR_POINTS = 14;
 const ATTR_POINTS_PER_LEVEL = 2;
 
-/**
- * PERSIST
- * NAME
- * ATTR
- * SKILLS
- * ISMOB
- * GOLD
- * XP
- * EQUIPS
- */
+export type CharacterInit = {
+  name: string;
+  attrValues: AttributesProps;
+  skills?: Skill[];
+  isMob?: boolean;
+  gold?: number;
+  xp?: number;
+  attrPoints?: number;
+  inventorySize?: number;
+  inventoryItems?: Item[];
+  equippedItems?: EquipmentSlotsInit;
+};
+
 export default class Character {
   name: string;
   attributes: Attributes;
@@ -45,17 +50,21 @@ export default class Character {
   xp: Experience;
   attrPoints: number;
   inventory: Inventory;
-  constructor(
-    name: string,
-    attrValues: AttributesProps,
-    skills: Skill[] = [],
-    isMob: boolean = false,
-    gold: number = 0,
-    xp: number = 0,
-    attrPoints: number = 0,
-    iSize: number = 20,
-    iItems: Item[] = [],
-  ) {
+  equipmentSlots: EquipmentsSlots;
+
+  constructor(init: CharacterInit) {
+    const {
+      name,
+      attrValues,
+      skills = [],
+      isMob = false,
+      gold = 0,
+      xp = 0,
+      attrPoints = 0,
+      inventorySize = 20,
+      inventoryItems = [],
+      equippedItems = {},
+    } = init;
     utils.validateName(name, isMob);
     this.name = name;
     this.attributes = new Attributes(attrValues);
@@ -77,14 +86,19 @@ export default class Character {
 
     this.gold = new Gold(gold);
     this.xp = new Experience(xp);
-    this.inventory = new Inventory(iSize, iItems);
+    this.inventory = new Inventory(inventorySize, inventoryItems);
 
     if (!this._isMob && attrPoints < 0) {
       throw new Error("Invalid attrPoints state");
     }
     this.attrPoints = attrPoints;
-  }
 
+    if (Object.keys(equippedItems).length > 0) {
+      this.equipmentSlots = new EquipmentsSlots(equippedItems);
+    } else {
+      this.equipmentSlots = new EquipmentsSlots();
+    }
+  }
   // this method needs to go a factory
   /*
   initAttrPoints() {
@@ -97,6 +111,38 @@ export default class Character {
   }
   */
 
+  // Inventory and Equipment management
+  public bagToEquipmentSlots(id: string): void {
+    const item = this.inventory.getItemById(id);
+    if (!item) {
+      throw new Error("Item not found in inventory.");
+    }
+    if (item.type !== "equipment" || !item.equipmentItem) {
+      throw new Error("Item is not an equipment.");
+    }
+    this.equipmentSlots.equipItem(item.equipmentItem.slot, {
+      id: item.id,
+      type: item.type,
+      metadata: item.metadata,
+      equipmentItem: item.equipmentItem,
+    });
+    this.inventory.removeItem(id);
+  }
+
+  public equipmentSlotsToBag(id: string): void {
+    const item = this.equipmentSlots.getEquippedItemById(id);
+    if (!item) {
+      throw new Error("No equipment in the specified slot.");
+    }
+    if (this.inventory.isFull()) {
+      throw new Error("Inventory is full.");
+    }
+    this.equipmentSlots.unequipItem(item.equipmentItem.slot);
+
+    this.inventory.addItem([item]);
+  }
+
+  // Rewards and progression
   public gainRewards(rewards: MobRewards): void {
     this.gold.add(rewards.gold);
     this.gainXP(rewards.xp);
@@ -130,10 +176,7 @@ export default class Character {
     this.attrPoints -= amount;
   }
 
-  public isMob(): boolean {
-    return this._isMob;
-  }
-
+  // Combat state management
   public initCombatState(): void {
     if (this.combatState) return;
     this.combatState = new CombatState(this.stats, this.attributes);
@@ -143,21 +186,28 @@ export default class Character {
     this.combatState = null;
   }
 
+  // Skill management
   public getSkillById(id: string): Skill {
     const skill = this.skills.find((s) => s.id === id);
     if (!skill) throw new Error(`Skill ${id} not found`);
     return skill;
   }
 
-  public isDead(): boolean {
-    return this.combatState?.isDead() ?? false;
-  }
-
+  // Turn management
   public startTurn(): void {
     this.turnSystem.startTurn();
   }
 
   public endTurn(): void {
     this.turnSystem.endTurn();
+  }
+
+  // Utility methods
+  public isMob(): boolean {
+    return this._isMob;
+  }
+
+  public isDead(): boolean {
+    return this.combatState?.isDead() ?? false;
   }
 }
