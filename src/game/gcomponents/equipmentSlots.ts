@@ -2,7 +2,7 @@ import type { ItemParam } from "src/game/value-objects/item";
 
 type EquipmentItemParam = Extract<ItemParam, { type: "equipment" }>;
 
-type EquipmentSlotKey =
+export type EquipmentSlotKey =
   | "head"
   | "body"
   | "shoulders"
@@ -79,6 +79,11 @@ export default class EquipmentsSlots {
   // Unequip the item from the specified slot, setting it to null.
   public unequipItem(slot: EquipmentSlotKey): void {
     (this as any)[slot] = null;
+  }
+
+  // Get the equipped item from a specific slot.
+  public getEquippedItem(slot: EquipmentSlotKey): EquipmentItemParam | null {
+    return (this as any)[slot] ?? null;
   }
 
   // Get the equipped item by its ID, searching through all slots.

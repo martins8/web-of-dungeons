@@ -17,7 +17,11 @@ import type Skill from "src/game/value-objects/skill";
 import type Stats from "src/game/value-objects/stats";
 import { MobRewards } from "./mob";
 import EquipmentsSlots from "../gcomponents/equipmentSlots";
-import type { EquipmentSlotsInit } from "../gcomponents/equipmentSlots";
+import { ItemParam } from "src/game/value-objects/item";
+import type {
+  EquipmentSlotsInit,
+  EquipmentSlotKey,
+} from "../gcomponents/equipmentSlots";
 
 const BASE_ATTR_POINTS = 14;
 const ATTR_POINTS_PER_LEVEL = 2;
@@ -132,13 +136,26 @@ export default class Character {
   public equipmentSlotsToBag(id: string): void {
     const item = this.equipmentSlots.getEquippedItemById(id);
     if (!item) {
-      throw new Error("No equipment in the specified slot.");
+      throw new Error(`Equipment with id '${id}' not found in slots.`);
     }
+    this.unequipToInventory(item);
+  }
+
+  public unequipSlotToBag(slot: EquipmentSlotKey): void {
+    const item = this.equipmentSlots.getEquippedItem(slot);
+    if (!item) {
+      throw new Error(`No equipment in slot: ${slot}.`);
+    }
+    this.unequipToInventory(item);
+  }
+
+  private unequipToInventory(
+    item: Extract<ItemParam, { type: "equipment" }>,
+  ): void {
     if (this.inventory.isFull()) {
       throw new Error("Inventory is full.");
     }
     this.equipmentSlots.unequipItem(item.equipmentItem.slot);
-
     this.inventory.addItem([item]);
   }
 
