@@ -78,17 +78,35 @@ function characterToView(character) {
 
 export default function CombatPage() {
   // cria personagens
-  const player = new Character(
-    "Rogue",
-    { sta: 100, str: 8, dex: 14, con: 10, int: 6, wis: 6, agi: 10, cha: 6 },
+  const player = new Character({
+    name: "Rogue",
+    attrValues: {
+      sta: 100,
+      str: 8,
+      dex: 14,
+      con: 10,
+      int: 6,
+      wis: 6,
+      agi: 10,
+      cha: 6,
+    },
     skills,
-  );
+  });
 
-  const enemy = new Character(
-    "Goblin",
-    { sta: 100, str: 6, dex: 8, con: 8, int: 4, wis: 4, agi: 6, cha: 4 },
+  const enemy = new Character({
+    name: "Goblin",
+    attrValues: {
+      sta: 100,
+      str: 6,
+      dex: 8,
+      con: 8,
+      int: 4,
+      wis: 4,
+      agi: 6,
+      cha: 4,
+    },
     skills,
-  );
+  });
 
   // cria combate
   const combat = new Combat(player, enemy);
