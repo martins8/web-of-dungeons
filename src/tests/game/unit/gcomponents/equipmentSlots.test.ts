@@ -126,6 +126,7 @@ describe("EquipmentsSlots", () => {
         name: "Potion",
         description: "Heals",
       },
+      effects: {},
     };
 
     expect(() => new EquipmentsSlots({ head: consumable })).toThrow(
@@ -177,5 +178,37 @@ describe("EquipmentsSlots", () => {
 
     const notFoundItem = slots.getEquippedItemById("nonexistent");
     expect(notFoundItem).toBeNull();
+  });
+
+  test("should return list of equipped items", () => {
+    const head = makeArmor("cap", "head");
+    const body = makeArmor("tunic", "body");
+    const mainhand = makeWeapon("sword", "mainhand");
+
+    const slots = new EquipmentsSlots({ head, body, mainhand });
+
+    const equippedItems = slots.getListEquippedItems();
+    console.log(equippedItems);
+    expect(equippedItems).toHaveLength(3);
+    expect(equippedItems).toEqual(
+      expect.arrayContaining([head, body, mainhand]),
+    );
+  });
+
+  test("should return equipped items as a record", () => {
+    const head = makeArmor("cap", "head");
+    const body = makeArmor("tunic", "body");
+    const mainhand = makeWeapon("sword", "mainhand");
+
+    const slots = new EquipmentsSlots({ head, body, mainhand });
+
+    const equippedItems = slots.getEquippedItems();
+    console.log(equippedItems);
+    expect(Object.keys(equippedItems)).toHaveLength(3);
+    expect(equippedItems).toEqual({
+      head,
+      body,
+      mainhand,
+    });
   });
 });

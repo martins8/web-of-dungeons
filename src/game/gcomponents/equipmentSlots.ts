@@ -1,4 +1,5 @@
 import type { ItemParam } from "src/game/value-objects/item";
+import { StatKey } from "../value-objects/stats";
 
 type EquipmentItemParam = Extract<ItemParam, { type: "equipment" }>;
 
@@ -18,6 +19,8 @@ export type EquipmentSlotKey =
 export type EquipmentSlotsInit = Partial<
   Record<EquipmentSlotKey, ItemParam | null>
 >;
+
+type EquipmentStatsSnapshot = Partial<Record<StatKey, number>>;
 
 export default class EquipmentsSlots {
   head: EquipmentItemParam | null;
@@ -103,5 +106,22 @@ export default class EquipmentsSlots {
     ].filter((item): item is EquipmentItemParam => item !== null);
 
     return allSlots.find((item) => item.id === id) || null;
+  }
+
+  public getListEquippedItems(): EquipmentItemParam[] {
+    const allSlots: EquipmentItemParam[] = Object.values(this).filter(
+      (item): item is EquipmentItemParam => item !== null,
+    );
+    return allSlots;
+  }
+
+  public getEquippedItems(): Record<string, EquipmentItemParam> {
+    const equippedItems: Record<string, EquipmentItemParam> = {};
+    Object.entries(this).forEach(([slot, item]) => {
+      if (item) {
+        equippedItems[slot] = item;
+      }
+    });
+    return equippedItems;
   }
 }
