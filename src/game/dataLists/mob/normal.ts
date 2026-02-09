@@ -68,8 +68,8 @@ export const mobDefinitions: Record<string, MobDefinition> = {
       xp: 10,
       gold: 1,
       drops: [
-        { itemId: "starter_sword", weight: 0.3 }, // 30% chance
-        { itemId: "starter_shield", weight: 0.1 }, // 10% chance
+        { itemId: "starter_sword", weight: 100 }, // 30% chance
+        { itemId: "starter_shield", weight: 100 }, // 10% chance
         // { itemId: "material_001", weight: 0.5, maxStack: 3 } // future: stackable
       ],
     },
@@ -93,7 +93,11 @@ export const mobDefinitions: Record<string, MobDefinition> = {
     rewards: {
       xp: 10,
       gold: 1,
-      drops: null,
+      drops: [
+        { itemId: "starter_sword", weight: 100 }, // 30% chance
+        { itemId: "starter_shield", weight: 100 }, // 10% chance
+        // { itemId: "material_001", weight: 0.5, maxStack: 3 } // future: stackable
+      ],
     },
   },
 

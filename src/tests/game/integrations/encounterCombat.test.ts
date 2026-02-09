@@ -59,7 +59,7 @@ describe("Integration - EncounterCombat", () => {
 
       const result = encounterCombat.performAction(skill.id);
       // 🔍 contrato de retorno
-      //console.log("ActionResult:", result);
+      console.log("ActionResult:", result.data.rewards);
 
       expect(result).toHaveProperty("ok");
       expect(result).toHaveProperty("reason");
