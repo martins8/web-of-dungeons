@@ -190,7 +190,11 @@ export default class Character {
   // Combat state management
   public initCombatState(): void {
     if (this.combatState) return;
-    this.combatState = new CombatState(this.stats, this.attributes);
+    this.combatState = new CombatState(
+      this.stats,
+      this.attributes,
+      this.equipmentSlots.getEquippedItems(),
+    );
   }
 
   public finishCombatState(): void {
