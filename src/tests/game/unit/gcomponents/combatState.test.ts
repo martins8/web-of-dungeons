@@ -2,6 +2,7 @@ import CombatState from "src/game/gcomponents/combatState";
 import Attributes from "src/game/value-objects/attributes";
 import StatsCalculator from "src/game/services/statsCalculator";
 import Effect from "src/game/value-objects/effect";
+import { EquipmentItemParam } from "src/game/value-objects/item";
 
 describe("CombatState", () => {
   function createState() {
@@ -17,8 +18,34 @@ describe("CombatState", () => {
     });
 
     const stats = StatsCalculator.calculate(attributes);
-    return new CombatState(stats, attributes);
+    const item: Record<string, EquipmentItemParam> = {
+      mainhand: {
+        id: "test_sword",
+        type: "equipment",
+        metadata: {
+          name: "Test Sword",
+          description: "A sword used for testing.",
+          rarity: "common",
+        },
+        equipmentItem: {
+          slot: "mainhand",
+          stats: {
+            pDmg: 5,
+          },
+          weaponType: "sword",
+          handedness: "one-hand",
+          range: 1,
+        },
+      },
+    };
+    return new CombatState(stats, attributes, item);
   }
+
+  test("should get effective stats with equipment", () => {
+    const state = createState();
+    const effectiveStats = state.getEffectiveStats();
+    expect(effectiveStats.pDmg).toBe(state.baseStats.pDmg + 5);
+  });
 
   test("should apply buff to attributes", () => {
     const state = createState();
