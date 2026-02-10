@@ -36,4 +36,8 @@ export default class Inventory {
     const item = this.items.find((item) => item.id === itemId);
     return item || null;
   }
+
+  public isFull(): boolean {
+    return this.items.length >= this.slots;
+  }
 }

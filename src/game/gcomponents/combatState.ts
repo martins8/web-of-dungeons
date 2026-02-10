@@ -4,6 +4,7 @@ import EffectSystem from "src/game/systems/effectSystem";
 import type Effect from "src/game/value-objects/effect";
 import type Attributes from "src/game/value-objects/attributes";
 import type { StatsProps, StatKey } from "src/game/value-objects/stats";
+import Item, { EquipmentItemParam, ItemParam } from "../value-objects/item";
 
 type CrowdControlKey = "stunned" | "silenced" | "rooted" | "slowed";
 
@@ -34,10 +35,16 @@ export default class CombatState {
   debuffs: ClonedEffect[];
   cc: Record<CrowdControlKey, boolean>;
   cooldowns: Map<string, number>;
+  equipments: Record<string, EquipmentItemParam>;
 
-  constructor(stats: StatsProps, attributes: Attributes) {
+  constructor(
+    stats: StatsProps,
+    attributes: Attributes,
+    equipments: Record<string, EquipmentItemParam> = {},
+  ) {
     this.baseStats = { ...stats };
     this.baseAttributes = attributes;
+    this.equipments = equipments;
 
     this.health = new Health(stats.maxHp);
 
@@ -168,6 +175,13 @@ export default class CombatState {
         }
       }
     });
+
+    for (const item of Object.values(this.equipments)) {
+      if (!item?.equipmentItem?.stats) continue;
+      for (const [key, value] of Object.entries(item.equipmentItem.stats)) {
+        stats[key as StatKey] += value;
+      }
+    }
 
     return stats;
   }

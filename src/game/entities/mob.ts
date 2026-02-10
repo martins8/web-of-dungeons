@@ -1,6 +1,7 @@
 import Character from "src/game/entities/character";
 import type { AttributesProps } from "src/game/value-objects/attributes";
 import type Skill from "src/game/value-objects/skill";
+import type { DropEntry } from "src/game/systems/dropSystem";
 
 /*
 normal: this is mobs for encounters and farming in world encounters
@@ -25,7 +26,7 @@ export type MobArchetype = (typeof VALID_ARCHETYPES)[number];
 export interface MobRewards {
   xp: number;
   gold: number;
-  [key: string]: unknown;
+  drops: DropEntry[] | null;
 }
 
 export default class Mob extends Character {
@@ -51,7 +52,7 @@ export default class Mob extends Character {
     if (!VALID_ARCHETYPES.includes(archetype)) {
       throw new Error("Invalid archetype");
     }
-    super(name, attrValues, skills, true);
+    super({ name, attrValues, skills, isMob: true });
     this.id = id;
     this.type = type;
     this.archetype = archetype;
@@ -59,4 +60,3 @@ export default class Mob extends Character {
     this.rewards = rewards;
   }
 }
-

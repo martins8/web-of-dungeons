@@ -1,5 +1,6 @@
 import Combat from "src/game/systems/combat";
 import EncounterSystem from "src/game/systems/encounterSystem";
+import DropSystem from "src/game/systems/dropSystem";
 import SeedRNG, { type RandomSource } from "src/game/rng/seedRNG";
 import ActionResult from "src/game/value-objects/actionResult";
 import decideSkill from "src/game/AI/normal";
@@ -16,6 +17,7 @@ export default class EncounterCombat {
   player: Character;
   rng: RandomSource;
   encounterSystem: EncounterSystem;
+  dropSystem: DropSystem;
   mobs: Mob[];
   currentCombatIndex: number;
   currentCombat: Combat | null;
@@ -35,6 +37,8 @@ export default class EncounterCombat {
     this.encounterSystem = new EncounterSystem(encounterDefinition, {
       rng: this.rng,
     });
+
+    this.dropSystem = new DropSystem(this.rng);
 
     this.mobs = [] as Mob[];
     this.currentCombatIndex = 0;
@@ -129,8 +133,13 @@ export default class EncounterCombat {
         return ActionResult.failure("PLAYER_DEAD");
       }
       // before enter in next combat, grant rewards
-      this.player.gainRewards(this.mobs[this.currentCombatIndex].rewards);
-      result.data.rewards = this.mobs[this.currentCombatIndex].rewards;
+      const mob = this.mobs[this.currentCombatIndex];
+      const dropResult = this.dropSystem.calculateDrops(mob.rewards.drops);
+      this.player.gainRewards(mob.rewards, dropResult.items);
+      result.data.rewards = {
+        ...mob.rewards,
+        droppedItems: dropResult.droppedIds,
+      };
 
       this.currentCombatIndex++;
       this.startNextCombat();

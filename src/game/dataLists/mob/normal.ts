@@ -1,3 +1,5 @@
+import type { DropEntry } from "src/game/systems/dropSystem";
+
 /**
  * NORMAL MOBS HAS 8 BASE ATTRS
  * MOBS HAS 10 ATTR POINTS TO DISTRIBUTE
@@ -12,6 +14,7 @@
  * - `type`: one of normal|rare|elite|boss
  * - `archetype`: category (humanoid, beast, etc)
  * - `description`: human readable description
+ * - `rewards`: xp, gold, and possible item drops
  */
 
 export interface MobDefinition {
@@ -33,6 +36,13 @@ export interface MobDefinition {
   rewards: {
     xp: number;
     gold: number;
+    /**
+     * Possible item drops. Each entry has:
+     * - itemId: ID from item registry
+     * - weight: drop chance percentage (0-100)
+     * - maxStack?: max times this item can drop (default 1)
+     */
+    drops: DropEntry[] | null;
   };
 }
 
@@ -57,6 +67,11 @@ export const mobDefinitions: Record<string, MobDefinition> = {
     rewards: {
       xp: 10,
       gold: 1,
+      drops: [
+        { itemId: "starter_sword", weight: 100 }, // 30% chance
+        { itemId: "starter_shield", weight: 100 }, // 10% chance
+        // { itemId: "material_001", weight: 0.5, maxStack: 3 } // future: stackable
+      ],
     },
   },
   rat_01: {
@@ -78,6 +93,11 @@ export const mobDefinitions: Record<string, MobDefinition> = {
     rewards: {
       xp: 10,
       gold: 1,
+      drops: [
+        { itemId: "starter_sword", weight: 100 }, // 30% chance
+        { itemId: "starter_shield", weight: 100 }, // 10% chance
+        // { itemId: "material_001", weight: 0.5, maxStack: 3 } // future: stackable
+      ],
     },
   },
 
@@ -101,6 +121,7 @@ export const mobDefinitions: Record<string, MobDefinition> = {
     rewards: {
       xp: 10,
       gold: 1,
+      drops: null,
     },
   },
 
@@ -123,6 +144,7 @@ export const mobDefinitions: Record<string, MobDefinition> = {
     rewards: {
       xp: 10,
       gold: 1,
+      drops: null,
     },
   },
 
@@ -146,7 +168,7 @@ export const mobDefinitions: Record<string, MobDefinition> = {
     rewards: {
       xp: 20,
       gold: 2,
+      drops: null,
     },
   },
 };
-

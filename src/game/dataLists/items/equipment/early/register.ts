@@ -1,7 +1,7 @@
 import type { ItemParam } from "src/game/value-objects/item";
-import { earlyArmors } from "src/game/dataLists/equipment/early/armors";
-import { earlyWeapons } from "src/game/dataLists/equipment/early/weapons";
-import { earlyAccessories } from "src/game/dataLists/equipment/early/accessories";
+import { earlyArmors } from "src/game/dataLists/items/equipment/early/armors";
+import { earlyWeapons } from "src/game/dataLists/items/equipment/early/weapons";
+import { earlyAccessories } from "src/game/dataLists/items/equipment/early/accessories";
 
 type EquipmentDefinition = Extract<ItemParam, { type: "equipment" }>;
 

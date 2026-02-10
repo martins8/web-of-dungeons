@@ -12,9 +12,9 @@ describe("Combat - Integration Test", () => {
       rollPercent: jest.fn().mockReturnValue(99), // nunca evade nem crita
     };
 
-    const player = new Character(
-      "Hero",
-      {
+    const player = new Character({
+      name: "Hero",
+      attrValues: {
         sta: 12,
         str: 2,
         con: 10,
@@ -25,11 +25,11 @@ describe("Combat - Integration Test", () => {
         cha: 5,
       },
       skills,
-    );
+    });
 
-    const enemy = new Character(
-      "Goblin",
-      {
+    const enemy = new Character({
+      name: "Goblin",
+      attrValues: {
         sta: 8,
         str: 8,
         con: 8,
@@ -40,7 +40,7 @@ describe("Combat - Integration Test", () => {
         cha: 5,
       },
       skills,
-    );
+    });
 
     const combat = new Combat(player, enemy, { rng });
 
@@ -128,17 +128,35 @@ describe("Combat - Integration Test", () => {
       },
     };
 
-    const player = new Character(
-      "Hero",
-      { sta: 10, str: 5, con: 10, dex: 5, int: 5, wis: 5, agi: 5, cha: 5 },
-      [dotSkill, hotSkill],
-    );
+    const player = new Character({
+      name: "Hero",
+      attrValues: {
+        sta: 10,
+        str: 5,
+        con: 10,
+        dex: 5,
+        int: 5,
+        wis: 5,
+        agi: 5,
+        cha: 5,
+      },
+      skills: [dotSkill, hotSkill],
+    });
 
-    const enemy = new Character(
-      "Goblin",
-      { sta: 10, str: 5, con: 10, dex: 5, int: 5, wis: 5, agi: 5, cha: 5 },
-      [dotSkill, hotSkill],
-    );
+    const enemy = new Character({
+      name: "Goblin",
+      attrValues: {
+        sta: 10,
+        str: 5,
+        con: 10,
+        dex: 5,
+        int: 5,
+        wis: 5,
+        agi: 5,
+        cha: 5,
+      },
+      skills: [dotSkill, hotSkill],
+    });
 
     const combat = new Combat(player, enemy, { rng });
     combat.start();

@@ -15,7 +15,31 @@ const validAttributes = {
   cha: 8,
 };
 
-const player = new Character("hero", validAttributes, physicalSkillsList);
+const player = new Character({
+  name: "hero",
+  attrValues: validAttributes,
+  skills: physicalSkillsList,
+  equippedItems: {
+    mainhand: {
+      id: "starter_sword",
+      type: "equipment",
+      metadata: {
+        name: "Starter Sword",
+        description: "A basic sword for new adventurers.",
+        rarity: "common",
+      },
+      equipmentItem: {
+        slot: "mainhand",
+        stats: {
+          pDmg: 2,
+        },
+        weaponType: "sword",
+        handedness: "one-hand",
+        range: 1,
+      },
+    },
+  },
+});
 
 describe("Integration - EncounterCombat", () => {
   test("player clears full encounter with deterministic flow and valid state transitions", () => {
@@ -55,7 +79,7 @@ describe("Integration - EncounterCombat", () => {
 
       const result = encounterCombat.performAction(skill.id);
       // 🔍 contrato de retorno
-      //console.log("ActionResult:", result);
+      console.log("ActionResult:", result.data);
 
       expect(result).toHaveProperty("ok");
       expect(result).toHaveProperty("reason");
